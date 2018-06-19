@@ -1,0 +1,28 @@
+{
+  "class": [ "checkitem" ],
+  "properties": {
+    "id":-1,
+    "name": "",
+    "description": "",
+    "state": ""
+  },
+  "entities": [
+  ],
+  "actions": [
+    {
+      "name": "check-state",
+      "title": "Check State",
+      "method": "POST",
+      "href": "http://x",
+      "type": "application/x-www-form-urlencoded",
+      "fields": [
+        { "name": "state", "type": "text"}
+      ]
+    }
+  ],
+  "links": [
+    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" },
+    { "rel": [ "previous" ], "href": "http://api.x.io/orders/41" },
+    { "rel": [ "next" ], "href": "http://api.x.io/orders/43" }
+  ]
+}
