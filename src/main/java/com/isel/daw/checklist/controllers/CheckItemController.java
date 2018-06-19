@@ -21,7 +21,7 @@ public class CheckItemController {
         this.itemService=itemService;
     }
 
-    @GetMapping(path="/{id}", produces="application/vnd.siren+json")
+    @GetMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
     @RequiresAuthentication
     public ResponseEntity<?> getById(@RequestHeader(value="Authorization")String authorization,@PathVariable("id") long id) {
 
@@ -29,7 +29,7 @@ public class CheckItemController {
     }
 
 
-    @PostMapping(path="/create", produces={"application/json","application/problem+json"})
+    @PostMapping(path="/create", produces={"application/vnd.siren+json","application/problem+json"})
     @RequiresAuthentication
     public ResponseEntity<?> create(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckItemRequestDto checkItemRequestDto) {
         return itemService.create(authorization,checkItemRequestDto);
