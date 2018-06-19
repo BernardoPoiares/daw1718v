@@ -35,5 +35,11 @@ public class CheckItemController {
         return itemService.create(authorization,checkItemRequestDto);
     }
 
+    @PostMapping(path="/update", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> update(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckItemRequestDto checkItemRequestDto) {
+        return itemService.update(authorization,checkItemRequestDto);
+    }
+
 
 }
