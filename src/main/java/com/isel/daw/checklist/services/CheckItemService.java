@@ -109,4 +109,27 @@ public class CheckItemService implements Service {
     }
 
 
+    @Transactional
+    public ResponseEntity<?> delete(String authorization, long id){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
+        if(!valtUser.isValid)
+            return ResponseBuilder.buildError(valtUser.problem);
+        CheckItem checkItem= itemRepository.findById(id);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
+        if(!valtcheckItem.isValid)
+            return ResponseBuilder.buildError(valtcheckItem.problem);
+        long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
+        if(numbTempuses==1) {
+            CheckItemTemplate c=itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
+        }
+        CheckItem deleteditem= itemRepository.deleteById(checkItem.getId());
+        return ResponseBuilder.build(
+                CheckItemSirenBuilder.build(checkItem.getId(),
+                        checkItem.getCheckitem_itemtemplate().getName(),
+                        checkItem.getCheckitem_itemtemplate().getDescription(),
+                        checkItem.getState())
+        );
+    }
+
 }

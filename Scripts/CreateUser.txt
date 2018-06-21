@@ -1,0 +1,9 @@
+POST http://localhost:8081/user/create
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "username": "dog2",
+    "password": "im still not a dog muahahahaha"
+}

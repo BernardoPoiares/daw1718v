@@ -1,0 +1,18 @@
+
+POST http://localhost:8081/checkItem/create
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "name": "do Daw work",
+    "description": "ezzzzz"
+}
+
+
+
+
+
+GET http://localhost:8081/checkItem/2
+Accept: application/vnd.siren+json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
