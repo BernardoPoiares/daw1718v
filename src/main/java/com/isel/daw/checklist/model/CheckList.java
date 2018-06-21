@@ -1,6 +1,6 @@
 package com.isel.daw.checklist.model;
 
-import javax.jws.soap.SOAPBinding;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;

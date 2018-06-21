@@ -1,7 +1,6 @@
 package com.isel.daw.checklist.services;
 
 import com.isel.daw.checklist.Service;
-import com.isel.daw.checklist.Validator;
 import com.isel.daw.checklist.model.RequestsDTO.UserRequestDTO;
 import com.isel.daw.checklist.repositories.UserRepository;
 import com.isel.daw.checklist.model.Users;

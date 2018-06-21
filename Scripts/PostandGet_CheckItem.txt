@@ -1,7 +1,6 @@
 
 POST http://localhost:8081/checkItem/create
 Content-Type: application/json
-Accept: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 {
@@ -16,3 +15,10 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 GET http://localhost:8081/checkItem/2
 Accept: application/vnd.siren+json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+
+
+DELETE http://localhost:8081/checkItem/delete/1
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+

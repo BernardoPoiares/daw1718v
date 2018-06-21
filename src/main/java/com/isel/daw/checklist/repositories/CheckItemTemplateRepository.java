@@ -4,5 +4,5 @@ import com.isel.daw.checklist.model.CheckItemTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CheckItemTemplateRepository extends JpaRepository<CheckItemTemplate,Integer> {
-    CheckItemTemplate deleteById(long id);
+    long deleteById(long id);
 }

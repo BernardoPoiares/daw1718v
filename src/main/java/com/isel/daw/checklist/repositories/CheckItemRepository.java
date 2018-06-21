@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CheckItemRepository extends JpaRepository<CheckItem, Integer> {
     CheckItem findById(long id);
-    CheckItem deleteById(long id);
+    long deleteById(long id);
 
-    @Query(value="SELECT * FROM checkitem WHERE checkitem_itemtemplate= :id", nativeQuery = true)
-    long countByTemplateId(long id);
+    @Query(value="SELECT COUNT(*) FROM checkitem WHERE checkitem_itemtemplate = :id", nativeQuery = true)
+    long countByTemplateId(@Param("id")long id);
 }
