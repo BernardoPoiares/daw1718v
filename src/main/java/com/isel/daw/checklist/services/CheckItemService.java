@@ -125,7 +125,6 @@ public class CheckItemService implements Service {
         long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
         if(numbTempuses==0)
             itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
-
         //todo:change response
         return ResponseBuilder.build(
                 CheckItemSirenBuilder.build(checkItem.getId(),

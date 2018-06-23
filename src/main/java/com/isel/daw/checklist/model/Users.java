@@ -10,15 +10,19 @@ import java.util.Set;
 public class Users implements Serializable {
 
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private long id;
+
+    @Column(unique = true,nullable=false)
     private String username;
 
-    @Column
+    @Column(nullable=false)
     private String password;
     @OneToMany(mappedBy = "itemtemplate_user")
     private Set<CheckItemTemplate> checkItemsTemplates;
 
-    @Column
+    @Column(nullable=false)
     private String token;
 
     @OneToMany(mappedBy = "listtemplate_user")
