@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
 
@@ -94,8 +95,10 @@ public class CheckItemService implements Service {
             if(numbTempuses>1) {
                 itemtemplatetosave = new CheckItemTemplate(itemtemplatetosave.getName(), itemtemplatetosave.getDescription(), itemtemplatetosave.getItemTemplate_user()); // has to create a new one because is use by more items
                 itemtemplatetosave=itemTemplateRepository.save(itemtemplatetosave);
-                if(itemtemplatetosave==null)
+                if(itemtemplatetosave==null){
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                     return ResponseBuilder.buildError(new InternalServerProblem());
+                }
             }
             if(checkitem_dto.getName()!=null)
                 itemtemplatetosave.setName(checkitem_dto.getName());
