@@ -31,30 +31,24 @@ public class CheckListService {
         this.userRepository=userRepository;
         this.listTemplateRepository=listTemplateService;
     }
-    public ResponseEntity<?> getById(int id){
-        CheckList res=checkListRepository.findById(id);
-        return new ResponseEntity<>(
-                res,
-                HttpStatus.ACCEPTED
-        );
-    }
-/*
+
     public ResponseEntity<?> getListById(String authorization,long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckItemValidator.validateUser(user);
+        ValidatorResponse valtUser=CheckListValidator.validateUser(user);
         if(!valtUser.isValid)
             return ResponseBuilder.buildError(valtUser.problem);
-        CheckItem checkItem= itemRepository.findById(id);
-        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
-        if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
+        CheckList checklist= checkListRepository.findById(id);
+        if(checklist==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
+        ValidatorResponse valtcheckList=CheckListValidator.validateListById(checklist,id,user);
+        if(!valtcheckList.isValid)
+            return ResponseBuilder.buildError(valtcheckList.problem);
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
+                CheckListSirenBuilder.build(checklist.getId(),
+                        checklist.getName(),
+                        checklist.getCompletionDate())
         );
-    }*/
+    }
 
 
     public ResponseEntity<?> create(String authorization, CheckListRequestDto checklist_dto){
@@ -83,6 +77,8 @@ public class CheckListService {
         if(!valtcheckList.isValid)
             return ResponseBuilder.buildError(valtcheckList.problem);
         CheckList checklist= checkListRepository.findById(checklist_dto.getId());
+        if(checklist==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
         if(checklist_dto.getName()!=null)
             checklist.setName(checklist_dto.getName());
         if(checklist_dto.getCompletionDate()!=null)
@@ -97,29 +93,27 @@ public class CheckListService {
         );
     }
 
-/*
+
     @Transactional
     public ResponseEntity<?> delete(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
+        ValidatorResponse valtUser=CheckListValidator.validateUser(user);
         if(!valtUser.isValid)
             return ResponseBuilder.buildError(valtUser.problem);
-        CheckItem checkItem= itemRepository.findById(id);
-        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
-        if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
-        long delt_item_res= itemRepository.deleteById(checkItem.getId());
-        if(delt_item_res==0)
+        CheckList checklist= checkListRepository.findById(id);
+        if(checklist==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
+        ValidatorResponse valtcheckList=CheckListValidator.validateListById(checklist,id,user);
+        if(!valtcheckList.isValid)
+            return ResponseBuilder.buildError(valtcheckList.problem);
+        long delt_list_res= checkListRepository.deleteById(id);
+        if(delt_list_res==0)
             return ResponseBuilder.buildError(new InternalServerProblem());         //todo:check transactional better
-        long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
-        if(numbTempuses==0)
-            itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
         //todo:change response
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
+                CheckListSirenBuilder.build(checklist.getId(),
+                        checklist.getName(),
+                        checklist.getCompletionDate())
         );
-    }*/
+    }
 }

@@ -41,7 +41,7 @@ public class CheckItemController {
         return itemService.update(authorization,checkItemRequestDto);
     }
 
-    @DeleteMapping(path="/delete/{id}", produces={"application/vnd.siren+json","application/problem+json"})
+    @DeleteMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
     @RequiresAuthentication
     public ResponseEntity<?> delete(@RequestHeader(value="Authorization")String authorization, @PathVariable("id") long id) {
         return itemService.delete(authorization,id);

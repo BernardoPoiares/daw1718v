@@ -26,8 +26,8 @@ public class CheckListController {
     }
 
     @GetMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
-    public ResponseEntity<?> getById(@PathVariable("id") int id) {
-        return checkListService.getById(id);
+    public ResponseEntity<?> getListById(@RequestHeader(value="Authorization") String authorization,@PathVariable("id") long id) {
+        return checkListService.getListById(authorization,id);
     }
 
     @PostMapping(path="/create", produces={"application/vnd.siren+json","application/problem+json"})
@@ -38,6 +38,11 @@ public class CheckListController {
     @PostMapping(path="/update", produces={"application/vnd.siren+json","application/problem+json"})
     public ResponseEntity<?> update(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckListRequestDto checklistRequestDto){
         return checkListService.update(authorization,checklistRequestDto);
+    }
+
+    @DeleteMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
+    public ResponseEntity<?> delete(@RequestHeader(value="Authorization")String authorization, @PathVariable("id") long id){
+        return checkListService.delete(authorization,id);
     }
 
 }

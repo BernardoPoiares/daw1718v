@@ -83,28 +83,31 @@ public class CheckItemService implements Service {
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemRequest(checkitem_dto);
         if(!valtcheckItem.isValid)
             return ResponseBuilder.buildError(valtcheckItem.problem);
-        CheckItem checkItem= itemRepository.findById(checkitem_dto.getId());
-        if(checkitem_dto.getState()!=null) {
-            checkItem.setState(checkitem_dto.getState());
-            itemRepository.save(checkItem);
-        }
+        CheckItem checkitem= itemRepository.findById(checkitem_dto.getId());
+        if(checkitem==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
+        if(checkitem_dto.getState()!=null)
+            checkitem.setState(checkitem_dto.getState());
         if(checkitem_dto.getName()!=null || checkitem_dto.getDescription()!=null){
-            String newtemplate_name=checkitem_dto.getName()!=null?checkitem_dto.getName():checkItem.getCheckitem_itemtemplate().getName();
-            String newtemplate_description=checkitem_dto.getDescription()!=null?checkitem_dto.getDescription():checkItem.getCheckitem_itemtemplate().getDescription();
-            CheckItemTemplate newitemTemplate=new CheckItemTemplate(newtemplate_name,newtemplate_description,user);
-            CheckItemTemplate saveditemtemplate=itemTemplateRepository.save(newitemTemplate);
-            if(saveditemtemplate==null)
-                return ResponseBuilder.buildError(new InternalServerProblem());
-            checkItem.setCheckitem_itemtemplate(saveditemtemplate);
-            CheckItem savedcheckitem=itemRepository.save(checkItem);
-            if(savedcheckitem==null)
-                return ResponseBuilder.buildError(new InternalServerProblem());
+            CheckItemTemplate itemtemplatetosave=checkitem.getCheckitem_itemtemplate();
+            long numbTempuses=itemRepository.countByTemplateId(checkitem.getCheckitem_itemtemplate().getId());
+            if(numbTempuses>1) {
+                itemtemplatetosave = new CheckItemTemplate(itemtemplatetosave.getName(), itemtemplatetosave.getDescription(), itemtemplatetosave.getItemTemplate_user()); // has to create a new one because is use by more items
+                itemtemplatetosave=itemTemplateRepository.save(itemtemplatetosave);
+                if(itemtemplatetosave==null)
+                    return ResponseBuilder.buildError(new InternalServerProblem());
+            }
+            if(checkitem_dto.getName()!=null)
+                itemtemplatetosave.setName(checkitem_dto.getName());
+            if(checkitem_dto.getDescription()!=null)
+                itemtemplatetosave.setDescription(checkitem_dto.getDescription());
+            checkitem.setCheckitem_itemtemplate(itemtemplatetosave);
         }
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
+                CheckItemSirenBuilder.build(checkitem.getId(),
+                        checkitem.getCheckitem_itemtemplate().getName(),
+                        checkitem.getCheckitem_itemtemplate().getDescription(),
+                        checkitem.getState())
         );
     }
 

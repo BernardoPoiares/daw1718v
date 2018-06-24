@@ -34,7 +34,7 @@ public class CheckItemValidator {
         if(checkitem_dto.getId()<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
         if(checkitem_dto.getDescription()==null && checkitem_dto.getName()==null && checkitem_dto.getState()==null)
-            return new ValidatorResponse(false,new InvalidMultiParameterProblem(new String []{"description","name","state"}));
+            return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,state"));
         return new ValidatorResponse(true,null);
     }
 

@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CheckListRepository extends JpaRepository<CheckList,Integer>{
     CheckList findById(long id);
+    long deleteById(long id);
 }
