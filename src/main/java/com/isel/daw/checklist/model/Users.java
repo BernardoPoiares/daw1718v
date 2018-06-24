@@ -86,6 +86,12 @@ public class Users implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+
+    public long getId() {
+        return id;
+    }
+
 /*
     public Set<CheckListTemplate> getCheckListTemplates() {
         return checkListTemplates;

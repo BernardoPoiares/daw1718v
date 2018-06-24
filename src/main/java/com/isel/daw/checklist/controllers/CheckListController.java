@@ -2,6 +2,8 @@ package com.isel.daw.checklist.controllers;
 
 
 import com.isel.daw.checklist.model.CheckList;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
 import com.isel.daw.checklist.services.CheckListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +31,7 @@ public class CheckListController {
     }
 
     @PostMapping(path="/create", produces="application/json")
-    public ResponseEntity<?> create(@PathVariable("name") String name,@PathVariable("completiondate") Date completiondate){
-        return checkListService.create(name,completiondate);
+    public ResponseEntity<?> create(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckListRequestDto checklistRequestDto){
+        return checkListService.create(authorization,checklistRequestDto);
     }
 }

@@ -12,7 +12,7 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 
 
-GET http://localhost:8081/checkItem/2
+GET http://localhost:8081/checkItem/1
 Accept: application/vnd.siren+json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 

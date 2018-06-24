@@ -119,7 +119,7 @@ public class CheckItemService implements Service {
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
         if(!valtcheckItem.isValid)
             return ResponseBuilder.buildError(valtcheckItem.problem);
-        long delt_item_res= itemRepository.deleteById(5);
+        long delt_item_res= itemRepository.deleteById(checkItem.getId());
         if(delt_item_res==0)
             return ResponseBuilder.buildError(new InternalServerProblem());         //todo:check transactional better
         long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
