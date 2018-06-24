@@ -25,13 +25,19 @@ public class CheckListController {
         this.checkListService=checkListService;
     }
 
-    @GetMapping(path="/{id}", produces="application/json")
+    @GetMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
     public ResponseEntity<?> getById(@PathVariable("id") int id) {
         return checkListService.getById(id);
     }
 
-    @PostMapping(path="/create", produces="application/json")
+    @PostMapping(path="/create", produces={"application/vnd.siren+json","application/problem+json"})
     public ResponseEntity<?> create(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckListRequestDto checklistRequestDto){
         return checkListService.create(authorization,checklistRequestDto);
     }
+
+    @PostMapping(path="/update", produces={"application/vnd.siren+json","application/problem+json"})
+    public ResponseEntity<?> update(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckListRequestDto checklistRequestDto){
+        return checkListService.update(authorization,checklistRequestDto);
+    }
+
 }

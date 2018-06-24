@@ -56,7 +56,7 @@ public class CheckListService {
         );
     }*/
 
-    @Transactional
+
     public ResponseEntity<?> create(String authorization, CheckListRequestDto checklist_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser=CheckListValidator.validateUser(user);
@@ -71,44 +71,33 @@ public class CheckListService {
                         savedchecklist.getName(),
                         savedchecklist.getCompletionDate())
         );
-
     }
-/*
+
     @Transactional
-    public ResponseEntity<?> update(String authorization, CheckItemRequestDto checkitem_dto){
+    public ResponseEntity<?> update(String authorization, CheckListRequestDto checklist_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
             return ResponseBuilder.buildError(valtUser.problem);
-        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemRequest(checkitem_dto);
-        if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
-        CheckItem checkItem= itemRepository.findById(checkitem_dto.getId());
-        if(checkitem_dto.getState()!=null) {
-            checkItem.setState(checkitem_dto.getState());
-            itemRepository.save(checkItem);
-        }
-        if(checkitem_dto.getName()!=null || checkitem_dto.getDescription()!=null){
-            String newtemplate_name=checkitem_dto.getName()!=null?checkitem_dto.getName():checkItem.getCheckitem_itemtemplate().getName();
-            String newtemplate_description=checkitem_dto.getDescription()!=null?checkitem_dto.getDescription():checkItem.getCheckitem_itemtemplate().getDescription();
-            CheckItemTemplate newitemTemplate=new CheckItemTemplate(newtemplate_name,newtemplate_description,user);
-            CheckItemTemplate saveditemtemplate=itemTemplateRepository.save(newitemTemplate);
-            if(saveditemtemplate==null)
-                return ResponseBuilder.buildError(new InternalServerProblem());
-            checkItem.setCheckitem_itemtemplate(saveditemtemplate);
-            CheckItem savedcheckitem=itemRepository.save(checkItem);
-            if(savedcheckitem==null)
-                return ResponseBuilder.buildError(new InternalServerProblem());
-        }
+        ValidatorResponse valtcheckList=CheckListValidator.validateListRequest(checklist_dto);
+        if(!valtcheckList.isValid)
+            return ResponseBuilder.buildError(valtcheckList.problem);
+        CheckList checklist= checkListRepository.findById(checklist_dto.getId());
+        if(checklist_dto.getName()!=null)
+            checklist.setName(checklist_dto.getName());
+        if(checklist_dto.getCompletionDate()!=null)
+            checklist.setCompletionDate(checklist_dto.getCompletionDate());
+        CheckList updatedchecklist=checkListRepository.save(checklist);
+        if(updatedchecklist==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
+                CheckListSirenBuilder.build(updatedchecklist.getId(),
+                        updatedchecklist.getName(),
+                        updatedchecklist.getCompletionDate())
         );
     }
 
-
+/*
     @Transactional
     public ResponseEntity<?> delete(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
