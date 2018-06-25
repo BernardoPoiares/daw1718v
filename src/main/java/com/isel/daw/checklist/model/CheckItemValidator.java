@@ -28,11 +28,19 @@ public class CheckItemValidator {
         return new ValidatorResponse(true,null);
     }
 
-    public static ValidatorResponse validateItemRequest(CheckItemRequestDto checkitem_dto){
+    public static ValidatorResponse validateItemUpdateRequest(CheckItemRequestDto checkitem_dto){
         if(checkitem_dto==null)
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checkitem_dto.getId()<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
+        if(checkitem_dto.getDescription()==null && checkitem_dto.getName()==null && checkitem_dto.getState()==null)
+            return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,state"));
+        return new ValidatorResponse(true,null);
+    }
+
+    public static ValidatorResponse validateItemCreateRequest(CheckItemRequestDto checkitem_dto){
+        if(checkitem_dto==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checkitem_dto.getDescription()==null && checkitem_dto.getName()==null && checkitem_dto.getState()==null)
             return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,state"));
         return new ValidatorResponse(true,null);

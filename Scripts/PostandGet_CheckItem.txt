@@ -24,9 +24,9 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 {
     "id":1,
-    "name": "do Daw work is going5",
-    "description: "des1",
-    "state": "not" 
+    "name": "do Daw work is going11",
+    "description": "des13242",
+    "state": "umcompleted2" 
 }
 
 DELETE http://localhost:8081/checkItem/delete/1

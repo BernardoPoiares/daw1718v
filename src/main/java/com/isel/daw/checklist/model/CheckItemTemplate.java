@@ -47,6 +47,13 @@ public class CheckItemTemplate implements Serializable {
         this.itemtemplate_user = itemtemplate_user;
     }
 
+    public CheckItemTemplate(String name,String description,CheckListTemplate listTemplate,Users itemtemplate_user){
+        this.name = name;
+        this.description = description;
+        this.itemtemplate_user = itemtemplate_user;
+        this.checkitemtemplate_checklisttemplate=listTemplate;
+    }
+
 /*
     public Set<CheckItem> getCheckItems() {
         return checkItems;

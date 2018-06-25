@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 @Component
 public class CheckListTemplateService {
@@ -29,6 +30,7 @@ public class CheckListTemplateService {
         this.itemTemplateRepository=itemTemplateRepository;
     }
 
+    @Transactional
     public ResponseEntity<?> getListById(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser= CheckListTemplateValidator.validateUser(user);
@@ -117,17 +119,17 @@ public class CheckListTemplateService {
         if(checklisttemplate==null)
             return ResponseBuilder.buildError(new InternalServerProblem());
         for (CheckItemRequestDto checkitem_dto:checklisttemplate_dto.getCheckitems()) {
-            ValidatorResponse valtcheckitem=CheckItemValidator.validateItemRequest(checkitem_dto);
-            if(!valtUser.isValid) {
+            ValidatorResponse valtcheckitem=CheckItemValidator.validateItemCreateRequest(checkitem_dto);
+            if(!valtcheckitem.isValid) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return ResponseBuilder.buildError(valtcheckList.problem);
             }
-            CheckItemTemplate checkitem_saved=itemTemplateRepository.save(new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),user));
+            CheckItemTemplate checkitem_saved=itemTemplateRepository.save(new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),checklisttemplate,user));
             if(checkitem_saved==null){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return ResponseBuilder.buildError(valtcheckList.problem);
             }
-            checklisttemplate.addItemsTemplates(checkitem_saved);
+            //checklisttemplate.addItemsTemplates(checkitem_saved);
         }
         return ResponseBuilder.build(
                 CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),

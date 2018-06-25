@@ -56,6 +56,9 @@ public class CheckItemService implements Service {
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
             return ResponseBuilder.buildError(valtUser.problem);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemCreateRequest(checkitem_dto);
+        if(!valtcheckItem.isValid)
+            return ResponseBuilder.buildError(valtcheckItem.problem);
         CheckItemTemplate newitemTemplate=new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),user);
         CheckItemTemplate saveditemtemplate=itemTemplateRepository.save(newitemTemplate);
         if(saveditemtemplate==null)
@@ -81,7 +84,7 @@ public class CheckItemService implements Service {
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
             return ResponseBuilder.buildError(valtUser.problem);
-        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemRequest(checkitem_dto);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemUpdateRequest(checkitem_dto);
         if(!valtcheckItem.isValid)
             return ResponseBuilder.buildError(valtcheckItem.problem);
         CheckItem checkitem= itemRepository.findById(checkitem_dto.getId());
