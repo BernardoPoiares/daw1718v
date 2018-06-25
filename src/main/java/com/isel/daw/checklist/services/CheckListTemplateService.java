@@ -9,9 +9,11 @@ import com.isel.daw.checklist.repositories.CheckListTemplateRepository;
 import com.isel.daw.checklist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 
+@Component
 public class CheckListTemplateService {
     private final CheckListTemplateRepository listTemplateRepository;
     private final UserRepository userRepository;
@@ -67,8 +69,7 @@ public class CheckListTemplateService {
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
         if(checklisttemplate==null)
             return ResponseBuilder.buildError(new InternalServerProblem());
-        if(checklisttemplate.getName()!=null)
-            checklisttemplate.setName(checklisttemplate_dto.getName());
+        checklisttemplate.setName(checklisttemplate_dto.getName());
         return ResponseBuilder.build(
                 CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
                         checklisttemplate.getName())
