@@ -1,0 +1,18 @@
+{
+  "class": [ "checklisttemplate" ],
+  "properties": {
+    "id":-1,
+    "name": ""
+  },
+  "entities": [
+  ],
+  "actions": [
+    {
+    }
+  ],
+  "links": [
+    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" },
+    { "rel": [ "previous" ], "href": "http://api.x.io/orders/41" },
+    { "rel": [ "next" ], "href": "http://api.x.io/orders/43" }
+  ]
+}

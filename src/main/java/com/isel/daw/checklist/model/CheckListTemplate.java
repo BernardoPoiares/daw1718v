@@ -8,6 +8,7 @@ import java.util.Set;
 @Table(name = "checklist_template")
 public class CheckListTemplate implements Serializable {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -49,6 +50,10 @@ public class CheckListTemplate implements Serializable {
         this.checkLists = checkLists;
     }
 */
+
+    public long getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }

@@ -127,10 +127,15 @@ public class CheckItemService implements Service {
             return ResponseBuilder.buildError(valtcheckItem.problem);
         long delt_item_res= itemRepository.deleteById(checkItem.getId());
         if(delt_item_res==0)
-            return ResponseBuilder.buildError(new InternalServerProblem());         //todo:check transactional better
+            return ResponseBuilder.buildError(new InternalServerProblem());
         long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
-        if(numbTempuses==0)
-            itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
+        if(numbTempuses==0) {
+            long delt_itemtemp_res=itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
+            if(delt_itemtemp_res==0){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return ResponseBuilder.buildError(new InternalServerProblem());
+            }
+        }
         //todo:change response
         return ResponseBuilder.build(
                 CheckItemSirenBuilder.build(checkItem.getId(),
