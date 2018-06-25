@@ -24,8 +24,8 @@ public class CheckList implements Serializable {
     private Users list_user;
 
     @ManyToOne
-    @JoinColumn(name="checklist_listtemplate")
-    private CheckListTemplate checkListTemplate;
+    @JoinColumn(name="checklist_checklisttemplate")
+    private CheckListTemplate checklist_checklisttemplate;
 
     @ManyToMany
     @JoinTable(name = "checkitems_in_checklists",

@@ -26,13 +26,13 @@ public class CheckItemTemplate implements Serializable {
     private Users itemtemplate_user;
 
 
-    @OneToMany
-    @JoinColumn(name="checkitem_itemtemplate")
+    @OneToMany(mappedBy="checkitem_itemtemplate")
     private Set<CheckItem> checkItems;
 
 
-    @ManyToMany(mappedBy="itemsTemplates")
-    private Set<CheckListTemplate> checkListTemplates;
+    @ManyToOne
+    @JoinColumn(name="checkitemtemplate_checklisttemplate")
+    private CheckListTemplate checkitemtemplate_checklisttemplate;
 
     protected CheckItemTemplate() {}
 
@@ -96,12 +96,12 @@ public class CheckItemTemplate implements Serializable {
         this.checkItems = checkItems;
     }
 
-    public Set<CheckListTemplate> getCheckListTemplates() {
-        return checkListTemplates;
+    public CheckListTemplate getCheckitemtemplate_checklisttemplate() {
+        return checkitemtemplate_checklisttemplate;
     }
 
-    public void setCheckListTemplates(Set<CheckListTemplate> checkListTemplates) {
-        this.checkListTemplates = checkListTemplates;
+    public void setCheckitemtemplate_checklisttemplate(CheckListTemplate checkListTemplate) {
+        this.checkitemtemplate_checklisttemplate = checkListTemplate;
     }
 /*
     public List<CheckItem> getCheckLists() {

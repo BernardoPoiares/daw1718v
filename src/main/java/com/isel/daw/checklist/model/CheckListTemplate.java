@@ -21,15 +21,15 @@ public class CheckListTemplate implements Serializable {
     @JoinColumn(name="listtemplate_user")
     private Users listtemplate_user;
 
-    @OneToMany
-    @JoinColumn(name="checklist_listtemplate")
-    private Set<CheckList> checklist_listtemplate;
+    @OneToMany(mappedBy="checklist_checklisttemplate")
+    private Set<CheckList> checklist_checklisttemplate;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(name = "templateitems_in_templatelist",
             joinColumns = { @JoinColumn(name = "listtemplate_id")  },
-            inverseJoinColumns = { @JoinColumn(name = "itemtemplate_id")})
-    private Set<CheckItemTemplate> itemsTemplates ;
+            inverseJoinColumns = { @JoinColumn(name = "itemtemplate_id")})*/
+    @OneToMany(mappedBy="checkitemtemplate_checklisttemplate")
+    private Set<CheckItemTemplate> checkitemtemplate_checklisttemplate ;
 
 
     protected CheckListTemplate(){}
@@ -78,24 +78,29 @@ public class CheckListTemplate implements Serializable {
         this.listtemplate_user = listtemplate_user;
     }
 
-    public Set<CheckList> getChecklist_listtemplate() {
-        return checklist_listtemplate;
+    public Set<CheckList> getChecklist_checklisttemplate() {
+        return checklist_checklisttemplate;
     }
 
-    public void setChecklist_listtemplate(Set<CheckList> checklist_listtemplate) {
-        this.checklist_listtemplate = checklist_listtemplate;
+    public void setChecklist_checklisttemplate(Set<CheckList> checklist_listtemplate) {
+        this.checklist_checklisttemplate = checklist_listtemplate;
     }
 
 
 
-    public Set<CheckItemTemplate> getItemsTemplates() {
-        return itemsTemplates;
+
+    public Set<CheckItemTemplate> getCheckitemtemplate_checklisttemplate() {
+        return checkitemtemplate_checklisttemplate;
     }
 
-    public void setItemsTemplates(Set<CheckItemTemplate> itemsTemplates) {
-        this.itemsTemplates = itemsTemplates;
+    public void setCheckitemtemplate_checklisttemplate(Set<CheckItemTemplate> checkitemtemplate_checklisttemplate) {
+        this.checkitemtemplate_checklisttemplate = checkitemtemplate_checklisttemplate;
     }
-/*
+
+    public void addItemsTemplates(CheckItemTemplate itemTemplate){
+        this.checkitemtemplate_checklisttemplate.add(itemTemplate);
+    }
+    /*
     public Set<CheckListTemplate> getItensTemplates() {
         return itensTemplates;
     }

@@ -33,6 +33,11 @@ public class CheckListTemplateController {
         return checkListTemplateService.update(authorization, checklisttemplate_ReqDto);
     }
 
+    @PostMapping(path = "/addCheckItems", produces = {"application/vnd.siren+json", "application/problem+json"})
+    public ResponseEntity<?> addCheckItemsTemplates(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckListTemplateRequestDto checklisttemplate_ReqDto) {
+        return checkListTemplateService.addCheckItemsTemplate(authorization, checklisttemplate_ReqDto);
+    }
+
     @DeleteMapping(path = "/{id}", produces = {"application/vnd.siren+json", "application/problem+json"})
     public ResponseEntity<?> delete(@RequestHeader(value = "Authorization") String authorization, @PathVariable("id") long id) {
         return checkListTemplateService.delete(authorization, id);

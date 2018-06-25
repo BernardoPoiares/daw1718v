@@ -1,10 +1,14 @@
 package com.isel.daw.checklist.model.RequestsDTO;
 
+import java.util.List;
+
 public class CheckListTemplateRequestDto {
 
     private long id;
 
     private String name;
+
+    private CheckItemRequestDto[] checkitems;
 
     public long getId() {
         return id;
@@ -14,4 +18,8 @@ public class CheckListTemplateRequestDto {
         return name;
     }
 
+
+    public CheckItemRequestDto[] getCheckitems() {
+        return checkitems;
+    }
 }
