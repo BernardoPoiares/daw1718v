@@ -1,18 +1,20 @@
 package com.isel.daw.checklist.services;
 
+import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.*;
 import com.isel.daw.checklist.Service;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
+import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemSirenBuilder;
+import com.isel.daw.checklist.model.Validators.CheckItemValidator;
 import com.isel.daw.checklist.problems.InternalServerProblem;
-import com.isel.daw.checklist.problems.InvalidAuthenticationProblem;
-import com.isel.daw.checklist.problems.InvalidParameterProblem;
 import com.isel.daw.checklist.repositories.CheckItemRepository;
 import com.isel.daw.checklist.repositories.CheckItemTemplateRepository;
 import com.isel.daw.checklist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -33,63 +35,52 @@ public class CheckItemService implements Service {
         this.itemTemplateRepository=itemTemplateService;
     }
 
-    public ResponseEntity<?> getItemById(String authorization,long id){
+    public ServiceResponse<CheckItem> getItemById(String authorization,long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
+        ValidatorResponse valtUser= CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtUser.problem);
+            return new ServiceResponse<>(null,valtUser.problem);
         CheckItem checkItem= itemRepository.findById(id);
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
        if(!valtcheckItem.isValid)
-           return ResponseBuilder.buildError(valtcheckItem.problem);
-      return ResponseBuilder.build(
-              CheckItemSirenBuilder.build(checkItem.getId(),
-                checkItem.getCheckitem_itemtemplate().getName(),
-                checkItem.getCheckitem_itemtemplate().getDescription(),
-                checkItem.getState())
-            );
+           return new ServiceResponse<>(null,valtcheckItem.problem);
+       return new ServiceResponse<>(checkItem,null);
     }
 
     @Transactional
-    public ResponseEntity<?> create(String authorization, CheckItemRequestDto checkitem_dto){
+    public ServiceResponse<CheckItem> create(String authorization, CheckItemRequestDto checkitem_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtUser.problem);
+            return new ServiceResponse<>(null,valtUser.problem);
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemCreateRequest(checkitem_dto);
         if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
+            return new ServiceResponse<>(null,valtcheckItem.problem);
         CheckItemTemplate newitemTemplate=new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),user);
         CheckItemTemplate saveditemtemplate=itemTemplateRepository.save(newitemTemplate);
         if(saveditemtemplate==null)
-            return ResponseBuilder.buildError(new InternalServerProblem());
+            return new ServiceResponse<>(null,new InternalServerProblem());
         CheckItem newitem=new CheckItem("uncompleted",saveditemtemplate);
         CheckItem savedcheckitem=itemRepository.save(newitem);
         if(savedcheckitem==null) {
             itemTemplateRepository.deleteById(saveditemtemplate.getId());
-            return ResponseBuilder.buildError(new InternalServerProblem());
+            return new ServiceResponse<>(null, new InternalServerProblem());
         }
-        return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(savedcheckitem.getId(),
-                        savedcheckitem.getCheckitem_itemtemplate().getName(),
-                        savedcheckitem.getCheckitem_itemtemplate().getDescription(),
-                        savedcheckitem.getState())
-        );
-
+        return new ServiceResponse<>(savedcheckitem,null);
     }
 
     @Transactional
-    public ResponseEntity<?> update(String authorization, CheckItemRequestDto checkitem_dto){
+    public ServiceResponse<CheckItem> update(String authorization, CheckItemRequestDto checkitem_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtUser.problem);
+            return new ServiceResponse<>(null,valtUser.problem);
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemUpdateRequest(checkitem_dto);
         if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
+            return new ServiceResponse<>(null,valtcheckItem.problem);
         CheckItem checkitem= itemRepository.findById(checkitem_dto.getId());
         if(checkitem==null)
-            return ResponseBuilder.buildError(new InternalServerProblem());
+            return new ServiceResponse<>(null,new InternalServerProblem());
         if(checkitem_dto.getState()!=null)
             checkitem.setState(checkitem_dto.getState());
         if(checkitem_dto.getName()!=null || checkitem_dto.getDescription()!=null){
@@ -100,7 +91,7 @@ public class CheckItemService implements Service {
                 itemtemplatetosave=itemTemplateRepository.save(itemtemplatetosave);
                 if(itemtemplatetosave==null){
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                    return ResponseBuilder.buildError(new InternalServerProblem());
+                    return new ServiceResponse<>(null,new InternalServerProblem());
                 }
             }
             if(checkitem_dto.getName()!=null)
@@ -109,43 +100,34 @@ public class CheckItemService implements Service {
                 itemtemplatetosave.setDescription(checkitem_dto.getDescription());
             checkitem.setCheckitem_itemtemplate(itemtemplatetosave);
         }
-        return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkitem.getId(),
-                        checkitem.getCheckitem_itemtemplate().getName(),
-                        checkitem.getCheckitem_itemtemplate().getDescription(),
-                        checkitem.getState())
-        );
+        return new ServiceResponse<>(checkitem,null);
+
     }
 
 
     @Transactional
-    public ResponseEntity<?> delete(String authorization, long id){
+    public ServiceResponse<CheckItem> delete(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
         if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtUser.problem);
+            return new ServiceResponse<>(null,valtUser.problem);
         CheckItem checkItem= itemRepository.findById(id);
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemById(checkItem,id,user);
         if(!valtcheckItem.isValid)
-            return ResponseBuilder.buildError(valtcheckItem.problem);
+            return new ServiceResponse<>(null,valtcheckItem.problem);
         long delt_item_res= itemRepository.deleteById(checkItem.getId());
         if(delt_item_res==0)
-            return ResponseBuilder.buildError(new InternalServerProblem());
+            return new ServiceResponse<>(null,new InternalServerProblem());
         long numbTempuses=itemRepository.countByTemplateId(checkItem.getCheckitem_itemtemplate().getId());
         if(numbTempuses==0) {
             long delt_itemtemp_res=itemTemplateRepository.deleteById(checkItem.getCheckitem_itemtemplate().getId());
             if(delt_itemtemp_res==0){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return ResponseBuilder.buildError(new InternalServerProblem());
+                return new ServiceResponse<>(null,new InternalServerProblem());
             }
         }
         //todo:change response
-        return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
-        );
+        return new ServiceResponse<>(checkItem,null);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.isel.daw.checklist.services;
 
-import com.isel.daw.checklist.model.CheckItemTemplate;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.repositories.CheckItemTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;

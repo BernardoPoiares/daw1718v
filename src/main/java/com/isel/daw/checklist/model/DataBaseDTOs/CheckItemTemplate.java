@@ -1,7 +1,5 @@
-package com.isel.daw.checklist.model;
+package com.isel.daw.checklist.model.DataBaseDTOs;
 
-
-import com.isel.daw.checklist.model.Users;
 
 import javax.persistence.*;
 import java.io.Serializable;

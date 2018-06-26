@@ -1,7 +1,6 @@
 package com.isel.daw.checklist.model.RequestsDTO;
 
-import com.isel.daw.checklist.model.CheckListTemplate;
-import com.isel.daw.checklist.model.Users;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 
 import java.util.Date;
 
@@ -15,6 +14,9 @@ public class CheckListRequestDto {
     private Date completionDate;
 
     private CheckListTemplate checkListTemplate;
+
+
+    private CheckItemRequestDto[] checkitems;
 
     public long getId() {
         return id;
@@ -32,5 +34,9 @@ public class CheckListRequestDto {
         return checkListTemplate;
     }
 
+
+    public CheckItemRequestDto[] getCheckitems() {
+        return checkitems;
+    }
 
 }

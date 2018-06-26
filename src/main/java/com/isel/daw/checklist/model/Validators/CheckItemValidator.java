@@ -1,18 +1,17 @@
-package com.isel.daw.checklist.model;
+package com.isel.daw.checklist.model.Validators;
 
 import com.isel.daw.checklist.ValidatorResponse;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
+import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.problems.InvalidAuthenticationProblem;
 import com.isel.daw.checklist.problems.InvalidMultiParameterProblem;
 import com.isel.daw.checklist.problems.InvalidParameterProblem;
 import com.isel.daw.checklist.problems.NotFoundProblem;
-import org.springframework.http.HttpStatus;
-
-import java.lang.Error;
 
 public class CheckItemValidator {
 
-    public static ValidatorResponse validateItemById(CheckItem checkItem, long id,Users user){
+    public static ValidatorResponse validateItemById(CheckItem checkItem, long id, Users user){
         if(user==null)
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checkItem==null || !(checkItem.getCheckitem_itemtemplate().getItemTemplate_user().getUserName().equals(user.getUserName()))) {

@@ -1,10 +1,10 @@
-package com.isel.daw.checklist.model;
+package com.isel.daw.checklist.model.Validators;
 
 import com.isel.daw.checklist.ValidatorResponse;
-import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
+import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.problems.InvalidAuthenticationProblem;
-import com.isel.daw.checklist.problems.InvalidMultiParameterProblem;
 import com.isel.daw.checklist.problems.InvalidParameterProblem;
 import com.isel.daw.checklist.problems.NotFoundProblem;
 
@@ -17,7 +17,7 @@ public class CheckListTemplateValidator {
     }
 
 
-    public static ValidatorResponse validateListTemplateById(CheckListTemplate checkListTemplate, long id,Users user){
+    public static ValidatorResponse validateListTemplateById(CheckListTemplate checkListTemplate, long id, Users user){
         if(user==null)
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checkListTemplate==null || !(checkListTemplate.getListtemplate_user().getUserName().equals(user.getUserName()))) {

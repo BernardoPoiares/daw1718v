@@ -1,7 +1,6 @@
 package com.isel.daw.checklist.repositories;
 
-import com.isel.daw.checklist.model.CheckList;
-import com.isel.daw.checklist.model.CheckListTemplate;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CheckListTemplateRepository extends JpaRepository<CheckListTemplate,Integer> {

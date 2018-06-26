@@ -1,9 +1,7 @@
 package com.isel.daw.checklist.repositories;
 
 
-import com.isel.daw.checklist.model.CheckItem;
-import com.isel.daw.checklist.model.CheckList;
-import com.isel.daw.checklist.model.Users;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

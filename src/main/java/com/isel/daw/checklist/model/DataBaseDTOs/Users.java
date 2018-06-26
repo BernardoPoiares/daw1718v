@@ -1,5 +1,9 @@
-package com.isel.daw.checklist.model;
+package com.isel.daw.checklist.model.DataBaseDTOs;
 
+
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 
 import javax.persistence.*;
 import java.io.Serializable;

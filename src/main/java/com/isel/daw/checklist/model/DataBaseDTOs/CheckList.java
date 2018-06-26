@@ -1,4 +1,4 @@
-package com.isel.daw.checklist.model;
+package com.isel.daw.checklist.model.DataBaseDTOs;
 
 
 import javax.persistence.*;
