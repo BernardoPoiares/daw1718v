@@ -1,70 +1,59 @@
 package com.isel.daw.checklist.services;
 
+import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
-import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
-import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
-import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
-import com.isel.daw.checklist.model.DataBaseDTOs.Users;
+import com.isel.daw.checklist.model.DataBaseDTOs.*;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemValidator;
 import com.isel.daw.checklist.model.Validators.CheckListValidator;
 import com.isel.daw.checklist.problems.InternalServerProblem;
-import com.isel.daw.checklist.repositories.CheckItemRepository;
-import com.isel.daw.checklist.repositories.CheckListRepository;
-import com.isel.daw.checklist.repositories.CheckListTemplateRepository;
-import com.isel.daw.checklist.repositories.UserRepository;
+import com.isel.daw.checklist.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 public class CheckList_CheckItemServive {
 
-    private final CheckListRepository checkListRepository;
+    private final CheckListService checkListService;
+    private final CheckItemService checkItemService;
     private final UserRepository userRepository;
     private final CheckItemRepository checkItemRepository;
+    private final CheckItems_In_ChecklistsRepository ckits_in_ckltRepository;
 
 
     @Autowired
-    public CheckList_CheckItemServive(CheckListRepository listRepository, UserRepository userRepository,CheckItemRepository checkItemRepository){
-        this.checkListRepository=listRepository;
+    public CheckList_CheckItemServive(CheckListService checkListService,CheckItemService  checkItemService,UserRepository userRepository,CheckItemRepository checkItemRepository,CheckItems_In_ChecklistsRepository ckits_in_ckltRepository){
+        this.checkListService=checkListService;
+        this.checkItemService=checkItemService;
         this.userRepository=userRepository;
         this.checkItemRepository=checkItemRepository;
+        this.ckits_in_ckltRepository=ckits_in_ckltRepository;
     }
 
 
     @Transactional
-    public ResponseEntity<?> addCheckItems(String authorization, CheckListRequestDto checklist_dto){
-        Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckListValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtUser.problem);
-        ValidatorResponse valtcheckList=CheckListValidator.validateListAddCheckItemsRequest(checklist_dto);
-        if(!valtUser.isValid)
-            return ResponseBuilder.buildError(valtcheckList.problem);
-        CheckList checklist= checkListRepository.findById(checklist_dto.getId());
-        if(checklist==null)
-            return ResponseBuilder.buildError(new InternalServerProblem());
-        for (CheckItemRequestDto checkitem_dto:checklist_dto.getCheckitems()) {
-            ValidatorResponse valtcheckitem= CheckItemValidator.validateItemCreateRequest(checkitem_dto);
-            if(!valtcheckitem.isValid) {
+    public ServiceResponse<?> addCheckItems(String authorization, CheckListRequestDto checklist_dto){
+        ServiceResponse<CheckList> checklist_resp=checkListService.getListById(authorization,checklist_dto.getId());
+        if(checklist_resp.getError()!=null)
+            return checklist_resp;
+        for(CheckItemRequestDto checkitem_dto:checklist_dto.getCheckitems()){
+            ServiceResponse<CheckItem> checkitem_resp=checkItemService.getItemById(authorization,checklist_dto.getId());
+            if(checklist_resp.getError()!=null)
+                return checklist_resp;
+            long resp=ckits_in_ckltRepository.save(new CheckItem_CheckList(checkitem_resp.getResponse(),checklist_resp.getResponse());
+            if(resp==0){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return ResponseBuilder.buildError(valtcheckList.problem);
-            }
-            CheckItem checkitem_saved=checkItemRepository.save(new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),checklisttemplate,user));
-            if(checkitem_saved==null){
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return ResponseBuilder.buildError(new InternalServerProblem());
+                return new ServiceResponse<>(null,new InternalServerProblem());
             }
         }
-        return ResponseBuilder.build(
-                CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
-                        checklisttemplate.getName())
-        );
+        //todo:Change Response
+        return new ServiceResponse<>(checklist_resp.getResponse(),null);
     }
 }
