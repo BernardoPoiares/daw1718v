@@ -31,82 +31,83 @@ public class CheckListService {
 
 
     @Autowired
-    public CheckListService(CheckListRepository listRepository, UserRepository userRepository, CheckListTemplateRepository listTemplateService,CheckItemRepository checkItemRepository){
-        this.checkListRepository=listRepository;
-        this.userRepository=userRepository;
-        this.listTemplateRepository=listTemplateService;
-        this.checkItemRepository=checkItemRepository;
+    public CheckListService(CheckListRepository listRepository, UserRepository userRepository, CheckListTemplateRepository listTemplateService, CheckItemRepository checkItemRepository) {
+        this.checkListRepository = listRepository;
+        this.userRepository = userRepository;
+        this.listTemplateRepository = listTemplateService;
+        this.checkItemRepository = checkItemRepository;
     }
 
-    public ServiceResponse<CheckList> getListById(String authorization, long id){
-        Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckListValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        CheckList checklist= checkListRepository.findById(id);
-        if(checklist==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        ValidatorResponse valtcheckList=CheckListValidator.validateListById(checklist,id,user);
-        if(!valtcheckList.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
-        return new ServiceResponse<>(checklist,null);
+    public ServiceResponse<CheckList> getListById(String authorization, long id) {
+        Users user = userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser = CheckListValidator.validateUser(user);
+        if (!valtUser.isValid)
+            return new ServiceResponse<>(null, valtUser.problem);
+        CheckList checklist = checkListRepository.findById(id);
+        if (checklist == null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        ValidatorResponse valtcheckList = CheckListValidator.validateListById(checklist, id, user);
+        if (!valtcheckList.isValid)
+            return new ServiceResponse<>(null, valtcheckList.problem);
+        return new ServiceResponse<>(checklist, null);
 
     }
 
 
-    public ServiceResponse<CheckList> create(String authorization, CheckListRequestDto checklist_dto){
-        Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        CheckList newlist=new CheckList(checklist_dto.getName(),user,checklist_dto.getCompletionDate());
-        CheckList savedchecklist=checkListRepository.save(newlist);
-        if(savedchecklist==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        return  new ServiceResponse<>(savedchecklist,null);
+    public ServiceResponse<CheckList> create(String authorization, CheckListRequestDto checklist_dto) {
+        Users user = userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser = CheckListValidator.validateUser(user);
+        if (!valtUser.isValid)
+            return new ServiceResponse<>(null, valtUser.problem);
+        CheckList newlist = new CheckList(checklist_dto.getName(), user, checklist_dto.getCompletionDate());
+        CheckList savedchecklist = checkListRepository.save(newlist);
+        if (savedchecklist == null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        return new ServiceResponse<>(savedchecklist, null);
     }
 
     @Transactional
-    public ServiceResponse<CheckList> update(String authorization, CheckListRequestDto checklist_dto){
-        Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckItemValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        ValidatorResponse valtcheckList=CheckListValidator.validateListRequest(checklist_dto);
-        if(!valtcheckList.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
-        CheckList checklist= checkListRepository.findById(checklist_dto.getId());
-        if(checklist==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        if(checklist_dto.getName()!=null)
+    public ServiceResponse<CheckList> update(String authorization, CheckListRequestDto checklist_dto) {
+        Users user = userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser = CheckItemValidator.validateUser(user);
+        if (!valtUser.isValid)
+            return new ServiceResponse<>(null, valtUser.problem);
+        ValidatorResponse valtcheckList = CheckListValidator.validateListRequest(checklist_dto);
+        if (!valtcheckList.isValid)
+            return new ServiceResponse<>(null, valtcheckList.problem);
+        CheckList checklist = checkListRepository.findById(checklist_dto.getId());
+        if (checklist == null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        if (checklist_dto.getName() != null)
             checklist.setName(checklist_dto.getName());
-        if(checklist_dto.getCompletionDate()!=null)
+        if (checklist_dto.getCompletionDate() != null)
             checklist.setCompletionDate(checklist_dto.getCompletionDate());
-        CheckList updatedchecklist=checkListRepository.save(checklist);
-        if(updatedchecklist==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        return new ServiceResponse<>(updatedchecklist,null);
+        CheckList updatedchecklist = checkListRepository.save(checklist);
+        if (updatedchecklist == null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        return new ServiceResponse<>(updatedchecklist, null);
     }
 
 
     @Transactional
-    public ServiceResponse<CheckList> delete(String authorization, long id){
-        Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        CheckList checklist= checkListRepository.findById(id);
-        if(checklist==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        ValidatorResponse valtcheckList=CheckListValidator.validateListById(checklist,id,user);
-        if(!valtcheckList.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
-        long delt_list_res= checkListRepository.deleteById(id);
-        if(delt_list_res==0)
-            return new ServiceResponse<>(null,new InternalServerProblem());         //todo:check transactional better
+    public ServiceResponse<CheckList> delete(String authorization, long id) {
+        Users user = userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser = CheckListValidator.validateUser(user);
+        if (!valtUser.isValid)
+            return new ServiceResponse<>(null, valtUser.problem);
+        CheckList checklist = checkListRepository.findById(id);
+        if (checklist == null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        ValidatorResponse valtcheckList = CheckListValidator.validateListById(checklist, id, user);
+        if (!valtcheckList.isValid)
+            return new ServiceResponse<>(null, valtcheckList.problem);
+        long delt_list_res = checkListRepository.deleteById(id);
+        if (delt_list_res == 0)
+            return new ServiceResponse<>(null, new InternalServerProblem());         //todo:check transactional better
         //todo:change response
-        return new ServiceResponse<>(checklist,null);
+        return new ServiceResponse<>(checklist, null);
     }
+}
 
 
 /*
@@ -140,7 +141,7 @@ public class CheckListService {
                 CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
                         checklisttemplate.getName())
         );
-    }*/
+    }
 
 
-}
+}*/

@@ -37,7 +37,7 @@ public class CheckListValidator {
             return new ValidatorResponse(false,new InvalidMultiParameterProblem("name,completionDate"));
         return new ValidatorResponse(true,null);
     }
-
+/*
     public static ValidatorResponse validateListAddCheckItemsRequest(CheckListRequestDto checklist_dto){
         if(checklist_dto==null)
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
@@ -47,5 +47,5 @@ public class CheckListValidator {
             return new ValidatorResponse(false,new InvalidParameterProblem("checkitems","'checkitems' must be have items."));
         return new ValidatorResponse(true,null);
     }
-
+*/
 }

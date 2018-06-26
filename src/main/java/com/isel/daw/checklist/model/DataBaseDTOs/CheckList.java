@@ -88,6 +88,10 @@ public class CheckList implements Serializable {
         this.checkItems = checkItems;
     }
 
+    public void addCheckItems(CheckItem checkItem){
+        this.checkItems.add(checkItem);
+    }
+
 /*
     public Set<CheckItem> getCheckItems() {
         return checkItems;

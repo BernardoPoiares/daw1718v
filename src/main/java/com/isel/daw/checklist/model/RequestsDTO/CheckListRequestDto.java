@@ -15,9 +15,6 @@ public class CheckListRequestDto {
 
     private CheckListTemplate checkListTemplate;
 
-
-    private CheckItemRequestDto[] checkitems;
-
     public long getId() {
         return id;
     }
@@ -32,11 +29,6 @@ public class CheckListRequestDto {
 
     public CheckListTemplate getCheckListTemplate() {
         return checkListTemplate;
-    }
-
-
-    public CheckItemRequestDto[] getCheckitems() {
-        return checkitems;
     }
 
 }
