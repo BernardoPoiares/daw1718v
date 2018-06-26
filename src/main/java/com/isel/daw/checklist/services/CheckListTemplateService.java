@@ -127,9 +127,8 @@ public class CheckListTemplateService {
             CheckItemTemplate checkitem_saved=itemTemplateRepository.save(new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),checklisttemplate,user));
             if(checkitem_saved==null){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return ResponseBuilder.buildError(valtcheckList.problem);
+                return ResponseBuilder.buildError(new InternalServerProblem());
             }
-            //checklisttemplate.addItemsTemplates(checkitem_saved);
         }
         return ResponseBuilder.build(
                 CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
@@ -137,4 +136,35 @@ public class CheckListTemplateService {
         );
     }
 
+
+    @Transactional
+    public ResponseEntity<?> deleteCheckItemsTemplate(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser=CheckListTemplateValidator.validateUser(user);
+        if(!valtUser.isValid)
+            return ResponseBuilder.buildError(valtUser.problem);
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplatetoDeleteItemsRequest(checklisttemplate_dto);
+        if(!valtUser.isValid)
+            return ResponseBuilder.buildError(valtcheckList.problem);
+        CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
+        if(checklisttemplate==null)
+            return ResponseBuilder.buildError(new InternalServerProblem());
+        for (CheckItemRequestDto checkitem_dto:checklisttemplate_dto.getCheckitems()) { //todo:create itemtemplaterequestdto
+            CheckItemTemplate checkItemTemplate= itemTemplateRepository.getById(checkitem_dto.getId());
+            ValidatorResponse valtcheckitem=CheckItemTemplateValidator.validateDeltReqTempList(checkItemTemplate,user,checklisttemplate);
+            if(!valtcheckitem.isValid) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return ResponseBuilder.buildError(valtcheckList.problem);
+            }
+            long del_res=itemTemplateRepository.deleteById(checkItemTemplate.getId());
+            if(del_res==0){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return ResponseBuilder.buildError(new InternalServerProblem());
+            }
+        }
+        return ResponseBuilder.build(
+                CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
+                        checklisttemplate.getName())
+        );
+    }
 }

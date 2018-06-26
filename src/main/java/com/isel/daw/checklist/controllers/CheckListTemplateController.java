@@ -43,4 +43,8 @@ public class CheckListTemplateController {
         return checkListTemplateService.delete(authorization, id);
     }
 
+    @DeleteMapping(path = "/checkItemsTemplates", produces = {"application/vnd.siren+json", "application/problem+json"})
+    public ResponseEntity<?> deleteitemsTemplates(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckListTemplateRequestDto checklisttemplate_ReqDto) {
+        return checkListTemplateService.deleteCheckItemsTemplate(authorization, checklisttemplate_ReqDto);
+    }
 }
