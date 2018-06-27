@@ -8,6 +8,7 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemSirenBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemValidator;
 import com.isel.daw.checklist.problems.InternalServerProblem;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.transaction.Transactional;
+import javax.xml.validation.Validator;
 
 @Component
 public class CheckItemService implements Service {
@@ -56,7 +58,7 @@ public class CheckItemService implements Service {
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItemCreateRequest(checkitem_dto);
         if(!valtcheckItem.isValid)
             return new ServiceResponse<>(null,valtcheckItem.problem);
-        CheckItemTemplate newitemTemplate=new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),user);
+        CheckItemTemplate newitemTemplate=new CheckItemTemplate(checkitem_dto.getCheckitemtemplate().getName(),checkitem_dto.getCheckitemtemplate().getDescription(),user);
         CheckItemTemplate saveditemtemplate=itemTemplateRepository.save(newitemTemplate);
         if(saveditemtemplate==null)
             return new ServiceResponse<>(null,new InternalServerProblem());
@@ -66,6 +68,22 @@ public class CheckItemService implements Service {
             itemTemplateRepository.deleteById(saveditemtemplate.getId());
             return new ServiceResponse<>(null, new InternalServerProblem());
         }
+        return new ServiceResponse<>(savedcheckitem,null);
+    }
+
+    @Transactional
+    public ServiceResponse<CheckItem> createByTemplate(String authorization, CheckItemTemplate checkitemtemplate){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser=CheckItemValidator.validateUser(user);
+        if(!valtUser.isValid)
+            return new ServiceResponse<>(null,valtUser.problem);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItemTemplate(checkitemtemplate);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        CheckItem newitem=new CheckItem("uncompleted",checkitemtemplate);
+        CheckItem savedcheckitem=itemRepository.save(newitem);
+        if(savedcheckitem==null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
         return new ServiceResponse<>(savedcheckitem,null);
     }
 
@@ -83,21 +101,22 @@ public class CheckItemService implements Service {
             return new ServiceResponse<>(null,new InternalServerProblem());
         if(checkitem_dto.getState()!=null)
             checkitem.setState(checkitem_dto.getState());
-        if(checkitem_dto.getName()!=null || checkitem_dto.getDescription()!=null){
+        CheckItemTemplateRequestDto ckit_dto=checkitem_dto.getCheckitemtemplate();
+        if(ckit_dto!=null){
             CheckItemTemplate itemtemplatetosave=checkitem.getCheckitem_itemtemplate();
-            long numbTempuses=itemRepository.countByTemplateId(checkitem.getCheckitem_itemtemplate().getId());
+            long numbTempuses=itemRepository.countByTemplateId(ckit_dto.getId());
             if(numbTempuses>1) {
-                itemtemplatetosave = new CheckItemTemplate(itemtemplatetosave.getName(), itemtemplatetosave.getDescription(), itemtemplatetosave.getItemTemplate_user()); // has to create a new one because is use by more items
+                itemtemplatetosave = new CheckItemTemplate(ckit_dto.getName(), ckit_dto.getDescription(), itemtemplatetosave.getItemTemplate_user()); // has to create a new one because is use by more items
                 itemtemplatetosave=itemTemplateRepository.save(itemtemplatetosave);
                 if(itemtemplatetosave==null){
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                     return new ServiceResponse<>(null,new InternalServerProblem());
                 }
             }
-            if(checkitem_dto.getName()!=null)
-                itemtemplatetosave.setName(checkitem_dto.getName());
-            if(checkitem_dto.getDescription()!=null)
-                itemtemplatetosave.setDescription(checkitem_dto.getDescription());
+            if(ckit_dto.getName()!=null)
+                itemtemplatetosave.setName(ckit_dto.getName());
+            if(ckit_dto.getDescription()!=null)
+                itemtemplatetosave.setDescription(ckit_dto.getDescription());
             checkitem.setCheckitem_itemtemplate(itemtemplatetosave);
         }
         return new ServiceResponse<>(checkitem,null);

@@ -1,29 +1,21 @@
 package com.isel.daw.checklist.model.RequestsDTO;
 
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
+
 import javax.persistence.Column;
 
 public class CheckItemRequestDto {
 
     private int id;
-
-    private String name;
-
-    private String description;
-
+    private CheckItemTemplateRequestDto checkitemtemplate;
     private String state;
-
-
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 
     public int getId() {
         return id;
+    }
+
+    public CheckItemTemplateRequestDto getCheckitemtemplate() {
+        return checkitemtemplate;
     }
 
     public String getState() {

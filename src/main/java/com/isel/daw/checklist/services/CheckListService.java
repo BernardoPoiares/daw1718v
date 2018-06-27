@@ -59,7 +59,7 @@ public class CheckListService {
         ValidatorResponse valtUser = CheckListValidator.validateUser(user);
         if (!valtUser.isValid)
             return new ServiceResponse<>(null, valtUser.problem);
-        CheckList newlist = new CheckList(checklist_dto.getName(), user, checklist_dto.getCompletionDate());
+        CheckList newlist = new CheckList(checklist_dto.getName(), user, checklist_dto.getCompletionDate(),checklist_dto.getCheckListTemplate());
         CheckList savedchecklist = checkListRepository.save(newlist);
         if (savedchecklist == null)
             return new ServiceResponse<>(null, new InternalServerProblem());

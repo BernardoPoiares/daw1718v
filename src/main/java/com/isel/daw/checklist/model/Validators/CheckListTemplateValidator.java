@@ -42,7 +42,7 @@ public class CheckListTemplateValidator {
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checklisttemplate_dto.getId()<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
-        if(checklisttemplate_dto.getCheckitems()==null)
+        if(checklisttemplate_dto.getCheckitemstemplates()==null)
             return new ValidatorResponse(false,new InvalidParameterProblem("checkitems",null));
         return new ValidatorResponse(true,null);
     }
@@ -52,7 +52,7 @@ public class CheckListTemplateValidator {
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checklisttemplate_dto.getId()<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
-        if(checklisttemplate_dto.getCheckitems()==null)
+        if(checklisttemplate_dto.getCheckitemstemplates()==null)
             return new ValidatorResponse(false,new InvalidParameterProblem("checkitems",null));
         return new ValidatorResponse(true,null);
     }

@@ -2,6 +2,7 @@ package com.isel.daw.checklist.model.Validators;
 
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.problems.InvalidAuthenticationProblem;
@@ -32,7 +33,7 @@ public class CheckItemValidator {
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(checkitem_dto.getId()<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
-        if(checkitem_dto.getDescription()==null && checkitem_dto.getName()==null && checkitem_dto.getState()==null)
+        if(checkitem_dto.getCheckitemtemplate().getDescription()==null && checkitem_dto.getCheckitemtemplate().getName()==null && checkitem_dto.getState()==null)
             return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,state"));
         return new ValidatorResponse(true,null);
     }
@@ -40,8 +41,16 @@ public class CheckItemValidator {
     public static ValidatorResponse validateItemCreateRequest(CheckItemRequestDto checkitem_dto){
         if(checkitem_dto==null)
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
-        if(checkitem_dto.getDescription()==null && checkitem_dto.getName()==null && checkitem_dto.getState()==null)
+        if(checkitem_dto.getCheckitemtemplate()==null || checkitem_dto.getCheckitemtemplate().getDescription()==null && checkitem_dto.getCheckitemtemplate().getName()==null && checkitem_dto.getState()==null)
             return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,state"));
+        return new ValidatorResponse(true,null);
+    }
+
+    public static ValidatorResponse validateItemTemplate(CheckItemTemplate checkItemTemplate){
+        if(checkItemTemplate==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
+        if(checkItemTemplate.getDescription()==null && checkItemTemplate.getName()==null && checkItemTemplate.getId()<1)
+            return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name,id"));
         return new ValidatorResponse(true,null);
     }
 

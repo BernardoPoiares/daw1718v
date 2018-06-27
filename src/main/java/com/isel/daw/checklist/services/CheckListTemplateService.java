@@ -7,6 +7,7 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateSirenBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemTemplateValidator;
@@ -112,13 +113,13 @@ public class CheckListTemplateService {
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
         if(checklisttemplate==null)
             return new ServiceResponse<>(null,new InternalServerProblem());
-        for (CheckItemRequestDto checkitem_dto:checklisttemplate_dto.getCheckitems()) {
-            ValidatorResponse valtcheckitem= CheckItemValidator.validateItemCreateRequest(checkitem_dto);
+        for (CheckItemTemplateRequestDto checkitemtemplate_dto:checklisttemplate_dto.getCheckitemstemplates()) {
+            ValidatorResponse valtcheckitem= CheckItemTemplateValidator.validateCreateRequest(checkitemtemplate_dto,user);
             if(!valtcheckitem.isValid) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return new ServiceResponse<>(null,valtcheckList.problem);
             }
-            CheckItemTemplate checkitem_saved=itemTemplateRepository.save(new CheckItemTemplate(checkitem_dto.getName(),checkitem_dto.getDescription(),checklisttemplate,user));
+            CheckItemTemplate checkitem_saved=itemTemplateRepository.save(new CheckItemTemplate(checkitemtemplate_dto.getName(),checkitemtemplate_dto.getDescription(),checklisttemplate,user));
             if(checkitem_saved==null){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return new ServiceResponse<>(null,new InternalServerProblem());
@@ -141,8 +142,8 @@ public class CheckListTemplateService {
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
         if(checklisttemplate==null)
             return new ServiceResponse<>(null,new InternalServerProblem());
-        for (CheckItemRequestDto checkitem_dto:checklisttemplate_dto.getCheckitems()) { //todo:create itemtemplaterequestdto
-            CheckItemTemplate checkItemTemplate= itemTemplateRepository.getById(checkitem_dto.getId());
+        for (CheckItemTemplateRequestDto checkitemtemplate_dto:checklisttemplate_dto.getCheckitemstemplates()) { //todo:create itemtemplaterequestdto
+            CheckItemTemplate checkItemTemplate= itemTemplateRepository.getById(checkitemtemplate_dto.getId());
             ValidatorResponse valtcheckitem= CheckItemTemplateValidator.validateDeltReqTempList(checkItemTemplate,user,checklisttemplate);
             if(!valtcheckitem.isValid) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback

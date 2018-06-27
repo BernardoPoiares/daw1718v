@@ -8,7 +8,7 @@ public class CheckListTemplateRequestDto {
 
     private String name;
 
-    private CheckItemRequestDto[] checkitems;
+    private CheckItemTemplateRequestDto[] checkitemstemplates;
 
     public long getId() {
         return id;
@@ -18,8 +18,7 @@ public class CheckListTemplateRequestDto {
         return name;
     }
 
-
-    public CheckItemRequestDto[] getCheckitems() {
-        return checkitems;
+    public CheckItemTemplateRequestDto[] getCheckitemstemplates() {
+        return checkitemstemplates;
     }
 }

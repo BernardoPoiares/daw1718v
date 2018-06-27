@@ -47,6 +47,14 @@ public class CheckList implements Serializable {
         this.list_user = list_user;
         this.completionDate=completionDate;
     }
+
+    public CheckList(String name, Users list_user,Date completionDate,CheckListTemplate checkListTemplate){
+        this.name = name;
+        this.list_user = list_user;
+        this.completionDate=completionDate;
+        this.checklist_checklisttemplate=checkListTemplate;
+    }
+
     public long getId() {
         return id;
     }

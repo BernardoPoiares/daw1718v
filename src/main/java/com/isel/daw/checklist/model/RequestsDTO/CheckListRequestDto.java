@@ -31,4 +31,9 @@ public class CheckListRequestDto {
         return checkListTemplate;
     }
 
+
+    public void setCheckListTemplate(CheckListTemplate checkListTemplate) {
+        this.checkListTemplate = checkListTemplate;
+    }
+
 }
