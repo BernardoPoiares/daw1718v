@@ -92,6 +92,12 @@ public class CheckList implements Serializable {
         this.checkItems.add(checkItem);
     }
 
+    public void removeCheckItems(CheckItem checkItem){
+        this.checkItems.remove(checkItem);
+    }
+
+
+
 /*
     public Set<CheckItem> getCheckItems() {
         return checkItems;
