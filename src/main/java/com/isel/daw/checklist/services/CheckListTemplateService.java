@@ -2,23 +2,19 @@ package com.isel.daw.checklist.services;
 
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
-import com.isel.daw.checklist.model.*;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
-import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
+
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
-import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateSirenBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemTemplateValidator;
-import com.isel.daw.checklist.model.Validators.CheckItemValidator;
 import com.isel.daw.checklist.model.Validators.CheckListTemplateValidator;
 import com.isel.daw.checklist.problems.InternalServerProblem;
 import com.isel.daw.checklist.repositories.CheckItemTemplateRepository;
 import com.isel.daw.checklist.repositories.CheckListTemplateRepository;
 import com.isel.daw.checklist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -40,13 +36,13 @@ public class CheckListTemplateService {
     @Transactional
     public ServiceResponse<CheckListTemplate> getListById(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckListTemplateValidator.validateUser(user);
+        ValidatorResponse valtUser= CheckListTemplateValidator.valUser_Id(user,id);
         if(!valtUser.isValid)
             return new ServiceResponse<>(null,valtUser.problem);
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(id);
-        if(checklisttemplate==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplateById(checklisttemplate,id,user);
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
+        if(!valtcheckList.isValid)
+            return new ServiceResponse<>(null,valtcheckList.problem);
         if(!valtcheckList.isValid)
             return new ServiceResponse<>(null,valtcheckList.problem);
         return new ServiceResponse<>(checklisttemplate,null);
@@ -55,11 +51,10 @@ public class CheckListTemplateService {
 
     public ServiceResponse<CheckListTemplate> create(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListTemplateValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        CheckListTemplate newlisttemplate=new CheckListTemplate(checklisttemplate_dto.getName(),user);
-        CheckListTemplate savedchecklisttemplate=listTemplateRepository.save(newlisttemplate);
+        ValidatorResponse valRequest=CheckListTemplateValidator.valCreateRequest(user,checklisttemplate_dto);
+        if(!valRequest.isValid)
+            return new ServiceResponse<>(null,valRequest.problem);
+        CheckListTemplate savedchecklisttemplate=listTemplateRepository.save(new CheckListTemplate(checklisttemplate_dto.getName(),user));
         if(savedchecklisttemplate==null)
             return new ServiceResponse<>(null,new InternalServerProblem());
         return new ServiceResponse<>(savedchecklisttemplate,null);
@@ -68,13 +63,13 @@ public class CheckListTemplateService {
     @Transactional
     public ServiceResponse<CheckListTemplate> update(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser= CheckListTemplateValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplateRequest(checklisttemplate_dto);
+        ValidatorResponse valRequest= CheckListTemplateValidator.valUpdateResquest(user,checklisttemplate_dto);
+        if(!valRequest.isValid)
+            return new ServiceResponse<>(null,valRequest.problem);
+        CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
         if(!valtcheckList.isValid)
             return new ServiceResponse<>(null,valtcheckList.problem);
-        CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
         if(checklisttemplate==null)
             return new ServiceResponse<>(null,new InternalServerProblem());
         checklisttemplate.setName(checklisttemplate_dto.getName());
@@ -85,13 +80,11 @@ public class CheckListTemplateService {
     @Transactional
     public ServiceResponse<CheckListTemplate> delete(String authorization, long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListTemplateValidator.validateUser(user);
+        ValidatorResponse valtUser=CheckListTemplateValidator.valUser_Id(user,id);
         if(!valtUser.isValid)
             return new ServiceResponse<>(null,valtUser.problem);
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(id);
-        if(checklisttemplate==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplateById(checklisttemplate,id,user);
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
         if(!valtcheckList.isValid)
             return new ServiceResponse<>(null,valtcheckList.problem);
         long delt_list_res= listTemplateRepository.deleteById(id);
@@ -104,15 +97,13 @@ public class CheckListTemplateService {
     @Transactional
     public ServiceResponse<CheckListTemplate> addCheckItemsTemplate(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListTemplateValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplatetoAddItemsRequest(checklisttemplate_dto);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
+        ValidatorResponse valtrequest=CheckListTemplateValidator.valCkItRequest(checklisttemplate_dto);
+        if(!valtrequest.isValid)
+            return new ServiceResponse<>(null,valtrequest.problem);
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
-        if(checklisttemplate==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
+        if(!valtcheckList.isValid)
+            return new ServiceResponse<>(null,valtcheckList.problem);
         for (CheckItemTemplateRequestDto checkitemtemplate_dto:checklisttemplate_dto.getCheckitemstemplates()) {
             ValidatorResponse valtcheckitem= CheckItemTemplateValidator.validateCreateRequest(checkitemtemplate_dto,user);
             if(!valtcheckitem.isValid) {
@@ -133,21 +124,24 @@ public class CheckListTemplateService {
     @Transactional
     public ServiceResponse<CheckListTemplate> deleteCheckItemsTemplate(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser=CheckListTemplateValidator.validateUser(user);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtUser.problem);
-        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplatetoDeleteItemsRequest(checklisttemplate_dto);
-        if(!valtUser.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
+        ValidatorResponse valtrequest=CheckListTemplateValidator.valCkItRequest(checklisttemplate_dto);
+        if(!valtrequest.isValid)
+            return new ServiceResponse<>(null,valtrequest.problem);
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(checklisttemplate_dto.getId());
-        if(checklisttemplate==null)
-            return new ServiceResponse<>(null,new InternalServerProblem());
-        for (CheckItemTemplateRequestDto checkitemtemplate_dto:checklisttemplate_dto.getCheckitemstemplates()) { //todo:create itemtemplaterequestdto
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
+        if(!valtcheckList.isValid)
+            return new ServiceResponse<>(null,valtcheckList.problem);
+        for (CheckItemTemplateRequestDto checkitemtemplate_dto:checklisttemplate_dto.getCheckitemstemplates()) {
+            ValidatorResponse valtckitreq= CheckItemTemplateValidator.valRequest(checkitemtemplate_dto,user);
+            if(!valtckitreq.isValid) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return new ServiceResponse<>(null,valtckitreq.problem);
+            }
             CheckItemTemplate checkItemTemplate= itemTemplateRepository.getById(checkitemtemplate_dto.getId());
             ValidatorResponse valtcheckitem= CheckItemTemplateValidator.validateDeltReqTempList(checkItemTemplate,user,checklisttemplate);
             if(!valtcheckitem.isValid) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return new ServiceResponse<>(null,valtcheckList.problem);
+                return new ServiceResponse<>(null,valtcheckitem.problem);
             }
             long del_res=itemTemplateRepository.deleteById(checkItemTemplate.getId());
             if(del_res==0){
