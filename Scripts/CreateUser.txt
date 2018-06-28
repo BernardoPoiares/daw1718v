@@ -3,6 +3,6 @@ Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 {
-    "username": "dog2",
-    "password": "im still not a dog muahahahaha"
+    "username": "dog3",
+    "password": "maybe im a dog?"
 }

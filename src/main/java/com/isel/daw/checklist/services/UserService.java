@@ -1,7 +1,12 @@
 package com.isel.daw.checklist.services;
 
 import com.isel.daw.checklist.Service;
+import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.RequestsDTO.UserRequestDTO;
+import com.isel.daw.checklist.problems.ConflictProblem;
+import com.isel.daw.checklist.problems.InternalServerProblem;
+import com.isel.daw.checklist.problems.InvalidParameterProblem;
+import com.isel.daw.checklist.problems.NotFoundProblem;
 import com.isel.daw.checklist.repositories.UserRepository;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.utils.ValidatorObj;
@@ -30,17 +35,15 @@ public class UserService implements Service {
 
     }
 
-    public ResponseEntity<?> create(UserRequestDTO userdto){
+    public ServiceResponse<Users> create(UserRequestDTO userdto){
         Users user=userRepository.findByUsername(userdto.getUsername());
         if(user!=null)
-            return new ResponseEntity<>(null,
-                    HttpStatus.BAD_REQUEST
-            );
+            return new ServiceResponse<>(null,new ConflictProblem("There is already a User with the username given."));
         Users newuser=new Users(userdto.getUsername(), userdto.getPassword(),Base64.getEncoder().encodeToString((userdto.getUsername()+":"+userdto.getPassword()).getBytes()));
-        userRepository.save(newuser);
-        return new ResponseEntity<>("User "+userdto.getUsername()+"created.",
-                HttpStatus.ACCEPTED
-        );
+        Users user_res=userRepository.save(newuser);
+        if(user_res==null)
+            return new ServiceResponse<>(null,new InternalServerProblem());
+        return new ServiceResponse<>(user_res,null);
     }
 /*
     //CHECK AGAIN!!!

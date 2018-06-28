@@ -1,7 +1,12 @@
 package com.isel.daw.checklist.controllers;
 
 import com.isel.daw.checklist.RequiresAuthentication;
+import com.isel.daw.checklist.ServiceResponse;
+import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.UserRequestDTO;
+import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateSirenBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.UserSirenBuilder;
 import com.isel.daw.checklist.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +24,12 @@ public class UserController {
     }
 
     @PostMapping(path="/create", produces="application/json")
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO user) {
-        return userService.create(user);
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO userrequest_dto) {
+        ServiceResponse<Users> response= userService.create(userrequest_dto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        Users user=response.getResponse();
+        return ResponseBuilder.build(   UserSirenBuilder.build(user.getId(),user.getUserName()));
     }
 /*
     @PostMapping(path="/login", produces="application/json")
