@@ -6,7 +6,6 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.problems.*;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 
 public class CheckListTemplateValidator {
 

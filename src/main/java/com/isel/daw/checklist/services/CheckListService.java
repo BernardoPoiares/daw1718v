@@ -69,9 +69,6 @@ public class CheckListService {
     @Transactional
     public ServiceResponse<CheckList> update(String authorization, CheckListRequestDto checklist_dto) {
         Users user = userRepository.findByToken(authorization.split(" ")[1]);
-        ValidatorResponse valtUser = CheckItemValidator.validateUser(user);
-        if (!valtUser.isValid)
-            return new ServiceResponse<>(null, valtUser.problem);
         ValidatorResponse valtcheckList = CheckListValidator.validateListRequest(checklist_dto);
         if (!valtcheckList.isValid)
             return new ServiceResponse<>(null, valtcheckList.problem);

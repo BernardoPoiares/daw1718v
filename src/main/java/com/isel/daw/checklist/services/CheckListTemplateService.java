@@ -137,7 +137,7 @@ public class CheckListTemplateService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return new ServiceResponse<>(null,valtckitreq.problem);
             }
-            CheckItemTemplate checkItemTemplate= itemTemplateRepository.getById(checkitemtemplate_dto.getId());
+            CheckItemTemplate checkItemTemplate= itemTemplateRepository.findById(checkitemtemplate_dto.getId());
             ValidatorResponse valtcheckitem= CheckItemTemplateValidator.validateDeltReqTempList(checkItemTemplate,user,checklisttemplate);
             if(!valtcheckitem.isValid) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback

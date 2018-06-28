@@ -1,15 +1,13 @@
 package com.isel.daw.checklist.model.Validators;
 
 import com.isel.daw.checklist.ValidatorResponse;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
-import com.isel.daw.checklist.problems.BadRequestProblem;
-import com.isel.daw.checklist.problems.InvalidAuthenticationProblem;
-import com.isel.daw.checklist.problems.InvalidParameterProblem;
-import com.isel.daw.checklist.problems.NotFoundProblem;
+import com.isel.daw.checklist.problems.*;
 
 public class CheckItemTemplateValidator {
 
@@ -23,6 +21,14 @@ public class CheckItemTemplateValidator {
         return new ValidatorResponse(true, null);
     }
 
+    public static ValidatorResponse validateUpdateRequest(CheckItemTemplateRequestDto ckit_dto){
+        if (ckit_dto == null)
+            return new ValidatorResponse(false, new BadRequestProblem("checkitemtemplate", "The object 'checkitemtemplate' must not be empty'"));
+        if(ckit_dto.getName()==null || ckit_dto.getDescription()==null){
+            return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name"));
+        }
+        return new ValidatorResponse(true,null);
+    }
 
     public static ValidatorResponse validateDeltReqTempList(CheckItemTemplate checkItemtemplate, Users user, CheckListTemplate checklisttemplate){
         if(user==null)
@@ -30,6 +36,17 @@ public class CheckItemTemplateValidator {
         if(checkItemtemplate==null || !(checkItemtemplate.getItemTemplate_user().getUserName().equals(user.getUserName()))
                 ||checkItemtemplate.getCheckitemtemplate_checklisttemplate()!=checklisttemplate)
             return new ValidatorResponse(false, new NotFoundProblem("CheckItemTemplate with the id '" + checkItemtemplate.getId() + "'"));
+        return new ValidatorResponse(true,null);
+    }
+
+    public static ValidatorResponse validateId(long id){
+        if(id<1)
+            return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
+        return new ValidatorResponse(true,null);
+    }
+    public static ValidatorResponse validateItem(CheckItemTemplate checkItemTemplate){
+        if(checkItemTemplate==null)
+            return new ValidatorResponse(false, new InternalServerProblem());
         return new ValidatorResponse(true,null);
     }
 

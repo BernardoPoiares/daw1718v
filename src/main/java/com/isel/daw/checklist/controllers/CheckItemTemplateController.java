@@ -19,11 +19,5 @@ public class CheckItemTemplateController {
         this.itemTemplateService = itemTemplateService;
     }
 
-    @GetMapping(path = "/a", produces = "application/json")
-    @RequiresAuthentication
-    public ResponseEntity<?> get13() {
-
-        return itemTemplateService.getAll();
-    }
 }
 

@@ -58,10 +58,10 @@ public class CheckItemController {
     @PostMapping(path="/update", produces={"application/vnd.siren+json","application/problem+json"})
     @RequiresAuthentication
     public ResponseEntity<?> update(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckItemRequestDto checkItemRequestDto) {
-        ServiceResponse<CheckItem> response=itemService.update(authorization,checkItemRequestDto);
+        ServiceResponse<?> response=itemService.update(authorization,checkItemRequestDto);
         if(response.getError()!=null)
             return ResponseBuilder.buildError(response.getError());
-        CheckItem checkItem=response.getResponse();
+        CheckItem checkItem=(CheckItem)response.getResponse();
         return ResponseBuilder.build(
                 CheckItemSirenBuilder.build(checkItem.getId(),
                         checkItem.getCheckitem_itemtemplate().getName(),
