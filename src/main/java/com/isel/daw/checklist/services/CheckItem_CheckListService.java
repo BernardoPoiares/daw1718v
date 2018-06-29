@@ -24,16 +24,12 @@ public class CheckItem_CheckListService {
 
     private final CheckListService checkListService;
     private final CheckItemService checkItemService;
-    private final UserRepository userRepository;
-    private final CheckItemRepository checkItemRepository;
 
 
     @Autowired
-    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService,UserRepository userRepository,CheckItemRepository checkItemRepository){
+    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService){
         this.checkListService=checkListService;
         this.checkItemService=checkItemService;
-        this.userRepository=userRepository;
-        this.checkItemRepository=checkItemRepository;
     }
 
 

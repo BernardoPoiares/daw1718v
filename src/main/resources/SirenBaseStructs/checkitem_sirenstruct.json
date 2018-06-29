@@ -7,22 +7,53 @@
     "state": ""
   },
   "entities": [
+    {
+    "class":["checkitem","checkitemtemplate"],
+    "rel":["http://x.io/rels/checkitemtemplate-checkitem"],
+      "href":"self?"//todo:check this
+    },
+    {
+    "class":["info","user"],
+    "rel":["http://x.io/rels/user"],
+      "properties":{
+        "id":"",
+        "username":""
+      },
+      "links": [
+        {
+          "rel": [
+            "self"
+          ],
+          "href": "http://api.x.io/customers/pj123"
+        }
+        ]
+    }
   ],
   "actions": [
     {
-      "name": "check-state",
-      "title": "Check State",
-      "method": "POST",
-      "href": "http://x",
+      "name": "delete-checkitem",
+      "title": "Delete Checkitem",
+      "method": "Delete",
+      "href": "http://x/",
       "type": "application/x-www-form-urlencoded",
       "fields": [
-        { "name": "state", "type": "text"}
+        { "name": "id", "type": "number"}
+      ]
+    }, {
+      "name": "update-checkitem",
+      "title": "Update CheckItem",
+      "method": "Post",
+      "href": "http://x/",
+      "type": "application/x-www-form-urlencoded",
+      "fields": [
+        { "name": "id", "type": "number"},
+        { "name": "name", "type": "text"},
+        { "name": "state", "type": "text"},
+        { "name": "description", "type": "text"}
       ]
     }
   ],
   "links": [
-    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" },
-    { "rel": [ "previous" ], "href": "http://api.x.io/orders/41" },
-    { "rel": [ "next" ], "href": "http://api.x.io/orders/43" }
+    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" }
   ]
 }
