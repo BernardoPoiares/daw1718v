@@ -5,14 +5,52 @@
     "name": ""
   },
   "entities": [
+    {
+      "class":["checklist","checklisttemplate"],
+      "rel":["http://x.io/rels/checklisttemplate-checklist"],
+      "href":"self?"//todo:check this
+    },
+    {
+      "class":["info","user"],
+      "rel":["http://x.io/rels/user"],
+      "properties":{
+        "id":"",
+        "username":""
+      },
+      "links": [
+        {
+          "rel": [
+            "self"
+          ],
+          "href": "http://api.x.io/customers/pj123"
+        }
+      ]
+    }
   ],
   "actions": [
     {
+      "name": "delete-checklisttemplate",
+      "title": "Delete CheckListTemplate",
+      "method": "Delete",
+      "href": "http://x/",
+      "type": "application/x-www-form-urlencoded",
+      "fields": [
+        { "name": "id", "type": "number"}
+      ]
+    },
+    {
+      "name": "update-checklist",
+      "title": "Update CheckList",
+      "method": "Post",
+      "href": "http://x/",
+      "type": "application/x-www-form-urlencoded",
+      "fields": [
+        { "name": "id", "type": "number"},
+        { "name": "name", "type": "text"}
+      ]
     }
   ],
   "links": [
-    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" },
-    { "rel": [ "previous" ], "href": "http://api.x.io/orders/41" },
-    { "rel": [ "next" ], "href": "http://api.x.io/orders/43" }
+    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" }
   ]
 }
