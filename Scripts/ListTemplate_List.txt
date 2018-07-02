@@ -1,0 +1,10 @@
+POST http://localhost:8081/checkListTemplate_checkList/createCheckList
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "checklisttemplate_dto":{"id":1},
+    "checklist_dto":{"name":"secondlistfromtemplate",
+            "completionDate":"2013-04-23T18:25:43.511Z"
+}
+}

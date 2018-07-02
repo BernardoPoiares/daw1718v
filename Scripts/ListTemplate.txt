@@ -1,0 +1,49 @@
+POST http://localhost:8081/checkListTemplate/create
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "name":"myfirstlisttemplate"
+}
+
+GET http://localhost:8081/checkListTemplate/1
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+POST http://localhost:8081/checkListTemplate/update
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "id":1,
+    "name":"myfirstlisttemplate3"
+}
+
+DELETE http://localhost:8081/checkListTemplate/1
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+POST http://localhost:8081/checkListTemplate/addCheckItems
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "id":1,
+    "checkitemstemplates":[
+        {"name":"firstlisttemplateitem"},
+        {"name":"seconditemlisttemplate",
+        "description":"hope it workings :3"}
+    ]
+}
+
+DELETE http://localhost:8081/checkListTemplate/checkItemsTemplates
+Content-Type: application/json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+{
+    "id":1,
+    "checkitems":[
+        {"id":2},{"id":4}
+     ]
+}
+
+
+
