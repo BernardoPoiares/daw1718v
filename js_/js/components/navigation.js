@@ -10,8 +10,6 @@ export default class extends React.Component{
         return(<nav>
             <ul>
               <li><NavLink to='/'>Home</NavLink></li>
-              <li><NavLink to='/login'>login</NavLink></li>
-              <li><NavLink to='/checkItem'>checkItem</NavLink></li>
             </ul>
           </nav>)
     }
