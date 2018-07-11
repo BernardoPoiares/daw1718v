@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:9000", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -29,13 +30,18 @@ public class UserController {
         if(response.getError()!=null)
             return ResponseBuilder.buildError(response.getError());
         Users user=response.getResponse();
-        return ResponseBuilder.build(   UserSirenBuilder.build(user.getId(),user.getUserName()));
+        return ResponseBuilder.build(   UserSirenBuilder.build(user.getId(),user.getUserName(),user.getToken()));
     }
-/*
+
+
     @PostMapping(path="/login", produces="application/json")
     @RequiresAuthentication
-    public ResponseEntity<?> login(@RequestHeader(value="Authorization")String authorization) {
-        return userService.login(authorization);
+    public ResponseEntity<?> login(@RequestBody UserRequestDTO userrequest_dto) {
+        ServiceResponse<Users> response= userService.login(userrequest_dto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        Users user=response.getResponse();
+        return ResponseBuilder.build(   UserSirenBuilder.build(user.getId(),user.getUserName(),user.getToken()));
     }
-*/
+
 }

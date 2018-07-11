@@ -22,7 +22,7 @@ export default class Login extends React.Component {
       });
     }
     submitHandler(event){
-      fetch('localhost:8081/login',{
+      fetch('http://localhost:8081/user/login',{
         method:'POST',
         headers:{
           Accept:'application/json',

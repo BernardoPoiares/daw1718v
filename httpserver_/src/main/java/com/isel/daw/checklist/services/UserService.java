@@ -2,7 +2,9 @@ package com.isel.daw.checklist.services;
 
 import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.ServiceResponse;
+import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.RequestsDTO.UserRequestDTO;
+import com.isel.daw.checklist.model.Validators.UserValidator;
 import com.isel.daw.checklist.problems.ConflictProblem;
 import com.isel.daw.checklist.problems.InternalServerProblem;
 import com.isel.daw.checklist.problems.InvalidParameterProblem;
@@ -45,27 +47,13 @@ public class UserService implements Service {
             return new ServiceResponse<>(null,new InternalServerProblem());
         return new ServiceResponse<>(user_res,null);
     }
-/*
-    //CHECK AGAIN!!!
-    public ResponseEntity<?> login(String authorization){
-        Users user=userRepository.findByUsername(null);
-        ValidatorObj valobj=validateUser(user);
-        if(valobj.error!=null)
-            return new ResponseEntity<>(null,
-                    HttpStatus.BAD_REQUEST
-            );
-        String encoding=Base64.getEncoder().encodeToString((user.getUserName()+":"+user.getPassword()).getBytes());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authoritazion", "Basic "+encoding);
-        return new ResponseEntity<>(null,
-                headers,
-                HttpStatus.ACCEPTED
-        );
 
-    }*/
-
-        private ValidatorObj validateUser(Users user){
-            return new ValidatorObj();
-        }
+    public ServiceResponse<Users> login(UserRequestDTO userdto){
+        Users user=userRepository.findByUsername(userdto.getUsername());
+        ValidatorResponse valuser= UserValidator.validateUser(user,userdto);
+        if(!valuser.isValid)
+            return new ServiceResponse<>(null,valuser.problem);
+        return new ServiceResponse<>(user,null);
+    }
 
 }

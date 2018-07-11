@@ -2,7 +2,8 @@
   "class": [ "user" ],
   "properties": {
     "id":-1,
-    "username": ""
+    "username": "",
+    "token":""
   },
   "entities": [
   ],

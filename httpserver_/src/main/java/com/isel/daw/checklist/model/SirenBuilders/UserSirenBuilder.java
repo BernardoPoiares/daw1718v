@@ -23,10 +23,12 @@ public class UserSirenBuilder {
         return rootNode;
     }
 
-    public static JsonNode build(long id,String username){
+    public static JsonNode build(long id,String username,String token){
         JsonNode root=createRoot();
         ((ObjectNode)(root.path("properties"))).put("id",id);
         ((ObjectNode)(root.path("properties"))).put("username",username);
+
+        ((ObjectNode)(root.path("properties"))).put("token",token);
         return root;
     }
 }
