@@ -13,11 +13,11 @@ render(){
     return (
         <BrowserRouter>
         <div>
-        <div>
-            <Link to="/">Home</Link> <Sep />
-            <Link to="/login">Login</Link> <Sep />
-            <Link to="/checkItem">CheckItem</Link> <Sep />
-            <hr/>
+            <div>
+                <Link to="/">Home</Link> <Sep />
+                <Link to="/login">Login</Link> <Sep />
+                <Link to="/checkItem">CheckItem</Link> <Sep />
+                <hr/>
             </div>
           <Route exact path="/" component={Home} />
           <Route path="/login" component={Login} />
