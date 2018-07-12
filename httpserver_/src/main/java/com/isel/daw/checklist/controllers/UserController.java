@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:9000", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:9000")
 @RestController
 @RequestMapping("/user")
 public class UserController {
