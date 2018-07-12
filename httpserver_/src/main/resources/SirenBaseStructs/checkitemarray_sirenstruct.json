@@ -1,0 +1,34 @@
+{
+  "class": [ "checkitem_array" ],
+  "properties": {
+
+  },
+  "entities": [
+    {
+      "class":["checkitem","checkitemtemplate"],
+      "rel":["http://x.io/rels/checkitemtemplate-checkitem"],
+      "href":"self?"//todo:check this
+    },
+    {
+      "class":["info","user"],
+      "rel":["http://x.io/rels/user"],
+      "properties":{
+        "id":"",
+        "username":""
+      },
+      "links": [
+        {
+          "rel": [
+            "self"
+          ],
+          "href": "http://api.x.io/customers/pj123"
+        }
+      ]
+    }
+  ],
+  "actions": [
+  ],
+  "links": [
+    { "rel": [ "self" ], "href": "http://api.x.io/orders/42" }
+  ]
+}

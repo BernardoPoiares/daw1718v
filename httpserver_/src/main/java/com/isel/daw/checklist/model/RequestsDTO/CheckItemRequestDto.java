@@ -6,11 +6,19 @@ import javax.persistence.Column;
 
 public class CheckItemRequestDto {
 
-    private int id;
+    private long id;
     private CheckItemTemplateRequestDto checkitemtemplate;
     private String state;
 
-    public int getId() {
+    public CheckItemRequestDto(){}
+
+    public CheckItemRequestDto(long id,String name,String description,String state ){
+        this.id=id;
+        this.checkitemtemplate=new CheckItemTemplateRequestDto(name,description);
+        this.state=state;
+    }
+
+    public long getId() {
         return id;
     }
 

@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.services;
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.*;
@@ -50,6 +51,18 @@ public class CheckItemService implements Service {
        if(!valtcheckItem.isValid)
            return new ServiceResponse<>(null,valtcheckItem.problem);
        return new ServiceResponse<>(checkItem,null);
+    }
+
+    public ServiceResponse<CheckItemRequestDto[]> getAll(String authorization){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser_id= CheckItemValidator.validateUser(user);
+        if(!valtUser_id.isValid)
+            return new ServiceResponse<>(null,valtUser_id.problem);
+        CheckItem[] checkItems= itemRepository.findAllbyUser(user.getId());
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItems(checkItems,user);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        return new ServiceResponse<>(Converter.CheckItemsDTO_CheckItems(checkItems),null);
     }
 
 

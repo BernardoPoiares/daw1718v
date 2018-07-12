@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/checkItemTemplate_checkitem")
+
 public class CheckItemTemplate_CheckItemController {
 
     private final CheckItemTemplate_CheckItemService itemtemplate_itemService;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/checkListTemplate_checkList")
+
 public class CheckListTemplate_CheckListController {
 
 

@@ -1,14 +1,22 @@
 
-POST http://localhost:8081/checkItem/create
+POST http://localhost:8081/checkItemTemplate_checkitem/create
 Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 {
-    "name": "do Daw work",
+    "checkitemtemplate" : {"name": "do Daw work"},
     "description": "ezzzzz"
 }
 
 
+
+GET http://localhost:8081/checkItem/all
+Accept: application/vnd.siren+json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+
+GET http://localhost:8081/checkItem/all
+Accept: application/vnd.siren+json
+Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 
 
@@ -17,7 +25,7 @@ Accept: application/vnd.siren+json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 
-POST http://localhost:8081/checkItem/update
+POST http://localhost:8081/checkItemTemplate_checkitem/update
 Content-Type: application/json
 Accept: application/vnd.siren+json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
@@ -29,7 +37,7 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
     "state": "umcompleted2" 
 }
 
-DELETE http://localhost:8081/checkItem/delete/1
+DELETE http://localhost:8081/checkItemTemplate_checkitem/delete/1
 Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 

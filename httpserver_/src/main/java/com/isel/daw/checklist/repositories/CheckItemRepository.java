@@ -13,4 +13,7 @@ public interface CheckItemRepository extends JpaRepository<CheckItem, Integer> {
 
     @Query(value="SELECT COUNT(*) FROM checkitem WHERE checkitem_itemtemplate = :id", nativeQuery = true)
     long countByTemplateId(@Param("id")long id);
+
+    @Query(value="SELECT * FROM checkitem C inner join checkitem_template Ct on C.checkitem_itemtemplate= Ct.id WHERE ct.itemtemplate_user = :id", nativeQuery = true)
+    CheckItem[] findAllbyUser(@Param("id")long id);
 }

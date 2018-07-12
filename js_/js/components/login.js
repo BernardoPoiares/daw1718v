@@ -1,5 +1,7 @@
 import React from 'react'
-
+import request from './request'
+import session from './session'
+import User from '../model/User'
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -22,19 +24,12 @@ export default class Login extends React.Component {
       });
     }
     submitHandler(event){
-      fetch('http://localhost:8081/user/login',{
-        method:'POST',
-        headers:{
-          Accept:'application/json',
-          'Content-type':'application/json',
-          'Access-Control-Allow-Origin':'*'
-        },body:JSON.stringify({
-          username:this.state.username,
-          password:this.state.password
-        })
+      request('/user/login','POST',{
+        username:this.state.username,
+        password:this.state.password
       }).then(resp=>{
         return resp.json().then(json=>{
-          console.log(json)
+          session.saveLoginToken(new User(json))
         })
       })
     }

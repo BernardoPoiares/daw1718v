@@ -13,7 +13,7 @@ public class CheckItemValidator {
     public static ValidatorResponse validateItem(CheckItem checkItem, Users user){
         if(checkItem==null)
             return new ValidatorResponse(false,new InternalServerProblem());
-        if(!(checkItem.getCheckitem_itemtemplate().getItemTemplate_user().equals(user))) {
+        if(!(checkItem.getCheckitem_itemtemplate().getItemTemplate_user().getId()==user.getId())) {
             return new ValidatorResponse(false, new NotFoundProblem("CheckItem with the id '" + checkItem.getId()+ "'"));
         }return new ValidatorResponse(true,null);
     }
@@ -23,6 +23,12 @@ public class CheckItemValidator {
             return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         if(id<1)
             return new ValidatorResponse(false,new InvalidParameterProblem("id","'id' must be bigger then 0."));
+        return new ValidatorResponse(true,null);
+    }
+
+    public static ValidatorResponse validateUser(Users user){
+        if(user==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
         return new ValidatorResponse(true,null);
     }
 
@@ -54,5 +60,16 @@ public class CheckItemValidator {
         return new ValidatorResponse(true,null);
     }
 
+
+    public static ValidatorResponse validateItems(CheckItem[] checkItems, Users user){
+        if(checkItems==null)
+            return new ValidatorResponse(false, new NotFoundProblem("There are no checkitems for the user '"+user.getUserName()+"'"));
+        for (CheckItem checkitem:checkItems){
+            ValidatorResponse valitem=validateItem(checkitem,user);
+            if(!valitem.isValid)
+                return valitem;
+        }
+        return new ValidatorResponse(true,null);
+    }
 
 }

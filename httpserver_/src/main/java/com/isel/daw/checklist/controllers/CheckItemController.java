@@ -6,6 +6,7 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckItemArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemSirenBuilder;
 import com.isel.daw.checklist.services.CheckItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/checkItem")
+@CrossOrigin(origins="http://localhost:9000",
+        maxAge=2000,allowedHeaders="*",methods = RequestMethod.GET)
 public class CheckItemController {
 
     private final CheckItemService itemService;
@@ -36,6 +39,17 @@ public class CheckItemController {
                         checkItem.getCheckitem_itemtemplate().getName(),
                         checkItem.getCheckitem_itemtemplate().getDescription(),
                         checkItem.getState())
+        );
+    }
+
+    @GetMapping(path="/all", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> getById(@RequestHeader(value="Authorization")String authorization) {
+        ServiceResponse<CheckItemRequestDto[]> response=itemService.getAll(authorization);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckItemArraySirenBuilder.build(response.getResponse())
         );
     }
 
