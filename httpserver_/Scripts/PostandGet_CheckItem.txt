@@ -9,10 +9,11 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 }
 
 
-
 GET http://localhost:8081/checkItem/all
-Accept: application/vnd.siren+json
-Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+    Origin: http://localhost:9000
+    Access-Control-Allow-Origin: *
+    Access-Control-Allow-Methods: GET
+    Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 GET http://localhost:8081/checkItem/all
 Accept: application/vnd.siren+json

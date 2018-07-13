@@ -18,15 +18,15 @@ export default class extends React.Component{
       }
     
       loadIfNeeded () {
-          console.log(localStorage.getItem('token'))
+          if(this.state.done===true)return
           request('/checkItem/all','GET')
           .then(resp=>{
             return resp.json().then(json=>{
-                const checkitemsarray=[]
+            const checkitemsarray=[]
             json.properties.map(checkitem=>{
                 checkitemsarray.push(new CheckItem(checkitem))
             })
-              this.setState({done:true,checkitems:checkitemsarray})
+            this.setState({checkitems:checkitemsarray,done:true})
             })
           })
       }
@@ -35,20 +35,20 @@ export default class extends React.Component{
 
 
     render(){
-        if(this.state.done==true){
-            
+        if(this.state.done===true){
+            console.log(this.state.checkitems[0])
         return(<div>
             <h2>CheckItems</h2>
               <div>
-                <table style="width:100%">
+                <table>
                     <tr>
                         <th>Name</th>
                         <th>Description</th> 
                     </tr>
                     {this.state.checkitems.map(checkitem=>(
-                        <tr>
+                        <tr key={checkitem.id}>
                             <td>{checkitem.name}</td>
-                            <td>{checkitem.Description}</td>
+                            <td>{checkitem.description}</td>
                         </tr>
                     ))
                     }
