@@ -31,6 +31,13 @@ public class CheckListRequestDto {
         return checkListTemplate;
     }
 
+    public CheckListRequestDto(){}
+
+    public CheckListRequestDto(long id,String name,Date completionDate){
+        this.id=id;
+        this.name=name;
+        this.completionDate=completionDate;
+    }
 
     public void setCheckListTemplate(CheckListTemplate checkListTemplate) {
         this.checkListTemplate = checkListTemplate;

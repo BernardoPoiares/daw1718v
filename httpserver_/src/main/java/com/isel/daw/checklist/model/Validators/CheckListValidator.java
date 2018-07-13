@@ -48,6 +48,15 @@ public class CheckListValidator {
         return new ValidatorResponse(true,null);
     }
 
+    public static ValidatorResponse valLists(CheckList[] checkLists,Users user){
+        for(CheckList checkList:checkLists){
+            ValidatorResponse vallist = valCkl_User(checkList,user,checkList.getId());
+            if(!vallist.isValid)
+                return vallist;
+        }
+        return new ValidatorResponse(true,null);
+    }
+
 /*
     public static ValidatorResponse validateListAddCheckItemsRequest(CheckListRequestDto checklist_dto){
         if(checklist_dto==null)

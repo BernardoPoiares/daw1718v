@@ -6,6 +6,7 @@ import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckListArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckListSirenBuilder;
 import com.isel.daw.checklist.services.CheckListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,16 @@ public class CheckListController {
                 CheckListSirenBuilder.build(checklist.getId(),
                         checklist.getName(),
                         checklist.getCompletionDate())
+        );
+    }
+
+    @GetMapping(path="/all", produces={"application/vnd.siren+json","application/problem+json"})
+    public ResponseEntity<?> getListById(@RequestHeader(value="Authorization") String authorization) {
+        ServiceResponse<CheckListRequestDto[]> response=checkListService.getAll(authorization);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckListArraySirenBuilder.build(response.getResponse())
         );
     }
 

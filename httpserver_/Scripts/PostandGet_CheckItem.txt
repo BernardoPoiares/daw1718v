@@ -4,8 +4,10 @@ Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 {
-    "checkitemtemplate" : {"name": "do Daw work"},
-    "description": "ezzzzz"
+    "checkitemtemplate" : {
+        "name": "do Daw work",
+        "description": "ezzzzz2"
+    }
 }
 
 
