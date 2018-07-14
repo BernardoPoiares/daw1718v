@@ -23,8 +23,8 @@ export default class extends React.Component{
           .then(resp=>{
             return resp.json().then(json=>{
             const checklistsarray=[]
-            json.properties.map(checkitem=>{
-                checklistsarray.push(new CheckList(checkitem))
+            json.properties.map(checklist=>{
+                checklistsarray.push(new CheckList(checklist))
             })
             this.setState({checklists:checklistsarray,done:true})
             })
@@ -41,10 +41,10 @@ export default class extends React.Component{
               <div>
                 <table>
                     <tr>
-                        <th>Name</th>
+                        <th>Id</th>
                         <th>Description</th> 
                     </tr>
-                    {this.state.checklistsarray.map(checklist=>(
+                    {this.state.checklists.map(checklist=>(
                         <tr key={checklist.id}>
                             <td>{checklist.name}</td>
                         </tr>

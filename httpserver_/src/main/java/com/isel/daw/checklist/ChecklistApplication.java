@@ -14,5 +14,18 @@ public class ChecklistApplication {
 	}
 
 
+	@Bean
+	WebMvcConfigurer corsConfig() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("http://localhost:9000")
+						.allowedMethods("GET","PUT","POST","DELETE")
+						.allowCredentials(false);
 
+
+			}
+		};
+	}
 }

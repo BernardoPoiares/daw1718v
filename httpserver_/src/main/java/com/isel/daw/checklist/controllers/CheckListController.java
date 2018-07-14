@@ -1,6 +1,7 @@
 package com.isel.daw.checklist.controllers;
 
 
+import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
@@ -27,6 +28,7 @@ public class CheckListController {
     }
 
     @GetMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
     public ResponseEntity<?> getListById(@RequestHeader(value="Authorization") String authorization,@PathVariable("id") long id) {
         ServiceResponse<CheckList> response=checkListService.getListById(authorization,id);
         if(response.getError()!=null)
@@ -40,7 +42,8 @@ public class CheckListController {
     }
 
     @GetMapping(path="/all", produces={"application/vnd.siren+json","application/problem+json"})
-    public ResponseEntity<?> getListById(@RequestHeader(value="Authorization") String authorization) {
+    @RequiresAuthentication
+    public ResponseEntity<?> getAllByUser(@RequestHeader(value="Authorization") String authorization) {
         ServiceResponse<CheckListRequestDto[]> response=checkListService.getAll(authorization);
         if(response.getError()!=null)
             return ResponseBuilder.buildError(response.getError());
@@ -50,6 +53,7 @@ public class CheckListController {
     }
 
     @PostMapping(path="/create", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
     public ResponseEntity<?> create(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckListRequestDto checklistRequestDto){
         ServiceResponse<CheckList> response=checkListService.create(authorization,checklistRequestDto);
         if(response.getError()!=null)

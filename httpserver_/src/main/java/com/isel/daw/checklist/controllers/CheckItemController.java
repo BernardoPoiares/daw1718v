@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/checkItem")
-@CrossOrigin(origins="http://localhost:9000",
-        maxAge=2000,allowedHeaders="*",methods = RequestMethod.GET)
 public class CheckItemController {
 
     private final CheckItemService itemService;

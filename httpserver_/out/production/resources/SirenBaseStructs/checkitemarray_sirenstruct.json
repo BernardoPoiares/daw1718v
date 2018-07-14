@@ -7,7 +7,7 @@
     {
       "class":["checkitem","checkitemtemplate"],
       "rel":["http://x.io/rels/checkitemtemplate-checkitem"],
-      "href":"self?"//todo:check this
+      "href":"self?"
     },
     {
       "class":["info","user"],

@@ -22,7 +22,7 @@ public class CheckListValidator {
     }
 
     public static ValidatorResponse valCkl_User(CheckList checklist,Users user,long id){
-        if(checklist==null ||!(checklist.getList_user().equals(user.getUserName()))) {
+        if(checklist==null ||!(checklist.getList_user().getUserName().equals(user.getUserName()))) {
             return new ValidatorResponse(false, new NotFoundProblem("CheckList with the id '" + id + "'"));
         }return new ValidatorResponse(true,null);
     }

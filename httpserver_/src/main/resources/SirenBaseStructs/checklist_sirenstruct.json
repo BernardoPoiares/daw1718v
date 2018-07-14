@@ -9,7 +9,7 @@
     {
       "class":["checklist","checklisttemplate"],
       "rel":["http://x.io/rels/checklisttemplate-checklist"],
-      "href":"self?"//todo:check this
+      "href":"self?"
     },
     {
       "class":["info","user"],
