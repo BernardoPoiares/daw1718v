@@ -7,8 +7,7 @@ import User from '../model/User'
 export default class Login extends React.Component {
     constructor(props) {
       super(props);
-      console.log(props)
-      this.renderize=props.route.renderize
+      this.renderize=props.renderize
 
   this.changeHandler = this.changeHandler.bind(this)
   this.submitHandler = this.submitHandler.bind(this)
@@ -32,8 +31,6 @@ export default class Login extends React.Component {
       }).then(resp=>{
         return resp.json().then(json=>{
           session.saveLoginToken(new User(json))
-          console.log(this)
-          console.log(this.renderize)
           this.renderize()
         })
       })
