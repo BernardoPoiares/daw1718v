@@ -42,11 +42,13 @@ export default class extends React.Component{
                 <table>
                     <tr>
                         <th>Id</th>
-                        <th>Description</th> 
+                        <th>Description</th>
+                        <th>CompletionDate</th> 
                     </tr>
                     {this.state.checklists.map(checklist=>(
                         <tr key={checklist.id}>
-                            <td>{checklist.name}</td>
+                            <td>{checklist.name}</td>                            
+                            <td>{checklist.completionDate}</td>
                         </tr>
                     ))
                     }
