@@ -36,7 +36,6 @@ export default class extends React.Component{
 
     render(){
         if(this.state.done===true){
-            console.log(this.state.checkitems[0])
         return(<div>
             <h2>CheckItems</h2>
               <div>

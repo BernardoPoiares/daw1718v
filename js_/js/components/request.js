@@ -6,7 +6,6 @@ export default function(path,method,json){
     myheaders.append('Access-Control-Allow-Origin','*')
     if(session.isLogggedIn)
     myheaders.append('Authorization',localStorage.getItem('token'))
-    console.log(method=='POST')
     if(method=='POST'){
       myheaders.append('Content-type','application/json')
       myheaders.append('Accept','application/json')

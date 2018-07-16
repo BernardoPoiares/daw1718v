@@ -7,7 +7,7 @@ import User from '../model/User'
 export default class Login extends React.Component {
     constructor(props) {
       super(props);
-      this.renderize=props.renderize
+      this.redirectHome=props.redirectHome
 
   this.changeHandler = this.changeHandler.bind(this)
   this.submitHandler = this.submitHandler.bind(this)
@@ -31,7 +31,7 @@ export default class Login extends React.Component {
       }).then(resp=>{
         return resp.json().then(json=>{
           session.saveLoginToken(new User(json))
-          this.renderize()
+          this.redirectHome()
         })
       })
     }

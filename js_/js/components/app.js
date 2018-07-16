@@ -23,27 +23,29 @@ const LoadStates = {
 export default class App extends React.Component{
   constructor(props){
     super(props)
-    this.renderize=this.renderize.bind(this)
+    this.redirectHome=this.redirectHome.bind(this)
     this.Logout=this.Logout.bind(this)
     this.state={
-      loadState:LoadStates.loading
+      loadState:LoadStates.loading,
+      red_path:null
     }
   }
   
 
   Logout(){
+    return()=>{
     Session.logout()
-    console.log('login:'+Session.isLogggedIn())
-    VER ESTA MERDA!!!
-    this.props.history.push('/')
+    this.setState({
+      loadState:LoadStates.loading
+    })
   }
+}
 
-  renderLoginLogout(){
-    console.log(Session.isLogggedIn())
+  renderLoginLogout(){    
     if(!Session.isLogggedIn())
       return (<Link to="/login">Login</Link>)
     else  
-      return (<Link to="/logout" onClick={this.Logout()}>Logout</Link> )
+      return (<Link to="/" onClick={this.Logout()}>Logout</Link> )
   }
 
   componentDidMount () {
@@ -61,22 +63,26 @@ export default class App extends React.Component{
     })
   }
 
-  renderize(){
+  redirectHome(){
     this.setState({
-      loadState:LoadStates.loading
+      red_path:'/'
     })
   }
-  shouldComponentUpdate(nextProps, nextState){
-    return this.propsloadState !== nextProps.loadState
-}
+  shouldRederict(){
+    if(this.state.red_path!=null){
+      const path=this.state.red_path
+      this.setState({red_path:null})
+      return <Redirect to={path}/>
+    }
+  }
 
 render(){
-  
-  console.log(4)
+  if(this.state.loadState==LoadStates.loaded){
     return (
         <BrowserRouter>
         <div>
           <div>
+            {this.shouldRederict()}
             <Link to="/">Home</Link> <Sep />
             {this.renderLoginLogout()}  <Sep />
             <Link to="/checkItems">CheckItems</Link> <Sep />            
@@ -84,12 +90,15 @@ render(){
             <hr/>
           </div>
           <Route exact path="/" component={Home} />
-    <Route path="/login" render={()=><Login renderize={this.renderize}/>} />
+    <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
           <Route path="/checkItems" component={checkItems} />
           <Route path="/checkLists" component={checkLists} />
         </div>
       </BrowserRouter>
     )
+  }else{
+    return(<div>Loading...</div>)
+  }
 }
 
 }
