@@ -1,4 +1,5 @@
 import React from 'react'
+import Session from './session'
 
 export default class extends React.Component{
     constructor(props){
@@ -6,12 +7,19 @@ export default class extends React.Component{
     }
 
 render(){
-    return (
-        <div className='home'>
-        <h1>Welcome to my portfolio website</h1>
-        <p> Feel free to browse around and learn more about me.</p>
-      </div>
-    )
+    if(!Session.isLogggedIn()){
+        return (
+            <div className='home'>
+            <h1>Welcome to CheckLists!</h1>
+            <p>Please Log In to use this app. </p>
+        </div>
+        )
+    } else{
+        return <div className='home'>
+        <h1>Hello There!</h1>
+        <p>Don't forget to check your CheckItems and CheckLists ;)</p>
+    </div>
+    }
 }
 
 }
