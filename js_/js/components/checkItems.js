@@ -2,6 +2,8 @@ import React from 'react'
 import  request  from './request';
 import  CheckItem  from '../Model/CheckItem';
 
+import  TableCell  from './tableCell';
+
 export default class extends React.Component{
     constructor(props){
         super(props)
@@ -51,7 +53,13 @@ export default class extends React.Component{
             })
           })
         }
-      
+
+
+      refresh(){
+            this.setState({
+                done:false
+            })
+      }
 
 
 
@@ -72,7 +80,7 @@ export default class extends React.Component{
                         {this.state.checkitems.map(checkitem=>(
                             <tr key={checkitem.id}>
                                 <td><a href={"/checkItems/"+checkitem.id}>{checkitem.name}</a></td>
-                                <td>{checkitem.description}</td>
+                                <TableCell value={checkitem.description}  refresh={this.refresh}/>
                             </tr>
                         ))
                         }
