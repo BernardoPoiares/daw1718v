@@ -18,9 +18,11 @@ module.exports = {
           options: {
             presets: ['env', 'react']
           }
-        }
-      }
-    ]
+		}
+	  }
+      ,
+	  { test: /\.css$/, use:[ 'style-loader', 'css-loader'] }
+	]
   },
   devServer: {    
   historyApiFallback: true,

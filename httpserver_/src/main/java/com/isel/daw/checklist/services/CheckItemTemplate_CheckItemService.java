@@ -77,6 +77,7 @@ public class CheckItemTemplate_CheckItemService implements Service {
             ServiceResponse<CheckItemTemplate> ckittemp_res=checkItemTemplateService.create(authorization,checkitem_dto.getCheckitemtemplate());
             if(ckittemp_res.getError()!=null)
                 return ckittemp_res;
+
             itemtemplatetoupdate=ckittemp_res.getResponse();
             checkitem.setCheckitem_itemtemplate(itemtemplatetoupdate);
         }

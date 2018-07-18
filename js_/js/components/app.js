@@ -11,6 +11,8 @@ import Login from './login';
 import Home from './home';
 import Session  from './session';
 
+import styles from '../css/styles.css'
+
 const Sep = () => <span> | </span>
 
 
