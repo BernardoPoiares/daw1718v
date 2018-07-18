@@ -72,9 +72,9 @@ public class CheckItemTemplate_CheckItemService implements Service {
         if(!valtrequest.isValid)
             return new ServiceResponse<>(null,valtrequest.problem);
         CheckItemTemplate itemtemplatetoupdate=checkitem.getCheckitem_itemtemplate();
-        long numbTempuses=itemRepository.countByTemplateId(ckit_dto.getId());
+        long numbTempuses=itemRepository.countByTemplateId(itemtemplatetoupdate.getId());
         if(numbTempuses>1) {
-            ServiceResponse<CheckItemTemplate> ckittemp_res=checkItemTemplateService.create(authorization,checkitem_dto.getCheckitemtemplate());
+            ServiceResponse<CheckItemTemplate> ckittemp_res=checkItemTemplateService.clone(authorization,itemtemplatetoupdate);
             if(ckittemp_res.getError()!=null)
                 return ckittemp_res;
 

@@ -39,6 +39,14 @@ public class CheckItemTemplateService implements Service {
         return new ServiceResponse<>(checkItemtemplate,null);
     }
 
+    public ServiceResponse<CheckItemTemplate> clone(String authorization, CheckItemTemplate ckittemp){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        CheckItemTemplate checkItemtemplate= itemTemplateRepository.save(new CheckItemTemplate(ckittemp.getName(),ckittemp.getDescription(),user));
+        if(checkItemtemplate==null)
+            return new ServiceResponse<>(null, new InternalServerProblem());
+        return new ServiceResponse<>(checkItemtemplate,null);
+    }
+
     public ServiceResponse<CheckItemTemplate> getById(String authorization,long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtid= CheckItemTemplateValidator.validateId(id);

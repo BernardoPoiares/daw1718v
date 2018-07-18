@@ -4,6 +4,8 @@ import  CheckItem  from '../Model/CheckItem';
 
 import  TableCell  from './tableCell';
 
+import ServerRequests from './serverRequests'
+
 export default class extends React.Component{
     constructor(props){
         super(props)
@@ -61,7 +63,9 @@ export default class extends React.Component{
             })
       }
 
-
+      update(checkitem){
+        return ServerRequests.UpdateCheckItem(checkitem)
+      }
 
 
     render(){
@@ -80,7 +84,7 @@ export default class extends React.Component{
                         {this.state.checkitems.map(checkitem=>(
                             <tr key={checkitem.id}>
                                 <td><a href={"/checkItems/"+checkitem.id}>{checkitem.name}</a></td>
-                                <TableCell value={checkitem.description}  refresh={this.refresh}/>
+                                <TableCell id={checkitem.id} value={checkitem.description}  name="description" update={this.update}/>
                             </tr>
                         ))
                         }

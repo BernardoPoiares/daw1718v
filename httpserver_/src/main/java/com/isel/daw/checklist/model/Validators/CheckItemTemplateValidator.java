@@ -24,7 +24,7 @@ public class CheckItemTemplateValidator {
     public static ValidatorResponse validateUpdateRequest(CheckItemTemplateRequestDto ckit_dto){
         if (ckit_dto == null)
             return new ValidatorResponse(false, new BadRequestProblem("checkitemtemplate", "The object 'checkitemtemplate' must not be empty'"));
-        if(ckit_dto.getName()==null || ckit_dto.getDescription()==null){
+        if(ckit_dto.getName()==null && ckit_dto.getDescription()==null){
             return new ValidatorResponse(false,new InvalidMultiParameterProblem("description,name"));
         }
         return new ValidatorResponse(true,null);
