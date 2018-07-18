@@ -28,15 +28,11 @@ public class CheckItemController {
     @GetMapping(path="/{id}", produces={"application/vnd.siren+json","application/problem+json"})
     @RequiresAuthentication
     public ResponseEntity<?> getById(@RequestHeader(value="Authorization")String authorization,@PathVariable("id") long id) {
-        ServiceResponse<CheckItem> response=itemService.getItemById(authorization,id);
+        ServiceResponse<CheckItemRequestDto> response=itemService.getItemById(authorization,id);
         if(response.getError()!=null)
             return ResponseBuilder.buildError(response.getError());
-        CheckItem checkItem=response.getResponse();
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem.getId(),
-                        checkItem.getCheckitem_itemtemplate().getName(),
-                        checkItem.getCheckitem_itemtemplate().getDescription(),
-                        checkItem.getState())
+                CheckItemSirenBuilder.build(response.getResponse())
         );
     }
 

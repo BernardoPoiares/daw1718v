@@ -61,7 +61,7 @@ public class CheckItemTemplate_CheckItemService implements Service {
 
     @Transactional
     public ServiceResponse<?> update(String authorization, CheckItemRequestDto checkitem_dto){
-        ServiceResponse<CheckItem> serv_resp=checkItemService.getItemById(authorization,checkitem_dto.getId());
+        ServiceResponse<CheckItem> serv_resp=checkItemService.getCheckItem(authorization,checkitem_dto.getId());
         if(serv_resp.getError()!=null)
             return serv_resp;
         CheckItem checkitem=serv_resp.getResponse();
@@ -89,7 +89,7 @@ public class CheckItemTemplate_CheckItemService implements Service {
 
     @Transactional
     public ServiceResponse<CheckItem> delete(String authorization, long id){
-        ServiceResponse<CheckItem> serv_resp=checkItemService.getItemById(authorization,id);
+        ServiceResponse<CheckItem> serv_resp=checkItemService.getCheckItem(authorization,id);
         if(serv_resp.getError()!=null)
             return serv_resp;
         CheckItem checkitem=serv_resp.getResponse();

@@ -40,17 +40,21 @@ export default class extends React.Component{
             <h2>CheckItems</h2>
               <div>
                 <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th> 
-                    </tr>
-                    {this.state.checkitems.map(checkitem=>(
-                        <tr key={checkitem.id}>
-                            <td>{checkitem.name}</td>
-                            <td>{checkitem.description}</td>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th> 
                         </tr>
-                    ))
-                    }
+                    </thead>
+                    <tbody>
+                        {this.state.checkitems.map(checkitem=>(
+                            <tr key={checkitem.id}>
+                                <td><a href={"/checkItems/"+checkitem.id}>{checkitem.name}</a></td>
+                                <td>{checkitem.description}</td>
+                            </tr>
+                        ))
+                        }
+                    </tbody>
                 </table>
                 </div>  
             </div>)

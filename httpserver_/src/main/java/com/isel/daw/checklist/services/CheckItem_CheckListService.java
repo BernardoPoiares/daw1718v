@@ -40,7 +40,7 @@ public class CheckItem_CheckListService {
             return checklist_resp;
         CheckList checklist=checklist_resp.getResponse();
         for(CheckItemRequestDto checkitem_dto:checklist_dto.getCheckitems()){
-            ServiceResponse<CheckItem> checkitem_resp=checkItemService.getItemById(authorization,checkitem_dto.getId());
+            ServiceResponse<CheckItem> checkitem_resp=checkItemService.getCheckItem(authorization,checkitem_dto.getId());
             if(checkitem_resp.getError()!=null) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return checklist_resp;
@@ -63,7 +63,7 @@ public class CheckItem_CheckListService {
             return checklist_resp;
         CheckList checklist=checklist_resp.getResponse();
         for(CheckItemRequestDto checkitem_dto:checklist_dto.getCheckitems()){
-            ServiceResponse<CheckItem> checkitem_resp=checkItemService.getItemById(authorization,checkitem_dto.getId());
+            ServiceResponse<CheckItem> checkitem_resp=checkItemService.getCheckItem(authorization,checkitem_dto.getId());
             if(checkitem_resp.getError()!=null) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return checklist_resp;

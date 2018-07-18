@@ -3,6 +3,7 @@ import { BrowserRouter, Route,Link,Redirect } from "react-router-dom";
 
 
 import checkItems from './checkItems';
+import checkItem from './checkItem';
 import checkLists from './checkLists'
 import Login from './login';
 
@@ -89,10 +90,12 @@ render(){
             <Link to="/checkLists">CheckLists</Link> <Sep />
             <hr/>
           </div>
-          <Route exact path="/" component={Home} />
-    <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
-          <Route path="/checkItems" component={checkItems} />
-          <Route path="/checkLists" component={checkLists} />
+          <Route path="/" exact={true} component={Home} />
+          <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
+          <Route path="/checkItems" exact={true} component={checkItems} />
+          <Route path="/checkItems/:id" exact={true} component={checkItem} />
+          <Route path="/checkLists" exact={true} component={checkLists} />
+          
         </div>
       </BrowserRouter>
     )

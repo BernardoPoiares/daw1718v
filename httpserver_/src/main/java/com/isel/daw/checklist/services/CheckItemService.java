@@ -41,7 +41,7 @@ public class CheckItemService implements Service {
         this.checkItemTemplateService=checkItemTemplateService;
     }
 
-    public ServiceResponse<CheckItem> getItemById(String authorization,long id){
+    public ServiceResponse<CheckItemRequestDto> getItemById(String authorization,long id){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser_id= CheckItemValidator.validateUser_Id(user,id);
         if(!valtUser_id.isValid)
@@ -50,7 +50,19 @@ public class CheckItemService implements Service {
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItem(checkItem,user);
        if(!valtcheckItem.isValid)
            return new ServiceResponse<>(null,valtcheckItem.problem);
-       return new ServiceResponse<>(checkItem,null);
+       return new ServiceResponse<>(new CheckItemRequestDto(checkItem.getId(),checkItem.getCheckitem_itemtemplate().getName(),checkItem.getCheckitem_itemtemplate().getDescription(),checkItem.getState()),null);
+    }
+
+    public ServiceResponse<CheckItem> getCheckItem(String authorization,long id){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser_id= CheckItemValidator.validateUser_Id(user,id);
+        if(!valtUser_id.isValid)
+            return new ServiceResponse<>(null,valtUser_id.problem);
+        CheckItem checkItem= itemRepository.findById(id);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItem(checkItem,user);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        return new ServiceResponse<>(checkItem,null);
     }
 
     public ServiceResponse<CheckItemRequestDto[]> getAll(String authorization){
