@@ -5,7 +5,9 @@ import  CheckItem  from '../Model/CheckItem';
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false}
+        this.state={done:false,newCI_name:"",newCI_description:""}
+        this.changeHandler=this.changeHandler.bind(this)
+        this.submitHandler=this.submitHandler.bind(this)
     }
 
 
@@ -30,6 +32,26 @@ export default class extends React.Component{
             })
           })
       }
+
+      changeHandler( event){
+        this.setState({
+          [event.target.name]: event.target.value
+        });
+      }
+
+      submitHandler(event){
+        request('/checkItemTemplate_checkitem/create','POST',{
+            checkitemtemplate : {
+                name: this.state.newCI_name,
+                description: this.state.newCI_description
+            }
+        }).then(resp=>{
+            this.setState({
+                done:false
+            })
+          })
+        }
+      
 
 
 
@@ -56,7 +78,19 @@ export default class extends React.Component{
                         }
                     </tbody>
                 </table>
-                </div>  
+                </div>
+                <div> 
+                    <form>
+                        <fieldset>
+                            <legend>Create New CheckItem:</legend>
+                            Name:<br/>
+                            <input type="text" name="newCI_name" onChange={this.changeHandler}/><br/>
+                            Description:<br/>
+                            <input type="text" name="newCI_description" onChange={this.changeHandler}/><br/><br/>
+                            <input type="submit" value="Submit" onClick={this.submitHandler}/>
+                        </fieldset>
+                    </form>
+                </div> 
             </div>)
         }
         else return(<div/>)

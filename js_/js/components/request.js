@@ -8,7 +8,6 @@ export default function(path,method,json){
     myheaders.append('Authorization',localStorage.getItem('token'))
     if(method=='POST'){
       myheaders.append('Content-type','application/json')
-      myheaders.append('Accept','application/json')
       myheaders.append('Access-Control-Allow-Methods','POST')
     }
     else{
