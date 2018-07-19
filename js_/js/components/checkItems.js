@@ -135,16 +135,14 @@ export default class extends React.Component{
                 <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
                 </div>
                 <div> 
-                    <form>
-                        <fieldset>
-                            <legend>Create New CheckItem:</legend>
-                            Name:<br/>
-                            <input type="text" name="newCI_name" onChange={this.changeHandler}/><br/>
-                            Description:<br/>
-                            <input type="text" name="newCI_description" onChange={this.changeHandler}/><br/><br/>
-                            <input type="submit" value="Submit" onClick={this.submitHandler}/>
-                        </fieldset>
-                    </form>
+                    <fieldset>
+                        <legend>Create New CheckItem:</legend>
+                        Name:<br/>
+                        <input type="text" name="newCI_name" onChange={this.changeHandler}/><br/>
+                        Description:<br/>
+                        <input type="text" name="newCI_description" onChange={this.changeHandler}/><br/><br/>
+                        <input type="submit" value="Submit" onClick={this.submitHandler}/>
+                    </fieldset>
                 </div> 
             </div>)
         }
