@@ -89,4 +89,17 @@ public class CheckItemService implements Service {
         return new ServiceResponse<>(savedcheckitem,null);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<CheckItemRequestDto[]> searchByName(String authorization,String name){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtsearch= CheckItemValidator.validateSearch(user,name);
+        if(!valtsearch.isValid)
+            return new ServiceResponse<>(null,valtsearch.problem);
+        CheckItem[] checkItems= itemRepository.searchByName(user.getId(),name);
+        ValidatorResponse valtcheckItem=CheckItemValidator.validateItems(checkItems,user);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        return new ServiceResponse<>(Converter.CheckItemsDTO_CheckItems(checkItems),null);
+    }
+
 }

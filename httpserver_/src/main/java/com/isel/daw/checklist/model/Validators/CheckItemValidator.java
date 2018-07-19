@@ -72,4 +72,13 @@ public class CheckItemValidator {
         return new ValidatorResponse(true,null);
     }
 
+    public static ValidatorResponse validateSearch(Users user,String name){
+        if(user==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
+        if(name==null || name==""){
+            return new ValidatorResponse(false,new InvalidParameterProblem("name","name cant be empty or null"));
+
+        }
+        return new ValidatorResponse(true,null);
+    }
 }

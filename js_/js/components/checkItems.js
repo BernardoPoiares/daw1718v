@@ -10,11 +10,12 @@ import ServerRequests from './serverRequests'
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false,newCI_name:"",newCI_description:"",selectedCI:[]}
+        this.state={done:false,search:"",newCI_name:"",newCI_description:"",selectedCI:[]}
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
         this.addSelected=this.addSelected.bind(this)
         this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
+        this.submitSearch=this.submitSearch.bind(this)
     }
 
 
@@ -75,6 +76,20 @@ export default class extends React.Component{
         )
       }
 
+      submitSearch(){
+        ServerRequests.SearchCheckItems(this.state.search).then(resp=>{
+            return resp.json().then(json=>{
+            const checkitemsarray=[]
+            if(json.properties!=null){
+                json.properties.map(checkitem=>{
+                    checkitemsarray.push(new CheckItem(checkitem))
+                })
+            }
+            this.setState({checkitems:checkitemsarray,done:true})
+            })
+            
+        })
+      }
 
       addSelected(ev){
         let sel_array=this.state.selectedCI
@@ -89,6 +104,12 @@ export default class extends React.Component{
         if(this.state.done===true){
         return(<div>
             <h2>CheckItems</h2>
+            <div class="search-container">
+            <fieldset>
+                <input type="text" placeholder="Search.." name="search" onChange={this.changeHandler}/>
+                <button type="submit" onClick={this.submitSearch}>Search</button>
+                </fieldset>    
+                </div>
               <div>
                 <table>
                     <thead>

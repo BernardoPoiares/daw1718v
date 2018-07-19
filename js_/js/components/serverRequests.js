@@ -3,6 +3,7 @@ import request from './request'
 module.exports={
     UpdateCheckItem,
     DeleteCheckItems,
+    SearchCheckItems,
     CreateCheckList,
     DeleteCheckLists,
     GetCheckList,
@@ -12,7 +13,7 @@ module.exports={
 
 const CHECKITEM_UPDATE_PATH='/checkItemTemplate_checkitem/update'
 const CHECKITEM_DELETE_PATH='/checkItemTemplate_checkitem/various'
-
+const CHECKITEM_SEARCH_PATH='/checkItem/search'
 
 const CHECKLIST_CREATE_PATH="/checkList/create"
 const CHECKLIST_DELETE_PATH="/checkList/various"
@@ -31,6 +32,10 @@ function DeleteCheckItems(checkitems){
             array.push({id:ci})
     )
     return request(CHECKITEM_DELETE_PATH,'DELETE',array)
+}
+
+function SearchCheckItems(search){
+    return request(CHECKITEM_SEARCH_PATH+"?name="+search,'GET')
 }
 
 function CreateCheckList(checklist){
@@ -53,3 +58,4 @@ function GetCheckList(checklist){
 function UpdateCheckList(checklist){
     return request(CHECKLIST_UPDATE_PATH,'POST',checklist)
 }
+
