@@ -2,10 +2,18 @@ import React from 'react'
 import  request  from './request';
 import  CheckList  from '../Model/CheckList';
 
+import ServerRequests from './serverRequests'
+
+const CHECKLIST_PATH="/checkList/"
+
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false}
+        this.state={done:false,newCL_name:"",newCL_completionDate:"",selectedCI:[]}
+        this.changeHandler=this.changeHandler.bind(this)
+        this.submitHandler=this.submitHandler.bind(this)
+        this.addSelected=this.addSelected.bind(this)
+        this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
     }
 
 
@@ -31,7 +39,44 @@ export default class extends React.Component{
           })
       }
 
+      
+      changeHandler( event){
+        this.setState({
+          [event.target.name]: event.target.value
+        });
+      }
 
+      submitHandler(event){
+        ServerRequests.CreateCheckList({
+                name:this.state.newCL_name,
+                completionDate:this.state.newCL_completionDate
+        }).then(resp=>{
+            this.setState({
+                done:false
+            })
+          })
+        }
+
+        
+      addSelected(ev){
+        let sel_array=this.state.selectedCL
+        if(!ev.target.checked)
+            sel_array=sel_array.slice(sel_array.indexOf(ev.target.id),1)
+        else
+            sel_array.push(ev.target.id)
+        this.setState({selectedCL:sel_array})
+      }
+
+
+      submitDeleteHandler(){
+        ServerRequests.DeleteCheckLists(this.state.selectedCL).then(
+            this.setState({done:false,selectedCL:[]})
+        )
+      }
+
+      getDate(){
+          return new Date().toISOString().slice(0,-5)
+      }
 
 
     render(){
@@ -40,20 +85,38 @@ export default class extends React.Component{
             <h2>CheckLists</h2>
               <div>
                 <table>
-                    <tr>
-                        <th>Id</th>
-                        <th>Description</th>
-                        <th>CompletionDate</th> 
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th/>
+                            <th>Name</th>
+                            <th data-type="date" >CompletionDate</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
                     {this.state.checklists.map(checklist=>(
                         <tr key={checklist.id}>
-                            <td>{checklist.name}</td>                            
-                            <td>{checklist.completionDate}</td>
+                            <td><input id={checklist.id} type="checkbox" onChange={this.addSelected}/></td>
+                                <td><a href={CHECKLIST_PATH+checklist.id}>{checklist.name}</a></td>
+                                <td >{checklist.completionDate.toLocaleString()}</td>
                         </tr>
-                    ))
-                    }
+                        ))
+                        }
+                    </tbody>
                 </table>
-                </div>  
+                <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
+                </div>
+                <div> 
+                    <form>
+                        <fieldset>
+                            <legend>Create New CheckList:</legend>
+                            Name:<br/>
+                            <input type="text" name="newCL_name" onChange={this.changeHandler}/><br/>
+                            CompletionDate:<br/>
+                            <input type="datetime-local" value={this.getDate()} min={this.getDate()} name="newCL_completionDate" onChange={this.changeHandler}/><br/><br/>
+                            <input type="submit" value="Submit" onClick={this.submitHandler}/>
+                        </fieldset>
+                    </form>
+                </div> 
             </div>)
         }
         else return(<div/>)
