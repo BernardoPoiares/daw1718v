@@ -5,14 +5,10 @@ export default function(path,method,json){
     const myheaders=new Headers()
     myheaders.append('Access-Control-Allow-Origin','*')
     if(session.isLogggedIn)
-    myheaders.append('Authorization',localStorage.getItem('token'))
-    if(method=='POST'){
+      myheaders.append('Authorization',localStorage.getItem('token'))
+    myheaders.append('Access-Control-Allow-Methods',method)
+    if(method!='GET')
       myheaders.append('Content-type','application/json')
-      myheaders.append('Access-Control-Allow-Methods','POST')
-    }
-    else{
-      myheaders.append('Access-Control-Allow-Methods','GET')
-    }
     return fetch(host+path,{
         method:method,
         headers:myheaders,

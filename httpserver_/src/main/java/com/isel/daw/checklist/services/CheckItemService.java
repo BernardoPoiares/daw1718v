@@ -20,9 +20,11 @@ import com.isel.daw.checklist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.Transactional;
 import javax.xml.validation.Validator;
 
 @Component
@@ -65,6 +67,7 @@ public class CheckItemService implements Service {
         return new ServiceResponse<>(checkItem,null);
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
     public ServiceResponse<CheckItemRequestDto[]> getAll(String authorization){
         Users user=userRepository.findByToken(authorization.split(" ")[1]);
         ValidatorResponse valtUser_id= CheckItemValidator.validateUser(user);

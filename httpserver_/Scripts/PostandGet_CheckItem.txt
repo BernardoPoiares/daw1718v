@@ -1,7 +1,10 @@
 
 POST http://localhost:8081/checkItemTemplate_checkitem/create
 Content-Type: application/json
-Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
+Origin: http://localhost:9000
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: POST
+Authorization: Basic Y2F0OmNhdDI=
 
 {
     "checkitemtemplate" : {
@@ -44,3 +47,20 @@ DELETE http://localhost:8081/checkItemTemplate_checkitem/delete/1
 Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
+DELETE http://localhost:8081/checkItemTemplate_checkitem/various
+Content-Type: application/json
+Origin: http://localhost:9000
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: DELETE
+Authorization: Basic Y2F0OmNhdDI=
+
+
+{   
+    [   
+        {
+            "id":6
+        },{
+            "id":7
+        }
+    ]
+}

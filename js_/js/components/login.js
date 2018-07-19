@@ -11,6 +11,7 @@ export default class Login extends React.Component {
 
   this.changeHandler = this.changeHandler.bind(this)
   this.submitHandler = this.submitHandler.bind(this)
+
       this.state = {
         username: "",
         password: ""
@@ -36,17 +37,12 @@ export default class Login extends React.Component {
       })
     }
 
-    validateInputs(){
-      return this.state.username.length>0 && this.state.password.length>0
-    }
-
     render() {
     return (
       <div>
         Username:
       <input type='text'
         name='username'
-        autofocus
         onChange={this.changeHandler}
         value={this.state.username}/>
         Password:
@@ -55,7 +51,7 @@ export default class Login extends React.Component {
         onChange={this.changeHandler}
         value={this.state.password}/>
         <br/>
-        <button type="submit" disable={!this.validateInputs} onClick={this.submitHandler}>Submit</button>
+        <input type="button" value="LogIn" onClick={this.submitHandler}/>
       </div>
     );
   }

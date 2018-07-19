@@ -3,15 +3,18 @@ import  request  from './request';
 import  CheckItem  from '../Model/CheckItem';
 
 import  TableCell  from './tableCell';
+import StateCell from './stateCell';
 
 import ServerRequests from './serverRequests'
 
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false,newCI_name:"",newCI_description:""}
+        this.state={done:false,newCI_name:"",newCI_description:"",selectedCI:[]}
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
+        this.addSelected=this.addSelected.bind(this)
+        this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
     }
 
 
@@ -29,10 +32,14 @@ export default class extends React.Component{
           .then(resp=>{
             return resp.json().then(json=>{
             const checkitemsarray=[]
+            console.log(this.state.checkitems)
             json.properties.map(checkitem=>{
                 checkitemsarray.push(new CheckItem(checkitem))
             })
             this.setState({checkitems:checkitemsarray,done:true})
+            
+            console.log("-")
+            console.log(this.state.checkitems)
             })
           })
       }
@@ -56,7 +63,6 @@ export default class extends React.Component{
           })
         }
 
-
       refresh(){
             this.setState({
                 done:false
@@ -67,6 +73,21 @@ export default class extends React.Component{
         return ServerRequests.UpdateCheckItem(checkitem)
       }
 
+      submitDeleteHandler(){
+        ServerRequests.DeleteCheckItems(this.state.selectedCI).then(
+            this.setState({done:false,selectedCI:[]})
+        )
+      }
+
+
+      addSelected(ev){
+        let sel_array=this.state.selectedCI
+        if(!ev.target.checked)
+            sel_array=sel_array.slice(sel_array.indexOf(ev.target.id),1)
+        else
+            sel_array.push(ev.target.id)
+        this.setState({selectedCI:sel_array})
+      }
 
     render(){
         if(this.state.done===true){
@@ -76,20 +97,25 @@ export default class extends React.Component{
                 <table>
                     <thead>
                         <tr>
+                            <th/>
                             <th>Name</th>
-                            <th>Description</th> 
+                            <th>Description</th>                             
+                            <th>State</th> 
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.checkitems.map(checkitem=>(
                             <tr key={checkitem.id}>
-                                <td><a href={"/checkItems/"+checkitem.id}>{checkitem.name}</a></td>
+                                <td><input id={checkitem.id} type="checkbox" onChange={this.addSelected}/></td>
+                                <TableCell id={checkitem.id} value={checkitem.name}  name="name" update={this.update}/>
                                 <TableCell id={checkitem.id} value={checkitem.description}  name="description" update={this.update}/>
+                                <StateCell id={checkitem.id} value={checkitem.state}  name="state" update={this.update}/>
                             </tr>
                         ))
                         }
                     </tbody>
                 </table>
+                <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
                 </div>
                 <div> 
                     <form>

@@ -14,9 +14,9 @@ import com.isel.daw.checklist.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Component

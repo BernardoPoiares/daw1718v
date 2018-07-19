@@ -16,9 +16,12 @@ import com.isel.daw.checklist.repositories.CheckItemTemplateRepository;
 import com.isel.daw.checklist.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.Transactional;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class CheckItemTemplate_CheckItemService implements Service {
@@ -61,6 +64,9 @@ public class CheckItemTemplate_CheckItemService implements Service {
 
     @Transactional
     public ServiceResponse<?> update(String authorization, CheckItemRequestDto checkitem_dto){
+        ValidatorResponse valtrequest= CheckItemValidator.validateItemUpdateRequest(checkitem_dto);
+        if(!valtrequest.isValid)
+            return new ServiceResponse<>(null,valtrequest.problem);
         ServiceResponse<CheckItem> serv_resp=checkItemService.getCheckItem(authorization,checkitem_dto.getId());
         if(serv_resp.getError()!=null)
             return serv_resp;
@@ -68,27 +74,26 @@ public class CheckItemTemplate_CheckItemService implements Service {
         if(checkitem_dto.getState()!=null)
             checkitem.setState(checkitem_dto.getState());
         CheckItemTemplateRequestDto ckit_dto=checkitem_dto.getCheckitemtemplate();
-        ValidatorResponse valtrequest= CheckItemTemplateValidator.validateUpdateRequest(ckit_dto);
-        if(!valtrequest.isValid)
-            return new ServiceResponse<>(null,valtrequest.problem);
-        CheckItemTemplate itemtemplatetoupdate=checkitem.getCheckitem_itemtemplate();
-        long numbTempuses=itemRepository.countByTemplateId(itemtemplatetoupdate.getId());
-        if(numbTempuses>1) {
-            ServiceResponse<CheckItemTemplate> ckittemp_res=checkItemTemplateService.clone(authorization,itemtemplatetoupdate);
-            if(ckittemp_res.getError()!=null)
-                return ckittemp_res;
+        if(ckit_dto.getDescription()!=null ||ckit_dto.getName()!=null) {
+            CheckItemTemplate itemtemplatetoupdate = checkitem.getCheckitem_itemtemplate();
+            long numbTempuses = itemRepository.countByTemplateId(itemtemplatetoupdate.getId());
+            if (numbTempuses > 1) {
+                ServiceResponse<CheckItemTemplate> ckittemp_res = checkItemTemplateService.clone(authorization, itemtemplatetoupdate);
+                if (ckittemp_res.getError() != null)
+                    return ckittemp_res;
 
-            itemtemplatetoupdate=ckittemp_res.getResponse();
-            checkitem.setCheckitem_itemtemplate(itemtemplatetoupdate);
+                itemtemplatetoupdate = ckittemp_res.getResponse();
+                checkitem.setCheckitem_itemtemplate(itemtemplatetoupdate);
+            }
+            if (ckit_dto.getName() != null)
+                itemtemplatetoupdate.setName(ckit_dto.getName());
+            if (ckit_dto.getDescription() != null)
+                itemtemplatetoupdate.setDescription(ckit_dto.getDescription());
         }
-        if(ckit_dto.getName()!=null)
-            itemtemplatetoupdate.setName(ckit_dto.getName());
-        if(ckit_dto.getDescription()!=null)
-            itemtemplatetoupdate.setDescription(ckit_dto.getDescription());
         return new ServiceResponse<>(checkitem,null);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE ,propagation= Propagation.REQUIRES_NEW)
     public ServiceResponse<CheckItem> delete(String authorization, long id){
         ServiceResponse<CheckItem> serv_resp=checkItemService.getCheckItem(authorization,id);
         if(serv_resp.getError()!=null)
@@ -106,5 +111,18 @@ public class CheckItemTemplate_CheckItemService implements Service {
             }
         }
         return new ServiceResponse<>(checkitem,null);
+    }
+
+
+    @Transactional(isolation = Isolation.SERIALIZABLE ,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<CheckItemRequestDto[]> deleteVarious(String authorization, CheckItemRequestDto[] checkItemsRequestDto){
+        for(CheckItemRequestDto ci:checkItemsRequestDto){
+            ServiceResponse<CheckItem> servresp=delete(authorization,ci.getId());
+            if(servresp.getError()!=null){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return new ServiceResponse<>(null,servresp.getError());
+            }
+        }
+        return new ServiceResponse<>(checkItemsRequestDto,null);
     }
 }

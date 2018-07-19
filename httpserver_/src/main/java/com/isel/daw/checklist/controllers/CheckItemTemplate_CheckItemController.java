@@ -5,6 +5,7 @@ import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckItemArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemSirenBuilder;
 import com.isel.daw.checklist.services.CheckItemService;
 import com.isel.daw.checklist.services.CheckItemTemplate_CheckItemService;
@@ -67,6 +68,17 @@ public class CheckItemTemplate_CheckItemController {
                         checkItem.getCheckitem_itemtemplate().getName(),
                         checkItem.getCheckitem_itemtemplate().getDescription(),
                         checkItem.getState())
+        );
+    }
+
+    @DeleteMapping(path="/various", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> deleteVarious(@RequestHeader(value="Authorization")String authorization,  @RequestBody CheckItemRequestDto[] checkItemsRequestDto) {
+        ServiceResponse<CheckItemRequestDto[]> response=itemtemplate_itemService.deleteVarious(authorization,checkItemsRequestDto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckItemArraySirenBuilder.build(checkItemsRequestDto)
         );
     }
 }
