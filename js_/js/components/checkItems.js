@@ -32,14 +32,10 @@ export default class extends React.Component{
           .then(resp=>{
             return resp.json().then(json=>{
             const checkitemsarray=[]
-            console.log(this.state.checkitems)
             json.properties.map(checkitem=>{
                 checkitemsarray.push(new CheckItem(checkitem))
             })
             this.setState({checkitems:checkitemsarray,done:true})
-            
-            console.log("-")
-            console.log(this.state.checkitems)
             })
           })
       }

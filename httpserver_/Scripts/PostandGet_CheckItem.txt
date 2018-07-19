@@ -43,7 +43,7 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
     "state": "umcompleted2" 
 }
 
-DELETE http://localhost:8081/checkItemTemplate_checkitem/delete/1
+DELETE http://localhost:8081/checkItemTemplate_checkitem/1
 Content-Type: application/json
 Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
@@ -55,12 +55,9 @@ Access-Control-Allow-Methods: DELETE
 Authorization: Basic Y2F0OmNhdDI=
 
 
-{   
+
     [   
         {
-            "id":6
-        },{
-            "id":7
+            "id":9
         }
     ]
-}

@@ -92,6 +92,16 @@ public class CheckListController {
         );
     }
 
+    @DeleteMapping(path="/various", produces={"application/vnd.siren+json","application/problem+json"})
+    public ResponseEntity<?> delete(@RequestHeader(value="Authorization")String authorization,@RequestBody CheckListRequestDto[] checklists_dto){
+        ServiceResponse<CheckListRequestDto[]> response=checkListService.deleteVarious(authorization,checklists_dto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckListArraySirenBuilder.build(response.getResponse())
+        );
+    }
+
 
 
 }

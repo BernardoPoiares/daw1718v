@@ -7,8 +7,6 @@ export default class extends React.Component{
         this.onClick=this.onClick.bind(this)
         this.update=props.update
         this.changeHandler=this.changeHandler.bind(this)
-        
-        this.submitHandler=this.submitHandler.bind(this)
         this.state={
             updateView:false,
             name:props.name,
@@ -22,14 +20,9 @@ export default class extends React.Component{
     }
 
     changeHandler(event){
-        this.setState({
-            value: event.target.value
-        });
-    }
-
-    submitHandler(){
-        this.update({[this.state.name]:this.state.value,id:this.state.id}).then(
+        this.update({[this.state.name]:event.target.value,id:this.state.id}).then(
             this.setState({
+                value:new Date(event.target.value),
                 updateView:false
             })
         )
@@ -37,12 +30,12 @@ export default class extends React.Component{
 
     render(){
         if(this.state.updateView==false)
-            return(<td onClick={this.onClick}>{this.state.value}</td>)
-        else
+            return(<td onClick={this.onClick}>{this.state.value.toLocaleString()}</td>)
+        else{
+            const date=this.state.value.toISOString().slice(0,-5)
             return(<td>
-                <input type="text" name={this.state.name} onChange={this.changeHandler} value={this.state.value}/>
-                <button type="submit" onClick={this.submitHandler}>Submit</button>
-                </td>
-        )
+                 <input type="datetime-local" value={date} min={date} name={this.state.name} onChange={this.changeHandler}/><br/><br/>
+                </td>)
+        }
     }
 }

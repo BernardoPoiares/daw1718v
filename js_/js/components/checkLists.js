@@ -4,12 +4,12 @@ import  CheckList  from '../Model/CheckList';
 
 import ServerRequests from './serverRequests'
 
-const CHECKLIST_PATH="/checkList/"
+const CHECKLIST_PATH="/checkLists/"
 
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false,newCL_name:"",newCL_completionDate:"",selectedCI:[]}
+        this.state={done:false,newCL_name:"",newCL_completionDate:"",selectedCL:[]}
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
         this.addSelected=this.addSelected.bind(this)
@@ -27,6 +27,7 @@ export default class extends React.Component{
     
       loadIfNeeded () {
           if(this.state.done===true)return
+          console.log("loading")
           request('/checkList/all','GET')
           .then(resp=>{
             return resp.json().then(json=>{
@@ -51,11 +52,13 @@ export default class extends React.Component{
                 name:this.state.newCL_name,
                 completionDate:this.state.newCL_completionDate
         }).then(resp=>{
+            return resp.json().then(
             this.setState({
                 done:false
             })
-          })
-        }
+            )
+        })
+       }
 
         
       addSelected(ev){
@@ -69,10 +72,11 @@ export default class extends React.Component{
 
 
       submitDeleteHandler(){
-        ServerRequests.DeleteCheckLists(this.state.selectedCL).then(
-            this.setState({done:false,selectedCL:[]})
-        )
-      }
+        ServerRequests.DeleteCheckLists(this.state.selectedCL).then(resp=>{
+            return resp.json().then(
+                this.setState({done:false,selectedCL:[]}))
+        })
+    }
 
       getDate(){
           return new Date().toISOString().slice(0,-5)
@@ -81,6 +85,7 @@ export default class extends React.Component{
 
     render(){
         if(this.state.done===true){
+            const datestring=this.getDate()
         return(<div>
             <h2>CheckLists</h2>
               <div>
@@ -106,19 +111,17 @@ export default class extends React.Component{
                 <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
                 </div>
                 <div> 
-                    <form>
-                        <fieldset>
-                            <legend>Create New CheckList:</legend>
-                            Name:<br/>
-                            <input type="text" name="newCL_name" onChange={this.changeHandler}/><br/>
-                            CompletionDate:<br/>
-                            <input type="datetime-local" value={this.getDate()} min={this.getDate()} name="newCL_completionDate" onChange={this.changeHandler}/><br/><br/>
-                            <input type="submit" value="Submit" onClick={this.submitHandler}/>
-                        </fieldset>
-                    </form>
+                    <fieldset>
+                        <legend>Create New CheckList:</legend>
+                        Name:<br/>
+                        <input type="text" name="newCL_name" onChange={this.changeHandler}/><br/>
+                        CompletionDate:<br/>
+                        <input type="datetime-local" min={datestring} name="newCL_completionDate" onChange={this.changeHandler}/><br/><br/>
+                        <input type="submit" value="Submit" onClick={this.submitHandler}/>
+                    </fieldset>
                 </div> 
             </div>)
         }
-        else return(<div/>)
+        else return(<div>Loading...</div>)
     }
 }

@@ -19,6 +19,8 @@ import com.isel.daw.checklist.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,4 +110,17 @@ public class CheckListService {
         return new ServiceResponse<>(checklist, null);
     }
 
+
+
+    @Transactional(isolation = Isolation.SERIALIZABLE ,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<CheckListRequestDto[]> deleteVarious(String authorization, CheckListRequestDto[] checkListsRequestDto){
+        for(CheckListRequestDto cl:checkListsRequestDto){
+            ServiceResponse<CheckList> servresp=delete(authorization,cl.getId());
+            if(servresp.getError()!=null){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+                return new ServiceResponse<>(null,servresp.getError());
+            }
+        }
+        return new ServiceResponse<>(checkListsRequestDto,null);
+    }
 }
