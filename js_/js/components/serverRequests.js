@@ -7,7 +7,8 @@ module.exports={
     CreateCheckList,
     DeleteCheckLists,
     GetCheckList,
-    UpdateCheckList
+    UpdateCheckList,
+    SearchCheckLists
 }
 
 
@@ -18,6 +19,7 @@ const CHECKITEM_SEARCH_PATH='/checkItem/search'
 const CHECKLIST_CREATE_PATH="/checkList/create"
 const CHECKLIST_DELETE_PATH="/checkList/various"
 const CHECKLIST_UPDATE_PATH="/checkList/update"
+const CHECKLIST_SEARCH_PATH="/checkList/search"
 const CHECKLIST_GET_PATH="/checkList"
 
 function UpdateCheckItem(checkitem){
@@ -59,3 +61,6 @@ function UpdateCheckList(checklist){
     return request(CHECKLIST_UPDATE_PATH,'POST',checklist)
 }
 
+function SearchCheckLists(search){
+    return request(CHECKLIST_SEARCH_PATH+"?name="+search,'GET')
+}

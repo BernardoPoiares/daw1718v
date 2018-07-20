@@ -53,7 +53,7 @@ public class CheckListService {
     public ServiceResponse<CheckListRequestDto[]> getAll(String authorization){
         Users user = userRepository.findByToken(authorization.split(" ")[1]);
         CheckList[] checklist = checkListRepository.findAllbyUser(user.getId());
-        ValidatorResponse valchecklist=CheckListValidator.valLists(checklist,user);
+        ValidatorResponse valchecklist=CheckListValidator.validateLists(checklist,user);
         if (!valchecklist.isValid )
             return new ServiceResponse<>(null, valchecklist.problem);
         return new ServiceResponse<>(Converter.CheckListsDTO_CheckLists(checklist), null);
@@ -123,4 +123,18 @@ public class CheckListService {
         }
         return new ServiceResponse<>(checkListsRequestDto,null);
     }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<CheckListRequestDto[]> searchByName(String authorization,String name){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtsearch= CheckItemValidator.validateSearch(user,name);
+        if(!valtsearch.isValid)
+            return new ServiceResponse<>(null,valtsearch.problem);
+        CheckList[] checkLists= checkListRepository.searchByName(user.getId(),name);
+        ValidatorResponse valtcheckItem=CheckListValidator.validateLists(checkLists,user);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        return new ServiceResponse<>(Converter.CheckListsDTO_CheckLists(checkLists),null);
+    }
+
 }

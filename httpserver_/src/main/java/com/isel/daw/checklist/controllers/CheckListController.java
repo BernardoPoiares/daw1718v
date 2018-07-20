@@ -102,6 +102,17 @@ public class CheckListController {
         );
     }
 
+    @GetMapping(path="/search", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> searchByName(@RequestHeader(value="Authorization")String authorization,@RequestParam("name") String name ) {
+        ServiceResponse<CheckListRequestDto[]> response=checkListService.searchByName(authorization,name);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckListArraySirenBuilder.build(response.getResponse())
+        );
+    }
+
 
 
 }

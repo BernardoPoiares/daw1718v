@@ -9,11 +9,13 @@ const CHECKLIST_PATH="/checkLists/"
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false,newCL_name:"",newCL_completionDate:"",selectedCL:[]}
+        this.state={done:false,state:"",newCL_name:"",newCL_completionDate:"",selectedCL:[]}
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
         this.addSelected=this.addSelected.bind(this)
         this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
+        this.submitSearch=this.submitSearch.bind(this)
+
     }
 
 
@@ -77,6 +79,20 @@ export default class extends React.Component{
                 this.setState({done:false,selectedCL:[]}))
         })
     }
+    submitSearch(){
+        ServerRequests.SearchCheckLists(this.state.search).then(resp=>{
+            return resp.json().then(json=>{
+            const checklistssarray=[]
+            if(json.properties!=null){
+                json.properties.map(checklist=>{
+                    checklistssarray.push(new CheckList(checklist))
+                })
+            }
+            this.setState({checklists:checklistssarray,done:true})
+            })
+            
+        })
+    }
 
       getDate(){
           return new Date().toISOString().slice(0,-5)
@@ -88,6 +104,12 @@ export default class extends React.Component{
             const datestring=this.getDate()
         return(<div>
             <h2>CheckLists</h2>
+            <div class="search-container">
+            <fieldset>
+                <input type="text" placeholder="Search.." name="search" onChange={this.changeHandler}/>
+                <button type="submit" onClick={this.submitSearch}>Search</button>
+                </fieldset>    
+                </div>
               <div>
                 <table>
                     <thead>

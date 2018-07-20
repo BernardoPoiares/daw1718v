@@ -146,6 +146,6 @@ export default class extends React.Component{
                 </div> 
             </div>)
         }
-        else return(<div/>)
+        else return(<div>Loading...</div>)
     }
 }

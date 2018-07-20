@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.repositories;
 
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +12,7 @@ public interface CheckListRepository extends JpaRepository<CheckList,Integer>{
 
     @Query(value="SELECT * FROM checklist WHERE list_user = :id", nativeQuery = true)
     CheckList[] findAllbyUser(@Param("id") long id);
+
+    @Query(value="SELECT * FROM checklist WHERE list_user = :id AND name=:name", nativeQuery = true)
+    CheckList[] searchByName(@Param("id")long id, @Param("name")String name);
 }
