@@ -8,13 +8,15 @@ module.exports={
     DeleteCheckLists,
     GetCheckList,
     UpdateCheckList,
-    SearchCheckLists
+    SearchCheckLists,
+    GetCheckItemsFromList
 }
 
 
 const CHECKITEM_UPDATE_PATH='/checkItemTemplate_checkitem/update'
 const CHECKITEM_DELETE_PATH='/checkItemTemplate_checkitem/various'
 const CHECKITEM_SEARCH_PATH='/checkItem/search'
+const CHECKITEM_SEARCH_BY_LIST_PATH='/checkItem/searchByList'
 
 const CHECKLIST_CREATE_PATH="/checkList/create"
 const CHECKLIST_DELETE_PATH="/checkList/various"
@@ -38,6 +40,10 @@ function DeleteCheckItems(checkitems){
 
 function SearchCheckItems(search){
     return request(CHECKITEM_SEARCH_PATH+"?name="+search,'GET')
+}
+
+function GetCheckItemsFromList(checklist_id){
+    return request(CHECKITEM_SEARCH_BY_LIST_PATH+"?id="+checklist_id,'GET')
 }
 
 function CreateCheckList(checklist){

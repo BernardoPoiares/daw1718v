@@ -3,7 +3,7 @@ import  request  from './request';
 import  CheckList  from '../Model/CheckList';
 
 import ServerRequests from './serverRequests'
-
+import Search from './searchComponent'
 const CHECKLIST_PATH="/checkLists/"
 
 export default class extends React.Component{
@@ -15,7 +15,6 @@ export default class extends React.Component{
         this.addSelected=this.addSelected.bind(this)
         this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
         this.submitSearch=this.submitSearch.bind(this)
-
     }
 
 
@@ -73,14 +72,15 @@ export default class extends React.Component{
       }
 
 
-      submitDeleteHandler(){
+    submitDeleteHandler(){
         ServerRequests.DeleteCheckLists(this.state.selectedCL).then(resp=>{
             return resp.json().then(
                 this.setState({done:false,selectedCL:[]}))
         })
     }
-    submitSearch(){
-        ServerRequests.SearchCheckLists(this.state.search).then(resp=>{
+
+    submitSearch(search){
+        ServerRequests.SearchCheckLists(search).then(resp=>{
             return resp.json().then(json=>{
             const checklistssarray=[]
             if(json.properties!=null){
@@ -104,19 +104,14 @@ export default class extends React.Component{
             const datestring=this.getDate()
         return(<div>
             <h2>CheckLists</h2>
-            <div class="search-container">
-            <fieldset>
-                <input type="text" placeholder="Search.." name="search" onChange={this.changeHandler}/>
-                <button type="submit" onClick={this.submitSearch}>Search</button>
-                </fieldset>    
-                </div>
-              <div>
+            <Search func={this.submitSearch} />
+            <div>
                 <table>
                     <thead>
                         <tr>
                             <th/>
                             <th>Name</th>
-                            <th data-type="date" >CompletionDate</th> 
+                            <th>CompletionDate</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -131,7 +126,7 @@ export default class extends React.Component{
                     </tbody>
                 </table>
                 <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
-                </div>
+            </div>
                 <div> 
                     <fieldset>
                         <legend>Create New CheckList:</legend>

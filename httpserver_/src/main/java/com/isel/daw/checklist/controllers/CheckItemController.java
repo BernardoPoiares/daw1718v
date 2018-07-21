@@ -58,5 +58,14 @@ public class CheckItemController {
         );
     }
 
-
+    @GetMapping(path="/searchByList", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> searchByList(@RequestHeader(value="Authorization")String authorization,@RequestParam("id") long listid ) {
+        ServiceResponse<CheckItemRequestDto[]> response=itemService.searchByList(authorization,listid);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckItemArraySirenBuilder.build(response.getResponse())
+        );
+    }
 }

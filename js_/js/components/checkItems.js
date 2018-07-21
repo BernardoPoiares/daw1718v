@@ -4,6 +4,7 @@ import  CheckItem  from '../Model/CheckItem';
 
 import  TableCell  from './tableCell';
 import StateCell from './stateCell';
+import  Search from './searchComponent'
 
 import ServerRequests from './serverRequests'
 
@@ -76,8 +77,8 @@ export default class extends React.Component{
         )
       }
 
-      submitSearch(){
-        ServerRequests.SearchCheckItems(this.state.search).then(resp=>{
+      submitSearch(search){
+        ServerRequests.SearchCheckItems(search).then(resp=>{
             return resp.json().then(json=>{
             const checkitemsarray=[]
             if(json.properties!=null){
@@ -104,13 +105,8 @@ export default class extends React.Component{
         if(this.state.done===true){
         return(<div>
             <h2>CheckItems</h2>
-            <div class="search-container">
-            <fieldset>
-                <input type="text" placeholder="Search.." name="search" onChange={this.changeHandler}/>
-                <button type="submit" onClick={this.submitSearch}>Search</button>
-                </fieldset>    
-                </div>
-              <div>
+            <Search func={this.submitSearch} />
+            <div>
                 <table>
                     <thead>
                         <tr>
