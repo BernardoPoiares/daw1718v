@@ -5,6 +5,7 @@ import StateCell from './tableCell'
 import DateCell from './dateCell'
 import CheckList from '../model/CheckList'
 import CheckItem from '../model/CheckItem'
+import CheckItemsTable from './tables/CheckItemsTable'
 
 
 export default class extends React.Component{
@@ -56,30 +57,9 @@ export default class extends React.Component{
 
       renderCheckItems(){
           if(this.state.cis_done==true){
-              return( <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th/>
-                            <th>Name</th>
-                            <th>Description</th>                             
-                            <th>State</th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.checkitems.map(checkitem=>(
-                            <tr key={checkitem.id}>
-                                <td><input id={checkitem.id} type="checkbox" onChange={this.addSelected}/></td>
-                                <TableCell id={checkitem.id} value={checkitem.name}  name="name" update={this.update}/>
-                                <TableCell id={checkitem.id} value={checkitem.description}  name="description" update={this.update}/>
-                                <StateCell id={checkitem.id} value={checkitem.state}  name="state" update={this.update}/>
-                            </tr>
-                        ))
-                        }
-                    </tbody>
-                </table>
-                <button type="submit">Remove</button>
-                </div>)
+              return(<CheckItemsTable checkitems={this.state.checkitems}
+                 buttonName='Remove'/>
+            )
           }
       }
 
