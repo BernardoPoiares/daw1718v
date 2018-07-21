@@ -47,7 +47,6 @@ export default class extends React.Component{
       }
 
       submitHandler(checkitem){
-          console.log(checkitem)
         ServerRequests.CreateCheckItem(checkitem).then(resp=>{
             this.setState({
                 done:false
@@ -96,6 +95,6 @@ export default class extends React.Component{
                     <CreateCheckItem func={this.submitHandler}/> 
                 </div>
             )
-        else return(<div>Loading...</div>)
+        else return null
     }
 }

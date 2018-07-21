@@ -17,6 +17,7 @@ export default class extends React.Component{
             id:props.match.params.id
         }
         this.submitHandler=this.submitHandler.bind(this)
+        this.submitRemoveItems=this.submitRemoveItems.bind(this)
     }
     componentDidMount () {
         this.loadIfNeeded()
@@ -55,10 +56,14 @@ export default class extends React.Component{
         return ServerRequests.UpdateCheckList(checkitem)
       }
 
+    submitRemoveItems(checkitems){
+        ServerRequests.RemoveCheckItemsFromCheckList(this.state.id,checkitems)
+    }
 
     renderCheckItems(){
         if(this.state.cis_done==true)
             return(<CheckItemsTable checkitems={this.state.checkitems}
+                checkboxfunc={this.submitRemoveItems}
                 buttonName='Remove'/>
             )
     }

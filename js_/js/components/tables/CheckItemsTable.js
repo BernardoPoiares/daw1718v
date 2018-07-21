@@ -8,9 +8,9 @@ export default class extends React.Component{
 
     constructor(props){
         super(props)
+        this.checkboxfunc=props.checkboxfunc
         this.state={
             checkitems:props.checkitems,
-            checkboxfunc:props.checkboxfunc,
             buttonName:props.buttonName,
             selectedCI:[]
         }
@@ -29,7 +29,7 @@ export default class extends React.Component{
       }
 
       submitSelecteds(){
-          this.state.checkboxfunc(this.state.selectedCI)
+          this.checkboxfunc(this.state.selectedCI)
       } 
 
 
