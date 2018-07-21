@@ -4,7 +4,7 @@ import  CheckList  from '../Model/CheckList';
 
 import ServerRequests from './serverRequests'
 import Search from './searchComponent'
-const CHECKLIST_PATH="/checkLists/"
+import CheckListTable from './tables/CheckListTable';
 
 export default class extends React.Component{
     constructor(props){
@@ -105,28 +105,7 @@ export default class extends React.Component{
         return(<div>
             <h2>CheckLists</h2>
             <Search func={this.submitSearch} />
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th/>
-                            <th>Name</th>
-                            <th>CompletionDate</th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.checklists.map(checklist=>(
-                        <tr key={checklist.id}>
-                            <td><input id={checklist.id} type="checkbox" onChange={this.addSelected}/></td>
-                                <td><a href={CHECKLIST_PATH+checklist.id}>{checklist.name}</a></td>
-                                <td >{checklist.completionDate.toLocaleString()}</td>
-                        </tr>
-                        ))
-                        }
-                    </tbody>
-                </table>
-                <button type="submit" onClick={this.submitDeleteHandler}>Delete</button>
-            </div>
+            <CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitDeleteHandler} buttonName='Delete'/>
                 <div> 
                     <fieldset>
                         <legend>Create New CheckList:</legend>

@@ -12,7 +12,8 @@ module.exports={
     SearchCheckLists,
     GetCheckItemsFromList,
     CreateCheckItem_AddCheckList,
-    RemoveCheckItemsFromCheckList
+    RemoveCheckItemsFromCheckList,
+    GetCheckListsFromCheckItem
 }
 
 const CHECKITEM_CREATE_PATH='/checkItemTemplate_checkitem/create'
@@ -28,6 +29,7 @@ const CHECKLIST_DELETE_PATH="/checkList/various"
 const CHECKLIST_UPDATE_PATH="/checkList/update"
 const CHECKLIST_SEARCH_PATH="/checkList/search"
 const CHECKLIST_GET_PATH="/checkList"
+const CHECKLIST_SEARCH_BY_ITEM_PATH="/checkItem_CheckList/searchByItem"
 
 const CHECKITEMS_CHECKLISTS_REMOVE_PATH='/checkItem_CheckList/deleteCheckItems'
 
@@ -106,3 +108,6 @@ function RemoveCheckItemsFromCheckList(checklist,checkitems){
     return request(CHECKITEMS_CHECKLISTS_REMOVE_PATH,'DELETE',req)
 }
 
+function GetCheckListsFromCheckItem(checkitem_id){
+    return request(CHECKLIST_SEARCH_BY_ITEM_PATH+"?id="+checkitem_id,'GET')
+}

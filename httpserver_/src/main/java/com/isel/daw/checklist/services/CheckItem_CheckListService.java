@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.services;
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.*;
@@ -14,6 +15,8 @@ import com.isel.daw.checklist.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -25,13 +28,15 @@ public class CheckItem_CheckListService {
     private final CheckListService checkListService;
     private final CheckItemService checkItemService;
     private final CheckItemTemplate_CheckItemService checkItem_Template_Service;
+    private final CheckListRepository checkListRepository;
 
 
     @Autowired
-    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService,CheckItemTemplate_CheckItemService checkItem_Template_Service){
+    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService,CheckItemTemplate_CheckItemService checkItem_Template_Service,CheckListRepository checkListRepository){
         this.checkListService=checkListService;
         this.checkItemService=checkItemService;
         this.checkItem_Template_Service=checkItem_Template_Service;
+        this.checkListRepository=checkListRepository;
     }
 
 
@@ -45,7 +50,7 @@ public class CheckItem_CheckListService {
             ServiceResponse<CheckItem> checkitem_resp=checkItemService.getCheckItem(authorization,checkitem_dto.getId());
             if(checkitem_resp.getError()!=null) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return checklist_resp;
+                return checkitem_resp;
             }
             checklist.addCheckItems(checkitem_resp.getResponse());
            /* if(resp!=null){
@@ -94,6 +99,16 @@ public class CheckItem_CheckListService {
         return new ServiceResponse<>(checkList,null);
     }
 
-
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<?> searchByItem(String authorization,Long item_id){
+        ServiceResponse<CheckItem> checkitem_resp=checkItemService.getCheckItem(authorization,item_id);
+        if(checkitem_resp.getError()!=null) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+            return checkitem_resp;
+        }
+        CheckItem checkitem=checkitem_resp.getResponse();
+        List<CheckList> checklists= checkListRepository.findAllByCheckItems(checkitem);
+        return new ServiceResponse<>(Converter.CheckListsDTO_CheckLists(checklists.toArray(new CheckList[checklists.size()])),null);
+    }
 
 }

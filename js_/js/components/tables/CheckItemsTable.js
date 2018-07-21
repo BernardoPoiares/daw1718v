@@ -1,9 +1,7 @@
 import React from 'react'
 
-import TableCell from '../tableCell'
-import StateCell from '../stateCell'
 
-
+const CHECKITEM_PATH="/checkItems/"
 export default class extends React.Component{
 
     constructor(props){
@@ -12,6 +10,7 @@ export default class extends React.Component{
         this.state={
             checkitems:props.checkitems,
             buttonName:props.buttonName,
+            updateView:props.updateView,
             selectedCI:[]
         }
         this.addSelected=this.addSelected.bind(this)
@@ -49,9 +48,9 @@ export default class extends React.Component{
                             {this.state.checkitems.map(checkitem=>(
                                 <tr key={checkitem.id}>
                                     <td><input id={checkitem.id} type="checkbox" onChange={this.addSelected}/></td>
-                                    <TableCell id={checkitem.id} value={checkitem.name}  name="name" update={this.update}/>
-                                    <TableCell id={checkitem.id} value={checkitem.description}  name="description" update={this.update}/>
-                                    <StateCell id={checkitem.id} value={checkitem.state}  name="state" update={this.update}/>
+                                    <td><a href={CHECKITEM_PATH+checkitem.id}>{checkitem.name}</a></td>
+                                    <td>{checkitem.description}</td>
+                                    <td>{checkitem.state}</td>
                                 </tr>
                             ))
                             }
