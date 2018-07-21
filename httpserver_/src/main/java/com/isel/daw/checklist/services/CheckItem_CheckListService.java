@@ -24,12 +24,14 @@ public class CheckItem_CheckListService {
 
     private final CheckListService checkListService;
     private final CheckItemService checkItemService;
+    private final CheckItemTemplate_CheckItemService checkItem_Template_Service;
 
 
     @Autowired
-    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService){
+    public CheckItem_CheckListService(CheckListService checkListService,CheckItemService  checkItemService,CheckItemTemplate_CheckItemService checkItem_Template_Service){
         this.checkListService=checkListService;
         this.checkItemService=checkItemService;
+        this.checkItem_Template_Service=checkItem_Template_Service;
     }
 
 
@@ -75,5 +77,20 @@ public class CheckItem_CheckListService {
         }
         //todo:Change Response
         return new ServiceResponse<>(checklist_resp.getResponse(),null);
+    }
+
+    @Transactional
+    public ServiceResponse<?> createAndAdd(String authorization, CheckItem_CheckListRequestDto checklist_dto) {
+        ServiceResponse<CheckItem> checkitem_resp=checkItem_Template_Service.create(authorization,checklist_dto.getCheckitems()[0]);
+        if(checkitem_resp.getError()!=null) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
+            return checkitem_resp;
+        }
+        ServiceResponse<CheckList> checklist_resp=checkListService.getListById(authorization,checklist_dto.getId());
+        if(checklist_resp.getError()!=null)
+            return checklist_resp;
+        CheckList checkList=checklist_resp.getResponse();
+        checkList.addCheckItems(checkitem_resp.getResponse());
+        return new ServiceResponse<>(checkList,null);
     }
 }

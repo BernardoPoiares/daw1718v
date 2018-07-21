@@ -5,6 +5,7 @@ import  Search from './searchComponent'
 
 import ServerRequests from './serverRequests'
 import CheckItemsTable from './tables/CheckItemsTable'
+import CreateCheckItem from './creates/createCheckItem'
 
 export default class extends React.Component{
     constructor(props){
@@ -45,13 +46,9 @@ export default class extends React.Component{
         });
       }
 
-      submitHandler(event){
-        request('/checkItemTemplate_checkitem/create','POST',{
-            checkitemtemplate : {
-                name: this.state.newCI_name,
-                description: this.state.newCI_description
-            }
-        }).then(resp=>{
+      submitHandler(checkitem){
+          console.log(checkitem)
+        ServerRequests.CreateCheckItem(checkitem).then(resp=>{
             this.setState({
                 done:false
             })
@@ -90,24 +87,15 @@ export default class extends React.Component{
       }
 
     render(){
-        if(this.state.done===true){
-        return(
-        <div>
-            <h2>CheckItems</h2>
-            <Search func={this.submitSearch} />
-            <CheckItemsTable checkitems={this.state.checkitems} checkboxfunc={this.submitDeleteHandler} buttonName='Delete'/>
-            <div> 
-                <fieldset>
-                    <legend>Create New CheckItem:</legend>
-                    Name:<br/>
-                    <input type="text" name="newCI_name" onChange={this.changeHandler}/><br/>
-                    Description:<br/>
-                    <input type="text" name="newCI_description" onChange={this.changeHandler}/><br/><br/>
-                    <input type="submit" value="Submit" onClick={this.submitHandler}/>
-                </fieldset>
-            </div> 
-        </div>)
-        }
+        if(this.state.done===true)
+            return(
+                <div>
+                    <h2>CheckItems</h2>
+                    <Search func={this.submitSearch} />
+                    <CheckItemsTable checkitems={this.state.checkitems} checkboxfunc={this.submitDeleteHandler} buttonName='Delete'/>
+                    <CreateCheckItem func={this.submitHandler}/> 
+                </div>
+            )
         else return(<div>Loading...</div>)
     }
 }

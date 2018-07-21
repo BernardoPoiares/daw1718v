@@ -1,6 +1,7 @@
 import request from './request'
 
 module.exports={
+    CreateCheckItem,
     UpdateCheckItem,
     DeleteCheckItems,
     SearchCheckItems,
@@ -9,20 +10,34 @@ module.exports={
     GetCheckList,
     UpdateCheckList,
     SearchCheckLists,
-    GetCheckItemsFromList
+    GetCheckItemsFromList,
+    CreateCheckItem_AddCheckList
 }
 
-
+const CHECKITEM_CREATE_PATH='/checkItemTemplate_checkitem/create'
 const CHECKITEM_UPDATE_PATH='/checkItemTemplate_checkitem/update'
 const CHECKITEM_DELETE_PATH='/checkItemTemplate_checkitem/various'
 const CHECKITEM_SEARCH_PATH='/checkItem/search'
 const CHECKITEM_SEARCH_BY_LIST_PATH='/checkItem/searchByList'
+
+const CHECKITEM_CHECKLIST_CREATEANDADD='/checkItem_CheckList/createAndAdd'
 
 const CHECKLIST_CREATE_PATH="/checkList/create"
 const CHECKLIST_DELETE_PATH="/checkList/various"
 const CHECKLIST_UPDATE_PATH="/checkList/update"
 const CHECKLIST_SEARCH_PATH="/checkList/search"
 const CHECKLIST_GET_PATH="/checkList"
+
+
+
+function CreateCheckItem(checkitem){
+    return request(CHECKITEM_CREATE_PATH,'POST',{
+        checkitemtemplate : {
+            name:checkitem.name,
+            description: checkitem.description
+        }
+    })
+}
 
 function UpdateCheckItem(checkitem){
     return request(CHECKITEM_UPDATE_PATH,'POST',{id:checkitem.id,state:checkitem.state,
@@ -70,3 +85,14 @@ function UpdateCheckList(checklist){
 function SearchCheckLists(search){
     return request(CHECKLIST_SEARCH_PATH+"?name="+search,'GET')
 }
+function CreateCheckItem_AddCheckList(checklist,checkitem){
+    return request(CHECKITEM_CHECKLIST_CREATEANDADD,'POST',{id:checklist,
+        checkitems:[{checkitemtemplate:{
+            name:checkitem.name,
+            description:checkitem.description}
+        }
+        ]
+    }
+    )
+}
+

@@ -55,4 +55,19 @@ public class CheckItem_CheckListController {
                         checkList.getName(),
                         checkList.getCompletionDate()));
     }
+
+    @PostMapping(path="/createAndAdd", produces= {
+            "application/vnd.siren+json", "application/problem+json"
+    })
+    @RequiresAuthentication
+    public ResponseEntity<?> createAndAdd(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckItem_CheckListRequestDto checkItem_checkListRequestDto) {
+        ServiceResponse<?> response = checkItem_checkListService.createAndAdd(authorization, checkItem_checkListRequestDto);
+        if (response.getError() != null)
+            return ResponseBuilder.buildError(response.getError());
+        CheckList checkList = (CheckList)response.getResponse();
+        return ResponseBuilder.build(
+                CheckListSirenBuilder.build(checkList.getId(),
+                        checkList.getName(),
+                        checkList.getCompletionDate()));
+    }
 }

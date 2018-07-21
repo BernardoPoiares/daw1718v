@@ -6,6 +6,7 @@ import DateCell from './dateCell'
 import CheckList from '../model/CheckList'
 import CheckItem from '../model/CheckItem'
 import CheckItemsTable from './tables/CheckItemsTable'
+import CreateCheckItem from './creates/createCheckItem'
 
 
 export default class extends React.Component{
@@ -15,6 +16,7 @@ export default class extends React.Component{
             done:false,
             id:props.match.params.id
         }
+        this.submitHandler=this.submitHandler.bind(this)
     }
     componentDidMount () {
         this.loadIfNeeded()
@@ -35,7 +37,6 @@ export default class extends React.Component{
         }
             
         if(this.state.cis_done!=true){
-            console.log(34)
             ServerRequests.GetCheckItemsFromList(this.state.id).then(resp=>{
                 return resp.json().then(json=>{
                 const checkitemsarray=[]
@@ -55,13 +56,19 @@ export default class extends React.Component{
       }
 
 
-      renderCheckItems(){
-          if(this.state.cis_done==true){
-              return(<CheckItemsTable checkitems={this.state.checkitems}
-                 buttonName='Remove'/>
+    renderCheckItems(){
+        if(this.state.cis_done==true)
+            return(<CheckItemsTable checkitems={this.state.checkitems}
+                buttonName='Remove'/>
             )
-          }
-      }
+    }
+
+    submitHandler(checkitem){
+        ServerRequests.CreateCheckItem_AddCheckList(this.state.id,checkitem).then(
+            this.setState({cis_done:false})
+        )
+    }
+
 
     render(){
         if(this.state.list_done==true)
@@ -84,6 +91,7 @@ export default class extends React.Component{
                     </table>
                 </div>
                 {this.renderCheckItems()}
+                <CreateCheckItem func={this.submitHandler}/>
             </div>
             )
         else 
