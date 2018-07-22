@@ -7,7 +7,15 @@ import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.problems.*;
 
+import java.util.List;
+
 public class CheckListTemplateValidator {
+
+    public static ValidatorResponse valUser(Users user){
+        if(user==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
+         return new ValidatorResponse(true,null);
+    }
 
     public static ValidatorResponse valUser_Id(Users user,long id){
         if(user==null)
@@ -43,6 +51,17 @@ public class CheckListTemplateValidator {
         if(!(checkListTemplate.getListtemplate_user().getUserName().equals(user.getUserName()))) {
             return new ValidatorResponse(false, new NotFoundProblem("CheckList with the id '" + checkListTemplate.getId() + "'"));
         }return new ValidatorResponse(true,null);
+    }
+
+    public static ValidatorResponse validateListsTemplates(List<CheckListTemplate> checkListTemplates, Users user){
+        if(checkListTemplates==null)
+            return new ValidatorResponse(false,new InternalServerProblem());
+        for(CheckListTemplate cklt:checkListTemplates){
+            ValidatorResponse resp=validateListTemplate(cklt,user);
+            if(!resp.isValid)
+                return resp;
+        }
+        return new ValidatorResponse(true,null);
     }
 
     public static ValidatorResponse valCkItRequest(CheckListTemplateRequestDto checklisttemplate_dto) {

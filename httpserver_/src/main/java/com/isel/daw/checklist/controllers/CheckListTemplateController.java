@@ -5,6 +5,7 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateSirenBuilder;
 import com.isel.daw.checklist.services.CheckListTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,19 @@ public class CheckListTemplateController {
                         checklisttemplate.getName())
         );
     }
+
+
+    @GetMapping(path = "/all", produces = {"application/vnd.siren+json", "application/problem+json"})
+    public ResponseEntity<?> getListById(@RequestHeader(value = "Authorization") String authorization) {
+        ServiceResponse<CheckListTemplateRequestDto[]> response=checkListTemplateService.getAll(authorization);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        CheckListTemplateRequestDto[] checklisttemplates=response.getResponse();
+        return ResponseBuilder.build(
+                CheckListTemplateArraySirenBuilder.build(checklisttemplates)
+        );
+    }
+
 
     @PostMapping(path = "/create", produces = {"application/vnd.siren+json", "application/problem+json"})
     public ResponseEntity<?> create(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckListTemplateRequestDto checklisttemplate_ReqDto) {

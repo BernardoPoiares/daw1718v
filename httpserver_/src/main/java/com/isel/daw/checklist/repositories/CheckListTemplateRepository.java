@@ -7,4 +7,5 @@ public interface CheckListTemplateRepository extends JpaRepository<CheckListTemp
 
     CheckListTemplate findById(long id);
     long deleteById(long id);
+
 }

@@ -15,7 +15,9 @@ module.exports={
     RemoveCheckItemsFromCheckList,
     GetCheckListsFromCheckItem,
     GetAllCheckLists,
-    AddCheckItemToCheckList
+    AddCheckItemToCheckList,
+    GetAllCheckListTemplates,
+    CreateCheckListTemplate
 }
 
 const CHECKITEM_CREATE_PATH='/checkItemTemplate_checkitem/create'
@@ -35,6 +37,8 @@ const CHECKLIST_SEARCH_BY_ITEM_PATH="/checkItem_CheckList/searchByItem"
 const CHECKLIST_GETALL_PATH='/checkList/all'
 const CHECKITEMS_CHECKLISTS_REMOVE_PATH='/checkItem_CheckList/deleteCheckItems'
 
+const CHECKLISTTEMPLATE_GETALL_PATH='/checkListTemplate/all'
+const CHECKLISTTEMPLATE_CREATE_PATH='/checkListTemplate/create'
 
 
 function CreateCheckItem(checkitem){
@@ -112,7 +116,6 @@ function RemoveCheckItemsFromCheckList(checklist,checkitems){
     checkitems.map(ci=>{
         req.checkitems.push({id:ci})
     })
-    console.log(req)
     return request(CHECKITEMS_CHECKLISTS_REMOVE_PATH,'DELETE',req)
 }
 
@@ -124,4 +127,13 @@ function AddCheckItemToCheckList(checkitem_id,checklist_id){
     return request(CHECKITEM_ADDTO_CHECKLIST_PATH,'POST',{id:checklist_id,
         checkitems:[{id:checkitem_id}]}
     )
+}
+
+function GetAllCheckListTemplates(){
+    return request(CHECKLISTTEMPLATE_GETALL_PATH,'GET')
+}
+
+
+function CreateCheckListTemplate(checklistemplate_name){
+    return request(CHECKLISTTEMPLATE_CREATE_PATH,'POST',{name:checklistemplate_name})
 }

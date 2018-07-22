@@ -6,6 +6,7 @@ import checkItems from './checkItems'
 import checkItem from './checkItem'
 import checkLists from './checkLists'
 import checkList from './checkList'
+import checkListTemplate from './checkListTemplate'
 
 import Login from './login'
 import Home from './home'
@@ -90,6 +91,7 @@ render(){
             {this.renderLoginLogout()}  <Sep />
             <Link to="/checkItems">CheckItems</Link> <Sep />            
             <Link to="/checkLists">CheckLists</Link> <Sep />
+            <Link to="/checkListsTemplates">CheckListsTemplates</Link> <Sep />
             <hr/>
           </div>
           <Route path="/" exact={true} component={Home} />
@@ -98,7 +100,8 @@ render(){
           <Route path="/checkItems/:id" exact={true} component={checkItem} />
           <Route path="/checkLists" exact={true} component={checkLists} />
           <Route path="/checkLists/:id" exact={true} component={checkList} />
-          
+          <Route path="/checkListsTemplates/" exact={true} component={checkListTemplate} />
+
         </div>
       </BrowserRouter>
     )

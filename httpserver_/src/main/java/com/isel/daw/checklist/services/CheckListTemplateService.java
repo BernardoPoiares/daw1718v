@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.services;
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
@@ -20,6 +21,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 public class CheckListTemplateService {
@@ -48,6 +51,20 @@ public class CheckListTemplateService {
             return new ServiceResponse<>(null,valtcheckList.problem);
         return new ServiceResponse<>(checklisttemplate,null);
     }
+
+    @Transactional
+    public ServiceResponse<CheckListTemplateRequestDto[]> getAll(String authorization){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtUser= CheckListTemplateValidator.valUser(user);
+        if(!valtUser.isValid)
+            return new ServiceResponse<>(null,valtUser.problem);
+        List<CheckListTemplate> checkliststemplates= listTemplateRepository.findAll();
+        ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListsTemplates(checkliststemplates,user);
+        if(!valtcheckList.isValid)
+            return new ServiceResponse<>(null,valtcheckList.problem);
+        return new ServiceResponse<>(Converter.CheckListsTemplateDTO_CheckListsTemplate(checkliststemplates.toArray(new CheckListTemplate[checkliststemplates.size()])),null);
+    }
+
 
 
     public ServiceResponse<CheckListTemplate> create(String authorization, CheckListTemplateRequestDto checklisttemplate_dto){

@@ -61,3 +61,8 @@ Authorization: Basic Y2F0OmNhdDI=
             "id":9
         }
     ]
+
+
+GET http://localhost:8081/checkItem/search?name=do Daw work24
+Accept: application/vnd.siren+json
+Authorization: Basic Y2F0OmNhdDI=

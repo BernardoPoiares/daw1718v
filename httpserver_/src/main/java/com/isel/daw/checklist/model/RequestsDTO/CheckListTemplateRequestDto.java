@@ -8,6 +8,14 @@ public class CheckListTemplateRequestDto {
 
     private String name;
 
+    public CheckListTemplateRequestDto(){}
+
+
+    public CheckListTemplateRequestDto(long id, String name){
+        this.id=id;
+        this.name=name;
+    }
+
     private CheckItemTemplateRequestDto[] checkitemstemplates;
 
     public long getId() {
