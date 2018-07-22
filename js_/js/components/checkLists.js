@@ -28,7 +28,6 @@ export default class extends React.Component{
     
       loadIfNeeded () {
           if(this.state.done===true)return
-          console.log("loading")
           request('/checkList/all','GET')
           .then(resp=>{
             return resp.json().then(json=>{

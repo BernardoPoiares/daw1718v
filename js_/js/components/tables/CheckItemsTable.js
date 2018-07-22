@@ -10,7 +10,6 @@ export default class extends React.Component{
         this.state={
             checkitems:props.checkitems,
             buttonName:props.buttonName,
-            updateView:props.updateView,
             selectedCI:[]
         }
         this.addSelected=this.addSelected.bind(this)

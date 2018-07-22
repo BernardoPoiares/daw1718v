@@ -6,12 +6,14 @@ import TableCell from './tableCell'
 import StateCell from './stateCell'
 import ServerRequests from './serverRequests';
 import CheckListTable from './tables/CheckListTable'
-
+import ListCheckLists from './ListCheckLists'
 export default class extends React.Component{
     constructor(props){
         super(props)
         this.state={done:false,id:props.match.params.id,checkitem_done:false,checklists_done:false}
         this.renderCheckLists=this.renderCheckLists.bind(this)
+        this.update=this.update.bind(this)
+        this.addList=this.addList.bind(this)
     }
 
 
@@ -47,10 +49,18 @@ export default class extends React.Component{
       }
 
 
+      
+      update(checkitem){
+        return ServerRequests.UpdateCheckItem(checkitem)
+      }
+
       renderCheckLists(){
           if(this.state.checklists_done)
             return(            <CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitDeleteHandler} buttonName='Remove'/>
         )
+      }
+      addList(checklist){
+          ServerRequests.AddCheckItemToCheckList(this.state.id,checklist)
       }
 
     render(){
@@ -76,6 +86,7 @@ export default class extends React.Component{
                 </table>
             </div>
             {this.renderCheckLists()}
+            <ListCheckLists func={this.addList}/>
             </div>)
         }
         else return(<div/>)

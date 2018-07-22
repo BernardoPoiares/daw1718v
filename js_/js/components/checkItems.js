@@ -60,9 +60,6 @@ export default class extends React.Component{
             })
       }
 
-      update(checkitem){
-        return ServerRequests.UpdateCheckItem(checkitem)
-      }
 
       submitDeleteHandler(selectedCI){
         ServerRequests.DeleteCheckItems(selectedCI).then(
