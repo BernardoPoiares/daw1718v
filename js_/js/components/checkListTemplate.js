@@ -17,6 +17,7 @@ export default class extends React.Component{
         }
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
+        this.update=this.update.bind(this)
     }
 
     componentDidMount(){
@@ -58,14 +59,14 @@ export default class extends React.Component{
     }
 
     submitHandler(){
-        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.newCIT_name,this.state.newCIT_description)
+        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.id,this.state.newCIT_name,this.state.newCIT_description)
     }
 
-    update(name){
-        ServerRequests.UpdateCheckListTemplate(this.state.id,name)
+    update(checklisttemp){
+        ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name)
     }
 
-    renderCheckItems(){
+    renderCheckItemsTemplates(){
         if(this.state.cis_done==true)
             return(<CheckItemTempalteTable checkitemstemps={this.state.checkitemstemplates}
                 checkboxfunc={this.submitRemoveItems}
@@ -89,8 +90,8 @@ export default class extends React.Component{
                         </tr>
                     </tbody>
             </table>
+            {this.renderCheckItemsTemplates()}
             <div> 
-            {this.renderCheckItems()}
             <fieldset>
                 <legend>Create New CheckItemTemplate:</legend>
                 Name:<br/>

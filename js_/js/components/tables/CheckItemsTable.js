@@ -15,7 +15,15 @@ export default class extends React.Component{
         this.addSelected=this.addSelected.bind(this)
         this.submitSelecteds=this.submitSelecteds.bind(this)
     }
-    
+    static getDerivedStateFromProps(nextProps, prevState){
+        if (prevState.checkitems !== nextProps.checkitems) {
+            return {
+              checkitems: nextProps.checkitems,
+            }
+          }
+        return null;
+
+    }
 
     addSelected(ev){
         let sel_array=this.state.selectedCI
@@ -27,7 +35,8 @@ export default class extends React.Component{
       }
 
       submitSelecteds(){
-          this.checkboxfunc(this.state.selectedCI)
+          this.checkboxfunc(this.state.selectedCI).then(checkitems=>
+            this.setState({checkitems:checkitems}))
       } 
 
 

@@ -52,7 +52,7 @@ export default class extends React.Component{
 
     render(){
         if(this.state.done==true)
-        return(<div>
+        return(<div><h1>CheckListTemplates</h1>
             <table>
                     <thead>
                         <tr>

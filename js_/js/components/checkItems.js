@@ -77,10 +77,10 @@ export default class extends React.Component{
                 })
             }
             this.setState({checkitems:checkitemsarray,done:true})
-            })
-            
+            })  
         })
       }
+  
 
     render(){
         if(this.state.done===true)
