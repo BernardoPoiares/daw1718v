@@ -50,7 +50,7 @@ public class CheckListTemplate_CheckListService {
             return ckl_resp;
         CheckList checklist=ckl_resp.getResponse();
         Set<CheckItem> checkItems=new HashSet<CheckItem>();
-        for(CheckItemTemplate checkitemtemplate:checklisttemplate.getCheckitemtemplate_checklisttemplate()){
+        for(CheckItemTemplate checkitemtemplate:checklisttemplate.getCheckitemtemplateChecklisttemplate()){
             ServiceResponse<CheckItem> cki_resp=checkItemService.createByTemplate(checkitemtemplate);
             if(cki_resp.getError()!=null) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback

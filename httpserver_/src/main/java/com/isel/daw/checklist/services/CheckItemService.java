@@ -52,7 +52,8 @@ public class CheckItemService implements Service {
         ValidatorResponse valtcheckItem=CheckItemValidator.validateItem(checkItem,user);
        if(!valtcheckItem.isValid)
            return new ServiceResponse<>(null,valtcheckItem.problem);
-       return new ServiceResponse<>(new CheckItemRequestDto(checkItem.getId(),checkItem.getCheckitem_itemtemplate().getName(),checkItem.getCheckitem_itemtemplate().getDescription(),checkItem.getState()),null);
+       CheckItemTemplate checkItemTemplate =checkItem.getCheckitem_itemtemplate();
+       return new ServiceResponse<>(new CheckItemRequestDto(checkItem.getId(),checkItemTemplate.getId(),checkItemTemplate.getName(),checkItemTemplate.getDescription(),checkItem.getState()),null);
     }
 
     public ServiceResponse<CheckItem> getCheckItem(String authorization,long id){

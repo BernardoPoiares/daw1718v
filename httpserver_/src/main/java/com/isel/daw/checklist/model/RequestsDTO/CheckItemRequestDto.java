@@ -12,9 +12,9 @@ public class CheckItemRequestDto {
 
     public CheckItemRequestDto(){}
 
-    public CheckItemRequestDto(long id,String name,String description,String state ){
+    public CheckItemRequestDto(long id,long checkitemtemp_id,String name,String description,String state ){
         this.id=id;
-        this.checkitemtemplate=new CheckItemTemplateRequestDto(name,description);
+        this.checkitemtemplate=new CheckItemTemplateRequestDto(checkitemtemp_id,name,description);
         this.state=state;
     }
 

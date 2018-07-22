@@ -16,8 +16,12 @@ module.exports={
     GetCheckListsFromCheckItem,
     GetAllCheckLists,
     AddCheckItemToCheckList,
+    GetCheckListTemplate,
     GetAllCheckListTemplates,
-    CreateCheckListTemplate
+    CreateCheckListTemplate,
+    UpdateCheckListTemplate,
+    CreateCheckItemTemp_AddTempList,
+    GetCheckItemsTempFromCheckkListTemp
 }
 
 const CHECKITEM_CREATE_PATH='/checkItemTemplate_checkitem/create'
@@ -37,9 +41,13 @@ const CHECKLIST_SEARCH_BY_ITEM_PATH="/checkItem_CheckList/searchByItem"
 const CHECKLIST_GETALL_PATH='/checkList/all'
 const CHECKITEMS_CHECKLISTS_REMOVE_PATH='/checkItem_CheckList/deleteCheckItems'
 
+const CHECKLISTTEMPLATE_GET_PATH='/checkListTemplate'
 const CHECKLISTTEMPLATE_GETALL_PATH='/checkListTemplate/all'
 const CHECKLISTTEMPLATE_CREATE_PATH='/checkListTemplate/create'
+const CHECKLISTTEMPLATE_UPDATE_PATH='/checkListTemplate/update'
 
+const CHECKITEMTEMP_CREATE_ADDTEMPLIST='/checkItemTemplate_CheckListTemplate/createAndAdd'
+const CHECKITEMTEMP_GETALL_FROMTEMPLIST='/checkItemTemplate_CheckListTemplate/getByList'
 
 function CreateCheckItem(checkitem){
     return request(CHECKITEM_CREATE_PATH,'POST',{
@@ -129,6 +137,10 @@ function AddCheckItemToCheckList(checkitem_id,checklist_id){
     )
 }
 
+function GetCheckListTemplate(checklistemplate_id){
+    return request(CHECKLISTTEMPLATE_GET_PATH+"/"+checklistemplate_id,'GET')
+}
+
 function GetAllCheckListTemplates(){
     return request(CHECKLISTTEMPLATE_GETALL_PATH,'GET')
 }
@@ -136,4 +148,16 @@ function GetAllCheckListTemplates(){
 
 function CreateCheckListTemplate(checklistemplate_name){
     return request(CHECKLISTTEMPLATE_CREATE_PATH,'POST',{name:checklistemplate_name})
+}
+
+function UpdateCheckListTemplate(checklisttemp_id,newname){
+    return request(CHECKLISTTEMPLATE_UPDATE_PATH,'POST',{id:checklisttemp_id,name:newname})
+}
+
+function CreateCheckItemTemp_AddTempList(checklisttemp_id,checkitemtemp_name,checkitemtemp_description){
+    return request(CHECKITEMTEMP_CREATE_ADDTEMPLIST,'POST',{id:checklisttemp_id,checkitemstemplates:[{name:checkitemtemp_name,description:checkitemtemp_description}]})
+}
+
+function GetCheckItemsTempFromCheckkListTemp(checklisttemp_id){
+    return request(CHECKITEMTEMP_GETALL_FROMTEMPLIST+"/"+checklisttemp_id,'GET')
 }

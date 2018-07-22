@@ -2,15 +2,18 @@ import React from 'react'
 
 import CheckListTemplate from '../model/CheckListTemplate'
 import ServerRequests from './ServerRequests'
+import TableCell from './tableCell';
+import CheckItemTempalteTable from './tables/CheckItemTemplateTable'
+import CheckItemTemplate from '../model/CheckItemTemplate'
 
-const CHECKLISTTEMPLATE_PATH='/checkListTemplate'
 
 export default class extends React.Component{
     constructor(props){
         super(props)
         this.state={
             done:false,
-            newCKLT_name:""
+            name:"",
+            id:props.match.params.id
         }
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
@@ -33,22 +36,43 @@ export default class extends React.Component{
 
     loadIfNeeded(){
         if(this.state.done==true) return
-        ServerRequests.GetAllCheckListTemplates().then(resp=>{
+        ServerRequests.GetCheckListTemplate(this.state.id).then(resp=>{
             return resp.json().then(json=>{
-            const checkliststempsarray=[]
-            if(json.properties!=null){
-                json.properties.map(checklisttemp=>{
-                    checkliststempsarray.push(new CheckListTemplate(checklisttemp))
-                })
-            }
-            this.setState({checkliststemplates:checkliststempsarray,done:true})
+            this.setState({checkliststemplate:new CheckListTemplate(json.properties),done:true})
             })
         })
+              
+        if(this.state.cis_done!=true){
+            ServerRequests.GetCheckItemsTempFromCheckkListTemp(this.state.id).then(resp=>{
+                return resp.json().then(json=>{
+                const checkitemstemparray=[]
+                if(json.properties!=null){
+                    json.properties.map(checkitem=>{
+                        checkitemstemparray.push(new CheckItemTemplate(checkitem))
+                    })
+                }
+                this.setState({checkitemstemplates:checkitemstemparray,cis_done:true})
+                })
+                })
+        }
     }
 
     submitHandler(){
-        ServerRequests.CreateCheckListTemplate(this.state.newCKLT_name)
+        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.newCIT_name,this.state.newCIT_description)
     }
+
+    update(name){
+        ServerRequests.UpdateCheckListTemplate(this.state.id,name)
+    }
+
+    renderCheckItems(){
+        if(this.state.cis_done==true)
+            return(<CheckItemTempalteTable checkitemstemps={this.state.checkitemstemplates}
+                checkboxfunc={this.submitRemoveItems}
+                buttonName='Remove'/>
+            )
+    }
+
 
     render(){
         if(this.state.done==true)
@@ -56,28 +80,26 @@ export default class extends React.Component{
             <table>
                     <thead>
                         <tr>
-                            <th/>
                             <th>Name</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.checkliststemplates.map(checklisttemp=>
-                        <tr key={checklisttemp.id}>
-                            <td><input id={checklisttemp.id} type="checkbox" onChange={this.addSelected}/></td>
-                            <td><a href={CHECKLISTTEMPLATE_PATH+"/"+checklisttemp.id}>{checklisttemp.name}</a></td>
+                        <tr key={this.state.id}>
+                            <TableCell  id={this.state.id} value={this.state.checkliststemplate.name}  name="name" update={this.update} />
                         </tr>
-                        )}
                     </tbody>
             </table>
-            <button type="submit" onClick={this.submitDelete}>Delete</button>
             <div> 
+            {this.renderCheckItems()}
             <fieldset>
-                <legend>Create New CheckListTemplate:</legend>
+                <legend>Create New CheckItemTemplate:</legend>
                 Name:<br/>
-                <input type="text" name="newCKLT_name" onChange={this.changeHandler}/><br/><br/>
+                <input type="text" name="newCIT_name" onChange={this.changeHandler}/><br/>
+                Description:<br/>
+                <input type="text" name="newCIT_description" onChange={this.changeHandler}/><br/><br/>
                 <input type="submit" value="Submit" onClick={this.submitHandler}/>
             </fieldset>
-        </div> 
+        </div>
         </div>)
         return null
     }

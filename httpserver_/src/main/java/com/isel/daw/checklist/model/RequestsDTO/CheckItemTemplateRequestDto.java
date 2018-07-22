@@ -6,16 +6,17 @@ public class CheckItemTemplateRequestDto {
 
     private String description;
 
-    private int id;
+    private long id;
 
     public CheckItemTemplateRequestDto(){}
 
-    public CheckItemTemplateRequestDto(String name,String description){
+    public CheckItemTemplateRequestDto(long id,String name,String description){
+        this.id=id;
         this.name=name;
         this.description=description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

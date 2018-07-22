@@ -47,8 +47,6 @@ public class CheckListTemplateService {
         ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
         if(!valtcheckList.isValid)
             return new ServiceResponse<>(null,valtcheckList.problem);
-        if(!valtcheckList.isValid)
-            return new ServiceResponse<>(null,valtcheckList.problem);
         return new ServiceResponse<>(checklisttemplate,null);
     }
 

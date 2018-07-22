@@ -1,11 +1,11 @@
 import React from 'react'
-import { BrowserRouter, Route,Link,Redirect } from "react-router-dom";
-
+import { BrowserRouter, Route,Link,Redirect } from 'react-router-dom'
 
 import checkItems from './checkItems'
 import checkItem from './checkItem'
 import checkLists from './checkLists'
 import checkList from './checkList'
+import checkListTemplates from './checkListTemplates'
 import checkListTemplate from './checkListTemplate'
 
 import Login from './login'
@@ -100,7 +100,8 @@ render(){
           <Route path="/checkItems/:id" exact={true} component={checkItem} />
           <Route path="/checkLists" exact={true} component={checkLists} />
           <Route path="/checkLists/:id" exact={true} component={checkList} />
-          <Route path="/checkListsTemplates/" exact={true} component={checkListTemplate} />
+          <Route path="/checkListsTemplates/" exact={true} component={checkListTemplates} />
+          <Route path="/checkListsTemplates/:id" exact={true} component={checkListTemplate} />
 
         </div>
       </BrowserRouter>
