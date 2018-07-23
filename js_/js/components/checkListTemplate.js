@@ -71,11 +71,16 @@ export default class extends React.Component{
         ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name)
     }
 
+    submitDeleteItemsTemp(selectedCI){
+        ServerRequests.DeleteCheckItemsTemplates(selectedCI)
+
+    }
+
     renderCheckItemsTemplates(){
         if(this.state.cis_done==true)
             return(<CheckItemTempalteTable checkitemstemps={this.state.checkitemstemplates}
-                checkboxfunc={this.submitRemoveItems}
-                buttonName='Remove'/>
+                checkboxfunc={this.submitDeleteItemsTemp}
+                buttonName='Delete'/>
             )
     }
 

@@ -24,7 +24,8 @@ module.exports={
     GetCheckItemsTempFromCheckkListTemp,
     RemoveCheckItemFromCheckLists,
     DeleteCheckListsTemplates,
-    SearchCheckListsTemplates
+    SearchCheckListsTemplates,
+    DeleteCheckItemsTemplates
 }
 
 const CHECKITEM_CREATE_PATH='/checkItemTemplate_checkitem/create'
@@ -33,7 +34,7 @@ const CHECKITEM_DELETE_PATH='/checkItemTemplate_checkitem/various'
 const CHECKITEM_SEARCH_PATH='/checkItem/search'
 const CHECKITEM_SEARCH_BY_LIST_PATH='/checkItem/searchByList'
 const CHECKITEM_ADDTO_CHECKLIST_PATH='/checkItem_CheckList/addCheckItems'
-const CHECKITEM_CHECKLIST_CREATEANDADD='/checkItem_CheckList/createAndAdd'
+const CHECKITEM_CHECKLIST_CREATEANDADD_PATH='/checkItem_CheckList/createAndAdd'
 
 const CHECKLIST_CREATE_PATH="/checkList/create"
 const CHECKLIST_DELETE_PATH="/checkList/various"
@@ -55,8 +56,9 @@ const CHECKLISTTEMPLATE_SEARCH_PATH='/checkListTemplate/search'
 const CHECKLISTTEMPLATE_DELETE_PATH='/checkItemTemplate_CheckListTemplate/various'
 
 
-const CHECKITEMTEMP_CREATE_ADDTEMPLIST='/checkItemTemplate_CheckListTemplate/createAndAdd'
-const CHECKITEMTEMP_GETALL_FROMTEMPLIST='/checkItemTemplate_CheckListTemplate/getByList'
+const CHECKITEMTEMP_CREATE_ADDTEMPLIST_PATH='/checkItemTemplate_CheckListTemplate/createAndAdd'
+const CHECKITEMTEMP_GETALL_FROMTEMPLIST_PATH='/checkItemTemplate_CheckListTemplate/getByList'
+const CHECKITEMTEMP_DELETEVARIOUS_PATH='/checkItemTemplate/various'
 
 function CreateCheckItem(checkitem){
     return request(CHECKITEM_CREATE_PATH,'POST',{
@@ -118,7 +120,7 @@ function SearchCheckLists(search){
     return request(CHECKLIST_SEARCH_PATH+"?name="+search,'GET')
 }
 function CreateCheckItem_AddCheckList(checklist,checkitem){
-    return request(CHECKITEM_CHECKLIST_CREATEANDADD,'POST',{id:checklist,
+    return request(CHECKITEM_CHECKLIST_CREATEANDADD_PATH,'POST',{id:checklist,
         checkitems:[{checkitemtemplate:{
             name:checkitem.name,
             description:checkitem.description}
@@ -164,11 +166,11 @@ function UpdateCheckListTemplate(checklisttemp_id,newname){
 }
 
 function CreateCheckItemTemp_AddTempList(checklisttemp_id,checkitemtemp_name,checkitemtemp_description){
-    return request(CHECKITEMTEMP_CREATE_ADDTEMPLIST,'POST',{id:checklisttemp_id,checkitemstemplates:[{name:checkitemtemp_name,description:checkitemtemp_description}]})
+    return request(CHECKITEMTEMP_CREATE_ADDTEMPLIST_PATH,'POST',{id:checklisttemp_id,checkitemstemplates:[{name:checkitemtemp_name,description:checkitemtemp_description}]})
 }
 
 function GetCheckItemsTempFromCheckkListTemp(checklisttemp_id){
-    return request(CHECKITEMTEMP_GETALL_FROMTEMPLIST+"/"+checklisttemp_id,'GET')
+    return request(CHECKITEMTEMP_GETALL_FROMTEMPLIST_PATH+"/"+checklisttemp_id,'GET')
 }
 
 
@@ -189,4 +191,12 @@ function DeleteCheckListsTemplates(checkliststemplates){
 function SearchCheckListsTemplates(search){
     return request(CHECKLISTTEMPLATE_SEARCH_PATH+"?name="+search,'GET')
 
+}
+
+function DeleteCheckItemsTemplates(checkitemstemplates){
+    const array=[]
+    checkitemstemplates.map(citp=>
+        array.push({id:citp}))
+    return request(CHECKITEMTEMP_DELETEVARIOUS_PATH,'DELETE',array
+)
 }
