@@ -6,6 +6,7 @@ import  Search from './searchComponent'
 import ServerRequests from './serverRequests'
 import CheckItemsTable from './tables/CheckItemsTable'
 import CreateCheckItem from './creates/createCheckItem'
+import ErrorComp from './errorComponent'
 
 export default class extends React.Component{
     constructor(props){
@@ -28,16 +29,17 @@ export default class extends React.Component{
     
       loadIfNeeded () {
           if(this.state.done===true)return
-          request('/checkItem/all','GET')
-          .then(resp=>{
-            return resp.json().then(json=>{
-            const checkitemsarray=[]
-            json.properties.map(checkitem=>{
-                checkitemsarray.push(new CheckItem(checkitem))
+            request('/checkItem/all','GET')
+            .then(json=>{
+                const checkitemsarray=[]
+                json.properties.map(checkitem=>{
+                    checkitemsarray.push(new CheckItem(checkitem))
+                })
+                this.setState({checkitems:checkitemsarray,done:true})
+                })
+            .catch(error=>{
+                this.setState({error:error,done:true})
             })
-            this.setState({checkitems:checkitemsarray,done:true})
-            })
-          })
       }
 
       changeHandler( event){
@@ -51,7 +53,9 @@ export default class extends React.Component{
             this.setState({
                 done:false
             })
-          })
+          }).catch(error=>{
+            this.setState({error:error,done:true})
+        })
         }
 
       refresh(){
@@ -64,25 +68,29 @@ export default class extends React.Component{
       submitDeleteHandler(selectedCI){
         ServerRequests.DeleteCheckItems(selectedCI).then(
             this.setState({done:false})
-        )
+        ).catch(error=>{
+            this.setState({error:error,done:true})
+        })
       }
 
       submitSearch(search){
-        ServerRequests.SearchCheckItems(search).then(resp=>{
-            return resp.json().then(json=>{
+        ServerRequests.SearchCheckItems(search).then(json=>{
             const checkitemsarray=[]
             if(json.properties!=null){
                 json.properties.map(checkitem=>{
                     checkitemsarray.push(new CheckItem(checkitem))
                 })
             }
-            this.setState({checkitems:checkitemsarray,done:true})
-            })  
+            this.setState({checkitems:checkitemsarray,done:true})  
+        }).catch(error=>{
+            this.setState({error:error,done:true})
         })
       }
   
 
     render(){
+        if(this.state.error!=null)
+            return (<ErrorComp error={this.state.error}/>)
         if(this.state.done===true)
             return(
                 <div>

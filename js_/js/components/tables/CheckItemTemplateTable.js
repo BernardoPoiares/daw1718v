@@ -1,6 +1,7 @@
 import React from 'react'
 import TableCell from '../tableCell';
 import ServerRequests from '../serverRequests'
+import ErrorComp from '../errorComponent'
 
 
 export default class extends React.Component{
@@ -42,10 +43,14 @@ export default class extends React.Component{
       } 
 
       update(checkitemtemp){
-        return ServerRequests.UpdateCheckItemTemplate(checkitemtemp)
+        return ServerRequests.UpdateCheckItemTemplate(checkitemtemp).catch(error=>{
+            this.setState({error:error,done:true})
+        })
       }
 
     render(){
+        if(this.state.error!=null)
+            return (<ErrorComp error={this.state.error}/>)
         return(
                 <div>
                     <table>

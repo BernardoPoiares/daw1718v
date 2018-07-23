@@ -2,6 +2,7 @@ import React from 'react'
 import request from './request'
 import session from './session'
 import User from '../model/User'
+import ErrorComp from './errorComponent'
 
 
 export default class Login extends React.Component {
@@ -14,7 +15,7 @@ export default class Login extends React.Component {
 
       this.state = {
         username: "",
-        password: ""
+        password: "",
       };
     }
   
@@ -29,15 +30,19 @@ export default class Login extends React.Component {
       request('/user/login','POST',{
         username:this.state.username,
         password:this.state.password
-      }).then(resp=>{
-        return resp.json().then(json=>{
+      }).then(json=>{
           session.saveLoginToken(new User(json))
           this.redirectHome()
-        })
-      })
+
+      }).catch(error=>{
+        this.setState({error:error,done:true})
+    })
     }
 
     render() {
+      
+      if(this.state.error!=null)
+      return (<ErrorComp error={this.state.error}/>)
     return (
       <div>
         Username:

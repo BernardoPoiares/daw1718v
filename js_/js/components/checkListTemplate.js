@@ -7,15 +7,18 @@ import ServerRequests from './ServerRequests'
 import TableCell from './tableCell';
 import CheckItemTempalteTable from './tables/CheckItemTemplateTable'
 import CheckItemTemplate from '../model/CheckItemTemplate'
+import ErrorComp from './errorComponent'
 
 
 export default class extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            done:false,
             name:"",
-            id:props.match.params.id
+            id:props.match.params.id,
+            redirect:false,
+            cltp_req:{done:false,finished:false},
+            cis_req:{done:false,finished:false}
         }
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
@@ -39,48 +42,63 @@ export default class extends React.Component{
     }
 
     loadIfNeeded(){
-        if(this.state.done==true) return
-        ServerRequests.GetCheckListTemplate(this.state.id).then(resp=>{
-            return resp.json().then(json=>{
-            this.setState({checkliststemplate:new CheckListTemplate(json.properties),done:true})
+        const ctlp_req_aux=this.state.cltp_req
+        const cis_req_aux=this.state.cis_req
+
+        if(ctlp_req_aux.done!=true){
+            ctlp_req_aux.done=true
+            this.setState({cltp_req:ctlp_req_aux})
+            ServerRequests.GetCheckListTemplate(this.state.id).then(json=>{
+                    ctlp_req_aux.finished=true
+                this.setState({checkliststemplate:new CheckListTemplate(json.properties),ctlp_req:ctlp_req_aux})
+            }).catch(error=>{
+                this.setState({error:error,done:true})
             })
-        })
+        }
               
-        if(this.state.cis_done!=true){
-            ServerRequests.GetCheckItemsTempFromCheckkListTemp(this.state.id).then(resp=>{
-                return resp.json().then(json=>{
-                const checkitemstemparray=[]
-                if(json.properties!=null){
-                    json.properties.map(checkitem=>{
-                        checkitemstemparray.push(new CheckItemTemplate(checkitem))
+        if(cis_req_aux.done!=true){
+            cis_req_aux.done=true
+            this.setState({cis_req_aux:cis_req_aux})
+                ServerRequests.GetCheckItemsTempFromCheckkListTemp(this.state.id).then(json=>{
+                    const checkitemstemparray=[]
+                    if(json.properties!=null){
+                        json.properties.map(checkitem=>{
+                            checkitemstemparray.push(new CheckItemTemplate(checkitem))
+                        })
+                    }
+                    cis_req_aux.finished=true
+                    this.setState({checkitemstemplates:checkitemstemparray,cis_req:cis_req_aux})
+                    }).catch(error=>{
+                        this.setState({error:error,done:true})
                     })
-                }
-                this.setState({checkitemstemplates:checkitemstemparray,cis_done:true})
-                })
-                })
         }
     }
 
     submitHandler(){
-        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.id,this.state.newCIT_name,this.state.newCIT_description).then(resp=>
-            resp.json().then(json=>{
+        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.id,this.state.newCIT_name,this.state.newCIT_description).then(json=>{
                 const checkitemstemps=this.state.checkitemstemplates
                 checkitemstemps.push(new CheckItemTemplate(json.properties))
                 this.setState({checkitemstemplates:checkitemstemps})
-            }))
+            }).catch(error=>{
+                this.setState({error:error,done:true})
+            })
     }
 
     update(checklisttemp){
-        ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name)
+        ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name).catch(error=>{
+            this.setState({error:error,done:true})
+        })
     }
 
     submitDeleteItemsTemp(selectedCI){
-        ServerRequests.DeleteCheckItemsTemplates(selectedCI)
+        ServerRequests.DeleteCheckItemsTemplates(selectedCI).catch(error=>{
+            this.setState({error:error,done:true})
+        })
 
     }
 
     renderCheckItemsTemplates(){
-        if(this.state.cis_done==true)
+        if(this.state.cis_req.finished==true)
             return(<CheckItemTempalteTable checkitemstemps={this.state.checkitemstemplates}
                 checkboxfunc={this.submitDeleteItemsTemp}
                 buttonName='Delete'/>
@@ -88,20 +106,23 @@ export default class extends React.Component{
     }
 
     submitNewListHandler(){
-        ServerRequests.CreateCheckListFromListTemplate(this.state.id,this.state.newCL_name,this.state.newCL_completionDate).then(resp=>
-            resp.json().then(json=>{
+        ServerRequests.CreateCheckListFromListTemplate(this.state.id,this.state.newCL_name,this.state.newCL_completionDate).then(json=>{
             if(json.properties!=null){
-                const CheckList=new CheckItemTemplate(json.properties)
-                return <Redirect to={"/checkLists/"+CheckList.id}/>
+               this.setState({newCL_id:json.properties.id,redirect:true})
             }
-        })
-    )
+    }).catch(error=>{
+        this.setState({error:error,done:true})
+    })
     }
 
     render(){
-        if(this.state.done==true){
+        if(this.state.error!=null)
+        return (<ErrorComp error={this.state.error}/>)
+        if(this.state.redirect==true)
+            return <Redirect to={"/checkLists/"+this.state.newCL_id}/>
+        if(this.state.cltp_req.finished==true){
             const datestring=new Date().toISOString().slice(0,-5)
-        return(<div>
+        return(<div><h1>CheckListTemplate:  {this.state.checkliststemplate.name}</h1>
             <table>
                     <thead>
                         <tr>
@@ -117,7 +138,7 @@ export default class extends React.Component{
             {this.renderCheckItemsTemplates()}
             <div> 
             <fieldset>
-                <legend>Create New CheckItemTemplate:</legend>
+                <legend>Create and Add New CheckItemTemplate:</legend>
                 Name:<br/>
                 <input type="text" name="newCIT_name" onChange={this.changeHandler}/><br/>
                 Description:<br/>
@@ -127,7 +148,7 @@ export default class extends React.Component{
         </div>
         <div> 
             <fieldset>
-                <legend>Create New CheckList:</legend>
+                <legend>Create CheckList From This CheckListTemplate:</legend>
                 Name:<br/>
                 <input type="text" name="newCL_name" onChange={this.changeHandler}/><br/>
                 CompletionDate:<br/>

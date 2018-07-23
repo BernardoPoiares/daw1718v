@@ -3,6 +3,9 @@ import React from 'react'
 import CheckListTemplate from '../model/CheckListTemplate'
 import ServerRequests from './serverRequests'
 import Search from './searchComponent'
+import ErrorComp from './errorComponent'
+
+
 const CHECKLISTTEMPLATE_PATH='/checkListsTemplates'
 
 export default class extends React.Component{
@@ -36,8 +39,7 @@ export default class extends React.Component{
 
     loadIfNeeded(){
         if(this.state.done==true) return
-        ServerRequests.GetAllCheckListTemplates().then(resp=>{
-            return resp.json().then(json=>{
+        ServerRequests.GetAllCheckListTemplates().then(json=>{
             const checkliststempsarray=[]
             if(json.properties!=null){
                 json.properties.map(checklisttemp=>{
@@ -45,24 +47,25 @@ export default class extends React.Component{
                 })
             }
             this.setState({checkliststemplates:checkliststempsarray,done:true})
-            })
+        }).catch(error=>{
+            this.setState({error:error,done:true})
         })
     }
 
     submitHandler(){
-        ServerRequests.CreateCheckListTemplate(this.state.newCKLT_name).then(resp=>
-            resp.json().then(json=>{
+        ServerRequests.CreateCheckListTemplate(this.state.newCKLT_name).then(json=>{
             const checkliststemplates=this.state.checkliststemplates
             console.log(json)
             checkliststemplates.push(new CheckListTemplate(json.properties))
             this.setState({checkliststemplates:checkliststemplates})
         })
-    )
+        .catch(error=>{
+        this.setState({error:error,done:true})
+    })
     }
 
     submitSearch(search){
-        ServerRequests.SearchCheckListsTemplates(search).then(resp=>{
-            return resp.json().then(json=>{
+        ServerRequests.SearchCheckListsTemplates(search).then(json=>{
             const checklisttempssarray=[]
             if(json.properties!=null){
                 json.properties.map(checklistemp=>{
@@ -70,15 +73,17 @@ export default class extends React.Component{
                 })
             }
             this.setState({checkliststemplates:checklisttempssarray,done:true})
-            })  
+        }).catch(error=>{
+            this.setState({error:error,done:true})
         })
       }
   
     
     submitDeleteHandler(){
-        ServerRequests.DeleteCheckListsTemplates(this.state.selectedCLT).then(resp=>{
-            return resp.json().then(
+        ServerRequests.DeleteCheckListsTemplates(this.state.selectedCLT).then(
                 this.setState({done:false}))
+        .catch(error=>{
+            this.setState({error:error,done:true})
         })
     }
 
@@ -93,6 +98,8 @@ export default class extends React.Component{
       }
 
     render(){
+        if(this.state.error!=null)
+        return (<ErrorComp error={this.state.error}/>)
         if(this.state.done==true)
         return(<div><h1>CheckListTemplates</h1>
             <Search func={this.submitSearch} />

@@ -5,6 +5,7 @@ import  CheckList  from '../Model/CheckList';
 import ServerRequests from './serverRequests'
 import Search from './searchComponent'
 import CheckListTable from './tables/CheckListTable';
+import ErrorComp from './errorComponent'
 
 export default class extends React.Component{
     constructor(props){
@@ -29,15 +30,15 @@ export default class extends React.Component{
       loadIfNeeded () {
           if(this.state.done===true)return
           request('/checkList/all','GET')
-          .then(resp=>{
-            return resp.json().then(json=>{
+          .then(json=>{
             const checklistsarray=[]
             json.properties.map(checklist=>{
                 checklistsarray.push(new CheckList(checklist))
             })
             this.setState({checklists:checklistsarray,done:true})
-            })
-          })
+          }).catch(error=>{
+            this.setState({error:error,done:true})
+        })
       }
 
       
@@ -51,12 +52,11 @@ export default class extends React.Component{
         ServerRequests.CreateCheckList({
                 name:this.state.newCL_name,
                 completionDate:this.state.newCL_completionDate
-        }).then(resp=>{
-            return resp.json().then(
+        }).then(
             this.setState({
                 done:false
-            })
-            )
+        })).catch(error=>{
+            this.setState({error:error,done:true})
         })
        }
 
@@ -72,24 +72,24 @@ export default class extends React.Component{
 
 
     submitDeleteHandler(checklists){
-        ServerRequests.DeleteCheckLists(checklists).then(resp=>{
-            return resp.json().then(
-                this.setState({done:false}))
+        ServerRequests.DeleteCheckLists(checklists).then(
+                this.setState({done:false})
+        ).catch(error=>{
+            this.setState({error:error,done:true})
         })
     }
 
     submitSearch(search){
-        ServerRequests.SearchCheckLists(search).then(resp=>{
-            return resp.json().then(json=>{
+        ServerRequests.SearchCheckLists(search).then(json=>{
             const checklistssarray=[]
             if(json.properties!=null){
                 json.properties.map(checklist=>{
                     checklistssarray.push(new CheckList(checklist))
                 })
             }
-            this.setState({checklists:checklistssarray,done:true})
-            })
-            
+            this.setState({checklists:checklistssarray,done:true})            
+        }).catch(error=>{
+            this.setState({error:error,done:true})
         })
     }
 
@@ -99,6 +99,8 @@ export default class extends React.Component{
 
 
     render(){
+        if(this.state.error!=null)
+        return (<ErrorComp error={this.state.error}/>)
         if(this.state.done===true){
             const datestring=this.getDate()
         return(<div>

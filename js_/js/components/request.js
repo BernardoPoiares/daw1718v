@@ -13,5 +13,10 @@ export default function(path,method,json){
         method:method,
         headers:myheaders,
         body:JSON.stringify(json)
-      })
+      }).then(resp=>{
+        console.log(resp)
+          if (resp.status >= 400) 
+            throw new Error("InternalServerError")
+          return resp.json().then()
+        })
 }

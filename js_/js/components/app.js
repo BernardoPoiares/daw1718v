@@ -12,6 +12,8 @@ import Login from './login'
 import Home from './home'
 import Session  from './session'
 
+import ErrorBoundary from './errorBoundary'
+
 import styles from '../css/styles.css'
 
 const Sep = () => <span> | </span>
@@ -94,6 +96,8 @@ render(){
             <Link to="/checkListsTemplates">CheckListsTemplates</Link> <Sep />
             <hr/>
           </div>
+          
+          <ErrorBoundary>
           <Route path="/" exact={true} component={Home} />
           <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
           <Route path="/checkItems" exact={true} component={checkItems} />
@@ -102,7 +106,7 @@ render(){
           <Route path="/checkLists/:id" exact={true} component={checkList} />
           <Route path="/checkListsTemplates/" exact={true} component={checkListTemplates} />
           <Route path="/checkListsTemplates/:id" exact={true} component={checkListTemplate} />
-
+          </ErrorBoundary>
         </div>
       </BrowserRouter>
     )

@@ -12,6 +12,6 @@ class ExceptionController {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<?> defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        return new ResponseEntity(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

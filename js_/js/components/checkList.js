@@ -7,6 +7,8 @@ import CheckList from '../model/CheckList'
 import CheckItem from '../model/CheckItem'
 import CheckItemsTable from './tables/CheckItemsTable'
 import CreateCheckItem from './creates/createCheckItem'
+import ErrorComp from './errorComponent'
+
 
 
 export default class extends React.Component{
@@ -29,17 +31,16 @@ export default class extends React.Component{
     
       loadIfNeeded () {
         if(this.state.list_done!=true){
-            ServerRequests.GetCheckList(this.state.id).then(resp=>{
-                return resp.json().then(json=>{
+            ServerRequests.GetCheckList(this.state.id).then(json=>{
                 const checklist=new CheckList(json.properties)
                 this.setState({checklist:checklist,list_done:true})
-                })
+            }).catch(error=>{
+                this.setState({error:error,done:true})
             })
         }
             
         if(this.state.cis_done!=true){
-            ServerRequests.GetCheckItemsFromList(this.state.id).then(resp=>{
-                return resp.json().then(json=>{
+            ServerRequests.GetCheckItemsFromList(this.state.id).then(json=>{
                 const checkitemsarray=[]
                 if(json.properties!=null){
                     json.properties.map(checkitem=>{
@@ -47,17 +48,22 @@ export default class extends React.Component{
                     })
                 }
                 this.setState({checkitems:checkitemsarray,cis_done:true})
-                })
+                }).catch(error=>{
+                    this.setState({error:error,done:true})
                 })
         }
     }
     
     update(checkitem){
-        return ServerRequests.UpdateCheckList(checkitem)
+        return ServerRequests.UpdateCheckList(checkitem).catch(error=>{
+            this.setState({error:error,done:true})
+        })
       }
 
     submitRemoveItems(checkitems){
-        ServerRequests.RemoveCheckItemsFromCheckList(this.state.id,checkitems)
+        ServerRequests.RemoveCheckItemsFromCheckList(this.state.id,checkitems).catch(error=>{
+            this.setState({error:error,done:true})
+        })
     }
 
     renderCheckItems(){
@@ -70,12 +76,16 @@ export default class extends React.Component{
 
     submitHandler(checkitem){
         ServerRequests.CreateCheckItem_AddCheckList(this.state.id,checkitem).then(
-            this.setState({cis_done:false})
+            this.setState({cis_done:false}).catch(error=>{
+                this.setState({error:error,done:true})
+            })
         )
     }
 
 
     render(){
+        if(this.state.error!=null)
+        return (<ErrorComp error={this.state.error}/>)
         if(this.state.list_done==true)
             return(<div>
                 <h3>Checklist : {this.state.checklist.id}</h3>

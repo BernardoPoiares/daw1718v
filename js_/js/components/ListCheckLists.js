@@ -1,6 +1,8 @@
 import React from 'react'
 import ServerRequests from './serverRequests'
 import CheckList from '../model/CheckList.js'
+import ErrorComp from './errorComponent'
+
 
 export default class extends React.Component{
     constructor(props){
@@ -24,15 +26,15 @@ export default class extends React.Component{
     
       loadIfNeeded () {
           if(this.state.done===true) return 
-          ServerRequests.GetAllCheckLists().then(resp=>{
-            return resp.json().then(json=>{
+          ServerRequests.GetAllCheckLists().then(json=>{
             const checklistsarray=[]
             json.properties.map(checklist=>{
                 checklistsarray.push(new CheckList(checklist))
             })
             this.setState({checklists:checklistsarray,done:true})
-            })
-          })
+          }).catch(error=>{
+            this.setState({error:error,done:true})
+        })
         }
 
           onChangeHandler(ev){
@@ -46,6 +48,8 @@ export default class extends React.Component{
           }
 
     render(){
+        if(this.state.error!=null)
+        return (<ErrorComp error={this.state.error}/>)
         if(this.state.done===true) 
         return(<div>
             <select onChange={this.onChangeHandler}>
