@@ -8,6 +8,7 @@ import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemTemplateValidator;
@@ -112,4 +113,19 @@ public class CheckItemTemplateService implements Service {
         return new ServiceResponse<>(checkitemstemps_dto, null);
     }
 
+    @Transactional
+    public ServiceResponse<?> update(String authorization, CheckItemTemplateRequestDto checkitem_dto){
+        ValidatorResponse valtcheckItemtemplate = CheckItemTemplateValidator.validateUpdateRequest(checkitem_dto);
+        if (!valtcheckItemtemplate.isValid)
+            return new ServiceResponse<>(null, valtcheckItemtemplate.problem);
+        ServiceResponse<CheckItemTemplate> serv_resp=getById(authorization,checkitem_dto.getId());
+        if(serv_resp.getError()!=null)
+            return serv_resp;
+        CheckItemTemplate checkItemTemplate=serv_resp.getResponse();
+        if (checkitem_dto.getName() != null)
+            checkItemTemplate.setName(checkitem_dto.getName());
+        if (checkitem_dto.getDescription() != null)
+            checkItemTemplate.setDescription(checkitem_dto.getDescription());
+        return new ServiceResponse<>(Converter.CheckItemTemplateDto_CheckItemTemplate(checkItemTemplate),null);
+    }
 }

@@ -1,4 +1,6 @@
 import React from 'react'
+import {Redirect } from 'react-router-dom'
+
 
 import CheckListTemplate from '../model/CheckListTemplate'
 import ServerRequests from './ServerRequests'
@@ -18,6 +20,7 @@ export default class extends React.Component{
         this.changeHandler=this.changeHandler.bind(this)
         this.submitHandler=this.submitHandler.bind(this)
         this.update=this.update.bind(this)
+        this.submitNewListHandler=this.submitNewListHandler.bind(this)
     }
 
     componentDidMount(){
@@ -84,9 +87,20 @@ export default class extends React.Component{
             )
     }
 
+    submitNewListHandler(){
+        ServerRequests.CreateCheckListFromListTemplate(this.state.id,this.state.newCL_name,this.state.newCL_completionDate).then(resp=>
+            resp.json().then(json=>{
+            if(json.properties!=null){
+                const CheckList=new CheckItemTemplate(json.properties)
+                return <Redirect to={"/checkLists/"+CheckList.id}/>
+            }
+        })
+    )
+    }
 
     render(){
-        if(this.state.done==true)
+        if(this.state.done==true){
+            const datestring=new Date().toISOString().slice(0,-5)
         return(<div>
             <table>
                     <thead>
@@ -111,7 +125,18 @@ export default class extends React.Component{
                 <input type="submit" value="Submit" onClick={this.submitHandler}/>
             </fieldset>
         </div>
+        <div> 
+            <fieldset>
+                <legend>Create New CheckList:</legend>
+                Name:<br/>
+                <input type="text" name="newCL_name" onChange={this.changeHandler}/><br/>
+                CompletionDate:<br/>
+                <input type="datetime-local" min={datestring} name="newCL_completionDate" onChange={this.changeHandler}/><br/><br/>
+                <input type="submit" value="Submit" onClick={this.submitNewListHandler}/>
+            </fieldset>
+        </div>
         </div>)
+        }
         return null
     }
 }

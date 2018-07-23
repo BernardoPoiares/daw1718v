@@ -73,5 +73,4 @@ public class CheckItemTemplateValidator {
             return new ValidatorResponse(false, new InvalidParameterProblem("name",null));
         return new ValidatorResponse(true,null);
     }
-
 }

@@ -1,4 +1,6 @@
 import React from 'react'
+import TableCell from '../tableCell';
+import ServerRequests from '../serverRequests'
 
 
 export default class extends React.Component{
@@ -39,6 +41,9 @@ export default class extends React.Component{
           this.checkboxfunc(this.state.selectedCI)
       } 
 
+      update(checkitemtemp){
+        return ServerRequests.UpdateCheckItemTemplate(checkitemtemp)
+      }
 
     render(){
         return(
@@ -55,9 +60,9 @@ export default class extends React.Component{
                             {this.state.checkitemstemps.map(checkitemtemp=>(
                                 <tr key={checkitemtemp.id}>
                                     <td><input id={checkitemtemp.id} type="checkbox" onChange={this.addSelected}/></td>
-                                    <td>{checkitemtemp.name}</td>
-                                    <td>{checkitemtemp.description}</td>
-                                </tr>
+                                    <TableCell id={checkitemtemp.id} value={checkitemtemp.name}  name="name" update={this.update}/>
+                                    <TableCell id={checkitemtemp.id} value={checkitemtemp.description}  name="description" update={this.update} />
+                                     </tr>
                             ))
                             }
                         </tbody>

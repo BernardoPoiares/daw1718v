@@ -2,9 +2,11 @@ package com.isel.daw.checklist.controllers;
 
 import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.ServiceResponse;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemTemplateArraySirenBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckItemTemplateSirenBuilder;
 import com.isel.daw.checklist.services.CheckItemTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,19 @@ public class CheckItemTemplateController {
             return ResponseBuilder.buildError(response.getError());
         return ResponseBuilder.build(
                 CheckItemTemplateArraySirenBuilder.build((CheckItemTemplateRequestDto[]) response.getResponse())
+        );
+    }
+
+
+    @PostMapping(path="/update", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> update(@RequestHeader(value="Authorization")String authorization, @RequestBody CheckItemTemplateRequestDto checkItemTemplateRequestDto) {
+        ServiceResponse<?> response=checkItemTemplateService.update(authorization,checkItemTemplateRequestDto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        CheckItemTemplateRequestDto checkItemTemplate=(CheckItemTemplateRequestDto) response.getResponse();
+        return ResponseBuilder.build(
+                CheckItemTemplateSirenBuilder.build(checkItemTemplate)
         );
     }
 }
