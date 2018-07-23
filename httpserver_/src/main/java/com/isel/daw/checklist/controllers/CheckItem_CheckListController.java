@@ -4,8 +4,11 @@ import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListsRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListsRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckItemSirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckListArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckListSirenBuilder;
 import com.isel.daw.checklist.services.CheckItem_CheckListService;
@@ -31,8 +34,8 @@ public class CheckItem_CheckListController {
         "application/vnd.siren+json", "application/problem+json"
     })
     @RequiresAuthentication
-    public ResponseEntity<?> addCheckItemstoCheckList(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckItem_CheckListRequestDto checkItem_checkListRequestDto) {
-        ServiceResponse<?> response = checkItem_checkListService.addCheckItems(authorization, checkItem_checkListRequestDto);
+    public ResponseEntity<?> addCheckItemstoCheckList(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckItem_CheckListRequestDto checkItem_checkListsRequestDto) {
+        ServiceResponse<?> response = checkItem_checkListService.addCheckItems(authorization, checkItem_checkListsRequestDto);
         if (response.getError() != null)
             return ResponseBuilder.buildError(response.getError());
         CheckList checkList = (CheckList)response.getResponse();
@@ -85,4 +88,16 @@ public class CheckItem_CheckListController {
         );
     }
 
+
+    @DeleteMapping(path="/itemFromLists", produces= {
+            "application/vnd.siren+json", "application/problem+json"
+    })
+    @RequiresAuthentication
+    public ResponseEntity<?> removeItemFromLists(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckItem_CheckListsRequestDto checkItem_checkListsRequestDto) {
+        ServiceResponse<?> response = checkItem_checkListService.removeItemFromLists(authorization, checkItem_checkListsRequestDto);
+        if (response.getError() != null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckItemSirenBuilder.build(checkItem_checkListsRequestDto.getId(),null,null,null));
+    }
 }

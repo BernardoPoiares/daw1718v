@@ -10,6 +10,8 @@ import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemTemplateArraySirenBuilder;
 import com.isel.daw.checklist.model.SirenBuilders.CheckItemTemplateSirenBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateArraySirenBuilder;
+import com.isel.daw.checklist.model.SirenBuilders.CheckListTemplateSirenBuilder;
 import com.isel.daw.checklist.services.CheckItemTemplate_CheckListTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +56,27 @@ public class CheckItemTemplate_CheckListTemplateController {
                 CheckItemTemplateArraySirenBuilder.build((CheckItemTemplateRequestDto[]) serv_resp.getResponse()));
     }
 
+    @DeleteMapping(path = "/{id}", produces = {"application/vnd.siren+json", "application/problem+json"})
+    public ResponseEntity<?> delete(@RequestHeader(value = "Authorization") String authorization, @PathVariable("id") long id) {
+        ServiceResponse<CheckListTemplate> response=checkItemTemplate_CheckListTemplateService.delete(authorization, id);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        CheckListTemplate checklisttemplate=response.getResponse();
+        return ResponseBuilder.build(
+                CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
+                        checklisttemplate.getName())
+        );
+    }
 
+
+    @DeleteMapping(path = "/various", produces = {"application/vnd.siren+json", "application/problem+json"})
+    public ResponseEntity<?> deleteVarious(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckListTemplateRequestDto[] checklisttemplates_ReqDto) {
+        ServiceResponse<CheckListTemplateRequestDto[]> response=checkItemTemplate_CheckListTemplateService.deleteVarious(authorization, checklisttemplates_ReqDto);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        CheckListTemplateRequestDto[] checklisttemplates=response.getResponse();
+        return ResponseBuilder.build(
+                CheckListTemplateArraySirenBuilder.build(checklisttemplates)
+        );
+    }
 }

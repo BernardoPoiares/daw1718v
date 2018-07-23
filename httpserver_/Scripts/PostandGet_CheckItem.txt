@@ -63,6 +63,9 @@ Authorization: Basic Y2F0OmNhdDI=
     ]
 
 
-GET http://localhost:8081/checkItem/search?name=do Daw work24
+GET http://localhost:8081/checkItemTemplate_CheckListTemplate/getByList/1
 Accept: application/vnd.siren+json
+Origin: http://localhost:9000
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET
 Authorization: Basic Y2F0OmNhdDI=

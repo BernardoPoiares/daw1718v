@@ -14,6 +14,7 @@ export default class extends React.Component{
         this.renderCheckLists=this.renderCheckLists.bind(this)
         this.update=this.update.bind(this)
         this.addList=this.addList.bind(this)
+        this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
     }
 
 
@@ -56,11 +57,15 @@ export default class extends React.Component{
 
       renderCheckLists(){
           if(this.state.checklists_done)
-            return(            <CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitDeleteHandler} buttonName='Remove'/>
+            return(<CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitDeleteHandler} buttonName='Remove'/>
         )
       }
       addList(checklist){
           ServerRequests.AddCheckItemToCheckList(this.state.id,checklist)
+      }
+
+      submitDeleteHandler(checkLists){
+          ServerRequests.RemoveCheckItemFromCheckLists(this.state.id,checkLists)
       }
 
     render(){

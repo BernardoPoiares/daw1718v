@@ -21,8 +21,16 @@ public class CheckListTemplate implements Serializable {
     @JoinColumn(name="listtemplate_user")
     private Users listtemplate_user;
 
-    @OneToMany(mappedBy="checklist_checklisttemplate")
-    private Set<CheckList> checklist_checklisttemplate;
+    public Set<CheckList> getChecklistChecklisttemplate() {
+        return checklistChecklisttemplate;
+    }
+
+    public void setChecklistChecklisttemplate(Set<CheckList> checklistChecklisttemplate) {
+        this.checklistChecklisttemplate = checklistChecklisttemplate;
+    }
+
+    @OneToMany(mappedBy="checklistChecklisttemplate")
+    private Set<CheckList> checklistChecklisttemplate;
 
     /*@ManyToMany
     @JoinTable(name = "templateitems_in_templatelist",
@@ -77,15 +85,6 @@ public class CheckListTemplate implements Serializable {
     public void setListtemplate_user(Users listtemplate_user) {
         this.listtemplate_user = listtemplate_user;
     }
-
-    public Set<CheckList> getChecklist_checklisttemplate() {
-        return checklist_checklisttemplate;
-    }
-
-    public void setChecklist_checklisttemplate(Set<CheckList> checklist_listtemplate) {
-        this.checklist_checklisttemplate = checklist_listtemplate;
-    }
-
 
 
 

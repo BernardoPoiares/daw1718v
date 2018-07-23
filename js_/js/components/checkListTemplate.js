@@ -59,7 +59,12 @@ export default class extends React.Component{
     }
 
     submitHandler(){
-        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.id,this.state.newCIT_name,this.state.newCIT_description)
+        ServerRequests.CreateCheckItemTemp_AddTempList(this.state.id,this.state.newCIT_name,this.state.newCIT_description).then(resp=>
+            resp.json().then(json=>{
+                const checkitemstemps=this.state.checkitemstemplates
+                checkitemstemps.push(new CheckItemTemplate(json.properties))
+                this.setState({checkitemstemplates:checkitemstemps})
+            }))
     }
 
     update(checklisttemp){

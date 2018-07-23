@@ -73,4 +73,12 @@ public class CheckListTemplateValidator {
             return new ValidatorResponse(false, new InvalidParameterProblem("checkitems", null));
         return new ValidatorResponse(true, null);
     }
+
+    public static ValidatorResponse validateSearch(Users user, String name){
+        if(user==null)
+            return new ValidatorResponse(false,new InvalidAuthenticationProblem());
+        if(name==null)
+            return new ValidatorResponse(false,new BadRequestProblem("name","name cannot be null"));
+        return new ValidatorResponse(true,null);
+    }
 }

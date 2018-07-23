@@ -61,7 +61,15 @@ public class CheckItem implements Serializable{
     public void setState(String state) {
         this.state = state;
     }
-/*
+
+    public void removeCheckLists(){
+        this.checkLists.clear();
+    }
+
+    public void removeCheckList(CheckList checkList){
+        this.checkLists.remove(checkList);
+    }
+    /*
     public int getCheckItemTemplateId() {
         return checkItemTemplateId;
     }

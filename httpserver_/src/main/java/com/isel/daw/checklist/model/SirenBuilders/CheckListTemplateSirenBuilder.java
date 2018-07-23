@@ -26,6 +26,7 @@ public class CheckListTemplateSirenBuilder {
     }
 
     public static JsonNode build(long id, String name){
+
         JsonNode root=createRoot();
         ((ObjectNode)(root.path("properties"))).put("id",id);
         ((ObjectNode)(root.path("properties"))).put("name",name);

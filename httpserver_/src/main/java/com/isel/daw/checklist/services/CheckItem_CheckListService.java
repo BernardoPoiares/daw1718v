@@ -6,12 +6,14 @@ import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.*;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListRequestDto;
+import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListsRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckListRequestDto;
 import com.isel.daw.checklist.model.ResponseBuilder;
 import com.isel.daw.checklist.model.Validators.CheckItemValidator;
 import com.isel.daw.checklist.model.Validators.CheckListValidator;
 import com.isel.daw.checklist.problems.InternalServerProblem;
 import com.isel.daw.checklist.repositories.*;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -109,6 +111,23 @@ public class CheckItem_CheckListService {
         CheckItem checkitem=checkitem_resp.getResponse();
         List<CheckList> checklists= checkListRepository.findAllByCheckItems(checkitem);
         return new ServiceResponse<>(Converter.CheckListsDTO_CheckLists(checklists.toArray(new CheckList[checklists.size()])),null);
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
+    public ServiceResponse<?> removeItemFromLists(String authorization,CheckItem_CheckListsRequestDto checkItem_checkListsRequestDto){
+        ServiceResponse<CheckItem> checkitem_resp=checkItemService.getCheckItem(authorization,checkItem_checkListsRequestDto.getId());
+        if(checkitem_resp.getError()!=null)
+            return checkitem_resp;
+        CheckItem checkItem=checkitem_resp.getResponse();
+        for (CheckListRequestDto checklist:checkItem_checkListsRequestDto.getChecklists()) {
+            ServiceResponse<CheckList> checklist_resp=checkListService.getListById(authorization,checklist.getId());
+            if(checklist_resp.getError()!=null)
+                return checklist_resp;
+            CheckList checkList=checklist_resp.getResponse();
+            checkItem.removeCheckList(checkList);
+            checkList.removeCheckItems(checkItem);
+        }
+        return new ServiceResponse<>(checkItem_checkListsRequestDto,null);
     }
 
 }

@@ -13,4 +13,6 @@ public interface CheckItemTemplateRepository extends JpaRepository<CheckItemTemp
     long deleteById(long id);
 
     List<CheckItemTemplate> findAllByCheckitemtemplateChecklisttemplate(CheckListTemplate checkListTemplate);
+
+
 }

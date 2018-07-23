@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.controllers;
 
+import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
@@ -36,6 +37,18 @@ public class CheckListTemplateController {
                         checklisttemplate.getName())
         );
     }
+
+    @GetMapping(path="/search", produces={"application/vnd.siren+json","application/problem+json"})
+    @RequiresAuthentication
+    public ResponseEntity<?> searchByName(@RequestHeader(value="Authorization")String authorization,@RequestParam("name") String name ) {
+        ServiceResponse<CheckListTemplateRequestDto[]> response=checkListTemplateService.searchByName(authorization,name);
+        if(response.getError()!=null)
+            return ResponseBuilder.buildError(response.getError());
+        return ResponseBuilder.build(
+                CheckListTemplateArraySirenBuilder.build(response.getResponse())
+        );
+    }
+
 
 
     @GetMapping(path = "/all", produces = {"application/vnd.siren+json", "application/problem+json"})
@@ -86,17 +99,7 @@ public class CheckListTemplateController {
         );
     }
 
-    @DeleteMapping(path = "/{id}", produces = {"application/vnd.siren+json", "application/problem+json"})
-    public ResponseEntity<?> delete(@RequestHeader(value = "Authorization") String authorization, @PathVariable("id") long id) {
-        ServiceResponse<CheckListTemplate> response=checkListTemplateService.delete(authorization, id);
-        if(response.getError()!=null)
-            return ResponseBuilder.buildError(response.getError());
-        CheckListTemplate checklisttemplate=response.getResponse();
-        return ResponseBuilder.build(
-                CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
-                        checklisttemplate.getName())
-        );
-    }
+
 
     @DeleteMapping(path = "/checkItemsTemplates", produces = {"application/vnd.siren+json", "application/problem+json"})
     public ResponseEntity<?> deleteitemsTemplates(@RequestHeader(value = "Authorization") String authorization, @RequestBody CheckListTemplateRequestDto checklisttemplate_ReqDto) {
@@ -109,4 +112,5 @@ public class CheckListTemplateController {
                         checklisttemplate.getName())
         );
     }
+
 }

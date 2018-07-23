@@ -23,9 +23,17 @@ public class CheckList implements Serializable {
     @JoinColumn(name="list_user")
     private Users list_user;
 
+    public CheckListTemplate getChecklistChecklisttemplate() {
+        return checklistChecklisttemplate;
+    }
+
+    public void setChecklistChecklisttemplate(CheckListTemplate checklistChecklisttemplate) {
+        this.checklistChecklisttemplate = checklistChecklisttemplate;
+    }
+
     @ManyToOne
-    @JoinColumn(name="checklist_checklisttemplate")
-    private CheckListTemplate checklist_checklisttemplate;
+    @JoinColumn(name="checklistChecklisttemplate")
+    private CheckListTemplate checklistChecklisttemplate;
 
     @ManyToMany
     @JoinTable(name = "checkitems_in_checklists",
@@ -52,7 +60,7 @@ public class CheckList implements Serializable {
         this.name = name;
         this.list_user = list_user;
         this.completionDate=completionDate;
-        this.checklist_checklisttemplate=checkListTemplate;
+        this.checklistChecklisttemplate=checkListTemplate;
     }
 
     public long getId() {

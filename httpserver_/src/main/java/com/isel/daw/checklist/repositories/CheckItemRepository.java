@@ -20,7 +20,7 @@ public interface CheckItemRepository extends JpaRepository<CheckItem, Integer> {
     @Query(value="SELECT * FROM checkitem c inner join checkitem_template Ct on c.checkitem_itemtemplate= Ct.id WHERE ct.itemtemplate_user = :id AND ct.name=:name", nativeQuery = true)
     CheckItem[] searchByName(@Param("id")long id,@Param("name")String name);
 
-    @Query(value="\tSELECT * FROM checkitem c inner join checkitem_template Ct on c.checkitem_itemtemplate= Ct.id inner join checkitems_in_checklists ciscl on ciscl.checkitem_id= c.id WHERE ct.itemtemplate_user =:user_id AND ciscl.checklist_id=:list_id", nativeQuery = true)
+    @Query(value="SELECT * FROM checkitem c inner join checkitem_template Ct on c.checkitem_itemtemplate= Ct.id inner join checkitems_in_checklists ciscl on ciscl.checkitem_id= c.id WHERE ct.itemtemplate_user =:user_id AND ciscl.checklist_id=:list_id", nativeQuery = true)
     CheckItem[] searchByList(@Param("user_id")long user_id,@Param("list_id")long list_id);
 
 

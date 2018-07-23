@@ -5,6 +5,7 @@ import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.DataBaseDTOs.Users;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItemTemplateRequestDto;
@@ -14,6 +15,7 @@ import com.isel.daw.checklist.problems.InternalServerProblem;
 import com.isel.daw.checklist.repositories.CheckItemRepository;
 import com.isel.daw.checklist.repositories.CheckItemTemplateRepository;
 import com.isel.daw.checklist.repositories.UserRepository;
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
@@ -99,6 +101,7 @@ public class CheckItemTemplate_CheckItemService implements Service {
         if(serv_resp.getError()!=null)
             return serv_resp;
         CheckItem checkitem=serv_resp.getResponse();
+        removeCheckItemFromCheckLists(checkitem);
         long delt_item_res= itemRepository.deleteById(checkitem.getId());
         if(delt_item_res==0)
             return new ServiceResponse<>(null,new InternalServerProblem());
@@ -125,4 +128,13 @@ public class CheckItemTemplate_CheckItemService implements Service {
         }
         return new ServiceResponse<>(checkItemsRequestDto,null);
     }
+
+
+    void removeCheckItemFromCheckLists(CheckItem checkItem){
+        for(CheckList checkList:checkItem.getCheckLists())
+            checkList.removeCheckItems(checkItem);
+        checkItem.removeCheckLists();
+    }
+
+
 }

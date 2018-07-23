@@ -2,6 +2,7 @@ package com.isel.daw.checklist.repositories;
 
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckListTemplate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,6 @@ public interface CheckListRepository extends JpaRepository<CheckList,Integer>{
     CheckList[] searchByName(@Param("id")long id, @Param("name")String name);
 
     List<CheckList> findAllByCheckItems(CheckItem checkItem);
+
+    List<CheckList> findAllByChecklistChecklisttemplate(CheckListTemplate checkListTemplate);
 }

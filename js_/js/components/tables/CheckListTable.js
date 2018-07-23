@@ -29,6 +29,16 @@ export default class extends React.Component{
         this.setState({selectedCL:sel_array})
       }
 
+      static getDerivedStateFromProps(nextProps, prevState){
+        if (prevState.checklists !== nextProps.checklists) {
+            return {
+                checklists: nextProps.checklists,
+            }
+          }
+        return null;
+
+    }
+
       submitSelecteds(){
           this.checkboxfunc(this.state.selectedCL)
       } 

@@ -15,6 +15,16 @@ export default class extends React.Component{
         this.submitSelecteds=this.submitSelecteds.bind(this)
     }
     
+    static getDerivedStateFromProps(nextProps, prevState){
+        if (prevState.checkitemstemps !== nextProps.checkitemstemps) {
+            return {
+                checkitemstemps: nextProps.checkitemstemps,
+            }
+          }
+        return null;
+
+    }
+
 
     addSelected(ev){
         let sel_array=this.state.selectedCI

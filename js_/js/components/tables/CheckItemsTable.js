@@ -15,6 +15,7 @@ export default class extends React.Component{
         this.addSelected=this.addSelected.bind(this)
         this.submitSelecteds=this.submitSelecteds.bind(this)
     }
+    
     static getDerivedStateFromProps(nextProps, prevState){
         if (prevState.checkitems !== nextProps.checkitems) {
             return {

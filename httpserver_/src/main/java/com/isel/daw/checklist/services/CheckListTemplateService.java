@@ -1,6 +1,7 @@
 package com.isel.daw.checklist.services;
 
 import com.isel.daw.checklist.Converter;
+import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.ValidatorResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckItemTemplate;
@@ -100,6 +101,7 @@ public class CheckListTemplateService {
         if(!valtUser.isValid)
             return new ServiceResponse<>(null,valtUser.problem);
         CheckListTemplate checklisttemplate= listTemplateRepository.findById(id);
+
         ValidatorResponse valtcheckList=CheckListTemplateValidator.validateListTemplate(checklisttemplate,user);
         if(!valtcheckList.isValid)
             return new ServiceResponse<>(null,valtcheckList.problem);
@@ -167,4 +169,20 @@ public class CheckListTemplateService {
         }
         return new ServiceResponse<>(checklisttemplate,null);
     }
+
+    public ServiceResponse<CheckListTemplateRequestDto[]>searchByName(String authorization,String name){
+        Users user=userRepository.findByToken(authorization.split(" ")[1]);
+        ValidatorResponse valtsearch= CheckListTemplateValidator.validateSearch(user,name);
+        if(!valtsearch.isValid)
+            return new ServiceResponse<>(null,valtsearch.problem);
+        List<CheckListTemplate> checkliststemplates= listTemplateRepository.searchByName(user.getId(),name);
+        ValidatorResponse valtcheckItem=CheckListTemplateValidator.validateListsTemplates(checkliststemplates,user);
+        if(!valtcheckItem.isValid)
+            return new ServiceResponse<>(null,valtcheckItem.problem);
+        return new ServiceResponse<>(Converter.CheckListsTemplateDTO_CheckListsTemplate(checkliststemplates.toArray(new CheckListTemplate[checkliststemplates.size()])),null);
+
+    }
+
+
+
 }

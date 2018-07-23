@@ -71,10 +71,10 @@ export default class extends React.Component{
       }
 
 
-    submitDeleteHandler(){
-        ServerRequests.DeleteCheckLists(this.state.selectedCL).then(resp=>{
+    submitDeleteHandler(checklists){
+        ServerRequests.DeleteCheckLists(checklists).then(resp=>{
             return resp.json().then(
-                this.setState({done:false,selectedCL:[]}))
+                this.setState({done:false}))
         })
     }
 
