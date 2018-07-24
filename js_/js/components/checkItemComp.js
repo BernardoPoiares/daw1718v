@@ -12,11 +12,18 @@ import ErrorComp from './errorComponent'
 export default class extends React.Component{
     constructor(props){
         super(props)
-        this.state={done:false,id:props.match.params.id,checkitem_done:false,checklists_done:false}
+        this.state={
+            done:false,
+            id:props.match.params.id,
+            checkitem_done:false,
+            checklists_done:false,        
+            cl_req:{done:false,finished:false},
+            cis_req:{done:false,finished:false}
+        }
         this.renderCheckLists=this.renderCheckLists.bind(this)
         this.update=this.update.bind(this)
         this.addList=this.addList.bind(this)
-        this.submitDeleteHandler=this.submitDeleteHandler.bind(this)
+        this.submitRemoveHandler=this.submitRemoveHandler.bind(this)
     }
 
 
@@ -29,14 +36,21 @@ export default class extends React.Component{
       }
     
       loadIfNeeded () {
-          if(this.state.checkitem_done===false)
+        const ci_req_aux=this.state.ci_req
+        const cls_req_aux=this.state.cls_req 
+
+        if(ci_req_aux.done!=true){
+            ci_req_aux.done=true
             request('/checkItem/'+this.state.id,'GET')
             .then(json=>{
-                this.setState({checkitem: new CheckItem(json.properties),checkitem_done:true})
+                ci_req_aux.finished=true
+                this.setState({checkitem: new CheckItem(json.properties),ci_req:ci_req_aux})
             }).catch(error=>{
                 this.setState({error:error,done:true})
             })
-        if(this.state.checklists_done===false)
+        }
+        if(cls_req_aux.done===false){
+            cls_req_aux.done=true
                 ServerRequests.GetCheckListsFromCheckItem(this.state.id).then(json=>{
                     const checklistssarray=[]
                     if(json.properties!=null){
@@ -44,10 +58,12 @@ export default class extends React.Component{
                             checklistssarray.push(new CheckList(checklist))
                         })
                     }
-                    this.setState({checklists:checklistssarray,checklists_done:true})               
+                    cls_req_aux.finished=true
+                    this.setState({checklists:checklistssarray,cls_req:cls_req_aux})               
                 }).catch(error=>{
                     this.setState({error:error,done:true})
                 })
+        }
       }
 
 
@@ -60,17 +76,30 @@ export default class extends React.Component{
 
       renderCheckLists(){
           if(this.state.checklists_done)
-            return(<CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitDeleteHandler} buttonName='Remove'/>
+            return(<CheckListTable checklists={this.state.checklists} checkboxfunc={this.submitRemoveHandler} buttonName='Remove'/>
         )
       }
       addList(checklist){
-          ServerRequests.AddCheckItemToCheckList(this.state.id,checklist).catch(error=>{
+          ServerRequests.AddCheckItemToCheckList(this.state.id,checklist)
+          .then(json=>{
+            const checklistsarray=this.state.checklists
+            if(json.properties!=null)
+                checklistsarray.push(new CheckList(json.properties))
+            this.setState({checkitems:checklistsarray,done:true})  
+          })
+          .catch(error=>{
             this.setState({error:error,done:true})
         })
       }
 
-      submitDeleteHandler(checkLists){
-          ServerRequests.RemoveCheckItemFromCheckLists(this.state.id,checkLists).catch(error=>{
+      submitRemoveHandler(checkLists){
+          ServerRequests.RemoveCheckItemFromCheckLists(this.state.id,checkLists)
+          .then(()=>{
+            let array=this.state.checklists
+            checkLists.map(id=>{array=array.filter(ci=>ci.id!=id)})
+            this.setState({checklists:array,done:true})
+            })
+          .catch(error=>{
             this.setState({error:error,done:true})
         })
       }

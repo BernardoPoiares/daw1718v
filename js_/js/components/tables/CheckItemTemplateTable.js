@@ -16,6 +16,7 @@ export default class extends React.Component{
         }
         this.addSelected=this.addSelected.bind(this)
         this.submitSelecteds=this.submitSelecteds.bind(this)
+        this.update=this.update.bind()
     }
     
     static getDerivedStateFromProps(nextProps, prevState){
@@ -67,7 +68,7 @@ export default class extends React.Component{
                                     <td><input id={checkitemtemp.id} type="checkbox" onChange={this.addSelected}/></td>
                                     <TableCell id={checkitemtemp.id} value={checkitemtemp.name}  name="name" update={this.update}/>
                                     <TableCell id={checkitemtemp.id} value={checkitemtemp.description}  name="description" update={this.update} />
-                                     </tr>
+                                </tr>
                             ))
                             }
                         </tbody>

@@ -1,6 +1,6 @@
 import React from 'react'
 import ServerRequests from './serverRequests'
-import CheckList from '../model/CheckList.js'
+import CheckList from '../model/CheckList'
 import ErrorComp from './errorComponent'
 
 

@@ -1,12 +1,12 @@
 import React from 'react'
 import { BrowserRouter, Route,Link,Redirect } from 'react-router-dom'
 
-import checkItems from './checkItems'
-import checkItem from './checkItem'
-import checkLists from './checkLists'
-import checkList from './checkList'
-import checkListTemplates from './checkListTemplates'
-import checkListTemplate from './checkListTemplate'
+import checkItems from './checkItemsComp'
+import checkItem from './checkItemComp'
+import checkLists from './checkListsComp'
+import checkList from './checkListComp'
+import checkListTemplates from './checkListTemplatesComp'
+import checkListTemplate from './checkListTemplateComp'
 
 import Login from './login'
 import Home from './home'
@@ -71,15 +71,9 @@ export default class App extends React.Component{
 
   redirectHome(){
     this.setState({
-      red_path:'/'
+      loadState:LoadStates.loading
+
     })
-  }
-  shouldRederict(){
-    if(this.state.red_path!=null){
-      const path=this.state.red_path
-      this.setState({red_path:null})
-      return <Redirect to={path}/>
-    }
   }
 
 render(){
@@ -88,7 +82,6 @@ render(){
         <BrowserRouter>
         <div>
           <div>
-            {this.shouldRederict()}
             <Link to="/">Home</Link> <Sep />
             {this.renderLoginLogout()}  <Sep />
             <Link to="/checkItems">CheckItems</Link> <Sep />            
@@ -98,14 +91,14 @@ render(){
           </div>
           
           <ErrorBoundary>
-          <Route path="/" exact={true} component={Home} />
-          <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
-          <Route path="/checkItems" exact={true} component={checkItems} />
-          <Route path="/checkItems/:id" exact={true} component={checkItem} />
-          <Route path="/checkLists" exact={true} component={checkLists} />
-          <Route path="/checkLists/:id" exact={true} component={checkList} />
-          <Route path="/checkListsTemplates/" exact={true} component={checkListTemplates} />
-          <Route path="/checkListsTemplates/:id" exact={true} component={checkListTemplate} />
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
+            <Route path="/checkItems" exact={true} component={checkItems} />
+            <Route path="/checkItems/:id" exact={true} component={checkItem} />
+            <Route path="/checkLists" exact={true} component={checkLists} />
+            <Route path="/checkLists/:id" exact={true} component={checkList} />
+            <Route path="/checkListsTemplates/" exact={true} component={checkListTemplates} />
+            <Route path="/checkListsTemplates/:id" exact={true} component={checkListTemplate} />
           </ErrorBoundary>
         </div>
       </BrowserRouter>

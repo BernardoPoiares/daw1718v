@@ -55,7 +55,6 @@ export default class extends React.Component{
     submitHandler(){
         ServerRequests.CreateCheckListTemplate(this.state.newCKLT_name).then(json=>{
             const checkliststemplates=this.state.checkliststemplates
-            console.log(json)
             checkliststemplates.push(new CheckListTemplate(json.properties))
             this.setState({checkliststemplates:checkliststemplates})
         })
@@ -80,9 +79,11 @@ export default class extends React.Component{
   
     
     submitDeleteHandler(){
-        ServerRequests.DeleteCheckListsTemplates(this.state.selectedCLT).then(
-                this.setState({done:false}))
-        .catch(error=>{
+        ServerRequests.DeleteCheckListsTemplates(this.state.selectedCLT).then(json=>{
+            let array=this.state.checkliststemplates
+            this.state.selectedCLT.map(id=>{array=array.filter(ci=>ci.id!=id)})
+            this.setState({checkliststemplates:array,done:true})
+        }).catch(error=>{
             this.setState({error:error,done:true})
         })
     }

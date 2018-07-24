@@ -2,7 +2,9 @@ package com.isel.daw.checklist.model.SirenBuilders;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.isel.daw.checklist.model.RequestsDTO.CheckListTemplateRequestDto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,4 +34,13 @@ public class CheckListTemplateSirenBuilder {
         ((ObjectNode)(root.path("properties"))).put("name",name);
         return root;
     }
+
+    public static JsonNode build(CheckListTemplateRequestDto checkliststemplate){
+        JsonNode root=createRoot();
+        JsonNode node = mapper.valueToTree(checkliststemplate);
+        ((ObjectNode)root).set("properties",node);
+        return root;
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.isel.daw.checklist.controllers;
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.ServiceResponse;
+import com.isel.daw.checklist.model.DataBaseDTOs.CheckItem;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListRequestDto;
 import com.isel.daw.checklist.model.RequestsDTO.CheckItem_CheckListsRequestDto;
@@ -54,11 +56,8 @@ public class CheckItem_CheckListController {
         ServiceResponse<?> response = checkItem_checkListService.deleteCheckItems(authorization, checkItem_checkListRequestDto);
         if (response.getError() != null)
             return ResponseBuilder.buildError(response.getError());
-        CheckList checkList = (CheckList)response.getResponse();
         return ResponseBuilder.build(
-                CheckListSirenBuilder.build(checkList.getId(),
-                        checkList.getName(),
-                        checkList.getCompletionDate()));
+                CheckListSirenBuilder.build(Converter.CheckListDTO_CheckList((CheckList)response.getResponse())));
     }
 
     @PostMapping(path="/createAndAdd", produces= {
@@ -69,11 +68,8 @@ public class CheckItem_CheckListController {
         ServiceResponse<?> response = checkItem_checkListService.createAndAdd(authorization, checkItem_checkListRequestDto);
         if (response.getError() != null)
             return ResponseBuilder.buildError(response.getError());
-        CheckList checkList = (CheckList)response.getResponse();
         return ResponseBuilder.build(
-                CheckListSirenBuilder.build(checkList.getId(),
-                        checkList.getName(),
-                        checkList.getCompletionDate()));
+                CheckItemSirenBuilder.build(Converter.CheckItemDto_CheckItem((CheckItem)response.getResponse())));
     }
 
 
@@ -98,6 +94,6 @@ public class CheckItem_CheckListController {
         if (response.getError() != null)
             return ResponseBuilder.buildError(response.getError());
         return ResponseBuilder.build(
-                CheckItemSirenBuilder.build(checkItem_checkListsRequestDto.getId(),null,null,null));
+                CheckItemSirenBuilder.build(Converter.CheckItemDto_CheckItem((CheckItem)response.getResponse())));
     }
 }

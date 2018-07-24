@@ -47,4 +47,20 @@ public class Converter {
         }
         return array;
     }
+
+    public static CheckItemRequestDto CheckItemDto_CheckItem(CheckItem checkItem){
+        return new CheckItemRequestDto(checkItem.getId(),
+                checkItem.getCheckitem_itemtemplate().getId(),
+                checkItem.getCheckitem_itemtemplate().getName(),
+                checkItem.getCheckitem_itemtemplate().getDescription(),
+                checkItem.getState());
+    }
+
+    public static CheckListRequestDto CheckListDTO_CheckList(CheckList checkList){
+        return new CheckListRequestDto(checkList.getId(),checkList.getName(),checkList.getCompletionDate());
+    }
+
+    public static CheckListTemplateRequestDto CheckListTemplateDTO_CheckList(CheckListTemplate checkList){
+        return new CheckListTemplateRequestDto(checkList.getId(),checkList.getName());
+    }
 }

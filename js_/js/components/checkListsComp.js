@@ -52,10 +52,11 @@ export default class extends React.Component{
         ServerRequests.CreateCheckList({
                 name:this.state.newCL_name,
                 completionDate:this.state.newCL_completionDate
-        }).then(
-            this.setState({
-                done:false
-        })).catch(error=>{
+        }).then(json=>{
+            const array=this.state.checklists
+            array.push(new CheckList(json.properties))
+            this.setState({checklists:array,done:true})
+          }).catch(error=>{
             this.setState({error:error,done:true})
         })
        }
@@ -72,9 +73,11 @@ export default class extends React.Component{
 
 
     submitDeleteHandler(checklists){
-        ServerRequests.DeleteCheckLists(checklists).then(
-                this.setState({done:false})
-        ).catch(error=>{
+        ServerRequests.DeleteCheckLists(checklists).then(()=>{
+            let array=this.state.checklists
+            checklists.map(id=>{array=array.filter(ci=>ci.id!=id)})
+            this.setState({checklists:array,done:true})
+        }).catch(error=>{
             this.setState({error:error,done:true})
         })
     }

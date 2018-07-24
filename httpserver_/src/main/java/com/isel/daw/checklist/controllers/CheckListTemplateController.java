@@ -1,5 +1,6 @@
 package com.isel.daw.checklist.controllers;
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.ServiceResponse;
 import com.isel.daw.checklist.model.DataBaseDTOs.CheckList;
@@ -80,11 +81,8 @@ public class CheckListTemplateController {
         ServiceResponse<CheckListTemplate> response=checkListTemplateService.update(authorization, checklisttemplate_ReqDto);
         if(response.getError()!=null)
             return ResponseBuilder.buildError(response.getError());
-        CheckListTemplate checklisttemplate=response.getResponse();
         return ResponseBuilder.build(
-                CheckListTemplateSirenBuilder.build(checklisttemplate.getId(),
-                        checklisttemplate.getName())
-        );
+                CheckListTemplateSirenBuilder.build(Converter.CheckListTemplateDTO_CheckList(response.getResponse())));
     }
 
     @PostMapping(path = "/addCheckItems", produces = {"application/vnd.siren+json", "application/problem+json"})

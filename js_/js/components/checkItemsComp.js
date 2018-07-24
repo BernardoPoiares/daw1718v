@@ -49,10 +49,10 @@ export default class extends React.Component{
       }
 
       submitHandler(checkitem){
-        ServerRequests.CreateCheckItem(checkitem).then(resp=>{
-            this.setState({
-                done:false
-            })
+        ServerRequests.CreateCheckItem(checkitem).then(json=>{
+            const checkitems=this.state.checkitems
+            checkitems.push(new CheckItem(json.properties))
+            this.setState({checkitems:checkitems,done:true})
           }).catch(error=>{
             this.setState({error:error,done:true})
         })
@@ -66,8 +66,11 @@ export default class extends React.Component{
 
 
       submitDeleteHandler(selectedCI){
-        ServerRequests.DeleteCheckItems(selectedCI).then(
-            this.setState({done:false})
+        ServerRequests.DeleteCheckItems(selectedCI).then(()=>{
+            let array=this.state.checkitems
+            selectedCI.map(id=>{array=array.filter(ci=>ci.id!=id)})
+            this.setState({checkitems:array,done:true})
+        }
         ).catch(error=>{
             this.setState({error:error,done:true})
         })

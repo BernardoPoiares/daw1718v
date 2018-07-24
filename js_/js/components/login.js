@@ -3,19 +3,20 @@ import request from './request'
 import session from './session'
 import User from '../model/User'
 import ErrorComp from './errorComponent'
+import { Redirect } from 'react-router-dom'
 
 
 export default class Login extends React.Component {
     constructor(props) {
       super(props);
-      this.redirectHome=props.redirectHome
-
+      this.re=props.redirectHome
   this.changeHandler = this.changeHandler.bind(this)
   this.submitHandler = this.submitHandler.bind(this)
 
       this.state = {
         username: "",
         password: "",
+        redirect:false
       };
     }
   
@@ -32,17 +33,18 @@ export default class Login extends React.Component {
         password:this.state.password
       }).then(json=>{
           session.saveLoginToken(new User(json))
-          this.redirectHome()
-
+          this.setState({redirect:true})
+          this.re()
       }).catch(error=>{
         this.setState({error:error,done:true})
     })
     }
 
     render() {
-      
       if(this.state.error!=null)
       return (<ErrorComp error={this.state.error}/>)
+      if(this.state.redirect==true)
+        return <Redirect to="/"/>
     return (
       <div>
         Username:

@@ -24,6 +24,7 @@ export default class extends React.Component{
         this.submitHandler=this.submitHandler.bind(this)
         this.update=this.update.bind(this)
         this.submitNewListHandler=this.submitNewListHandler.bind(this)
+        this.submitDeleteItemsTemp=this.submitDeleteItemsTemp.bind(this)
     }
 
     componentDidMount(){
@@ -85,13 +86,18 @@ export default class extends React.Component{
     }
 
     update(checklisttemp){
-        ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name).catch(error=>{
+        return ServerRequests.UpdateCheckListTemplate(this.state.id,checklisttemp.name).catch(error=>{
             this.setState({error:error,done:true})
         })
     }
 
     submitDeleteItemsTemp(selectedCI){
-        ServerRequests.DeleteCheckItemsTemplates(selectedCI).catch(error=>{
+        ServerRequests.DeleteCheckItemsTemplates(selectedCI)
+        .then(()=>{
+            let array=this.state.checkitemstemplates
+            selectedCI.map(id=>{array=array.filter(ci=>ci.id!=id)})
+            this.setState({checkitemstemplates:array,done:true})
+        }).catch(error=>{
             this.setState({error:error,done:true})
         })
 
@@ -122,7 +128,8 @@ export default class extends React.Component{
             return <Redirect to={"/checkLists/"+this.state.newCL_id}/>
         if(this.state.cltp_req.finished==true){
             const datestring=new Date().toISOString().slice(0,-5)
-        return(<div><h1>CheckListTemplate:  {this.state.checkliststemplate.name}</h1>
+        return(<div><h1>CheckListTemplate:  {this.state.checkliststemplate.id}</h1>
+        <div>
             <table>
                     <thead>
                         <tr>
@@ -135,6 +142,7 @@ export default class extends React.Component{
                         </tr>
                     </tbody>
             </table>
+            </div>
             {this.renderCheckItemsTemplates()}
             <div> 
             <fieldset>

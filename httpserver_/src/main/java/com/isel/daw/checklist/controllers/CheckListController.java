@@ -1,6 +1,7 @@
 package com.isel.daw.checklist.controllers;
 
 
+import com.isel.daw.checklist.Converter;
 import com.isel.daw.checklist.RequiresAuthentication;
 import com.isel.daw.checklist.Service;
 import com.isel.daw.checklist.ServiceResponse;
@@ -60,9 +61,7 @@ public class CheckListController {
             return ResponseBuilder.buildError(response.getError());
         CheckList checklist=response.getResponse();
         return ResponseBuilder.build(
-                CheckListSirenBuilder.build(checklist.getId(),
-                        checklist.getName(),
-                        checklist.getCompletionDate())
+                CheckListSirenBuilder.build(Converter.CheckListDTO_CheckList(response.getResponse()))
         );
     }
 

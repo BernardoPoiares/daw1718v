@@ -55,10 +55,6 @@ public class CheckItem_CheckListService {
                 return checkitem_resp;
             }
             checklist.addCheckItems(checkitem_resp.getResponse());
-           /* if(resp!=null){
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return new ServiceResponse<>(null,new InternalServerProblem());
-            }*/
         }
         //todo:Change Response
         return new ServiceResponse<>(checklist_resp.getResponse(),null);
@@ -76,13 +72,9 @@ public class CheckItem_CheckListService {
             if(checkitem_resp.getError()!=null) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
                 return checklist_resp;
-            }checklist.removeCheckItems(checkitem_resp.getResponse());
-           /* if(resp!=null){
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //set rollback
-                return new ServiceResponse<>(null,new InternalServerProblem());
-            }*/
+            }
+            checklist.removeCheckItems(checkitem_resp.getResponse());
         }
-        //todo:Change Response
         return new ServiceResponse<>(checklist_resp.getResponse(),null);
     }
 
@@ -98,7 +90,7 @@ public class CheckItem_CheckListService {
             return checklist_resp;
         CheckList checkList=checklist_resp.getResponse();
         checkList.addCheckItems(checkitem_resp.getResponse());
-        return new ServiceResponse<>(checkList,null);
+        return new ServiceResponse<>(checkitem_resp.getResponse(),null);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE,propagation= Propagation.REQUIRES_NEW)
@@ -127,7 +119,7 @@ public class CheckItem_CheckListService {
             checkItem.removeCheckList(checkList);
             checkList.removeCheckItems(checkItem);
         }
-        return new ServiceResponse<>(checkItem_checkListsRequestDto,null);
+        return new ServiceResponse<>(checkitem_resp,null);
     }
 
 }
