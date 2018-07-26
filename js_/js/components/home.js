@@ -1,5 +1,6 @@
 import React from 'react'
 import Session from './session'
+import oidc from './oidc'
 
 export default class extends React.Component{
     constructor(props){
@@ -12,6 +13,7 @@ render(){
             <div className='home'>
             <h1>Welcome to CheckLists!</h1>
             <p>Please Log In to use this app. </p>
+            <p>{oidc.getUser()}}</p>
         </div>
         )
     } else{

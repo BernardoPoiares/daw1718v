@@ -47,5 +47,8 @@ Authorization: Basic ZG9nMjppbSBzdGlsbCBub3QgYSBkb2cgbXVhaGFoYWhhaGE=
 
 
 
+GET http://localhost:8080/openid-connect-server-webapp/api/clients
 
-
+GET http://localhost:8080/openid-connect-server-webapp/authorize?client_id=845ff6ce-019e-47ea-90cf-c0d2af01ed04
+&response_type=id_token
+&scope=openid

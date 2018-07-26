@@ -14,6 +14,8 @@ import Session  from './session'
 
 import ErrorBoundary from './errorBoundary'
 
+import oidc from './oidc'
+
 import styles from '../css/styles.css'
 
 const Sep = () => <span> | </span>
@@ -92,6 +94,7 @@ render(){
           
           <ErrorBoundary>
             <Route path="/" exact={true} component={Home} />
+            <Route path="/loginCallback" render={()=>oidc.loginCallback()}/>
             <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
             <Route path="/checkItems" exact={true} component={checkItems} />
             <Route path="/checkItems/:id" exact={true} component={checkItem} />
