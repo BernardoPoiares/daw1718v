@@ -3,7 +3,10 @@
 module.exports={
     saveLoginToken,
     isLogggedIn,
-    logout
+    logout,
+    setBearerToken,
+    getBearerToken,
+    removeBearerToken
 }
 
 function saveLoginToken(user){
@@ -16,4 +19,17 @@ function isLogggedIn(){
 
 function logout(){
     localStorage.removeItem('token')
+}
+
+
+function setBearerToken(token){
+    localStorage.setItem('Bearer','Bearer '+token)
+}
+
+function getBearerToken(){
+    return localStorage.getItem('Bearer')
+}
+
+function removeBearerToken(){
+    localStorage.removeItem('Bearer')
 }

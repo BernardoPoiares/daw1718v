@@ -94,7 +94,7 @@ render(){
           
           <ErrorBoundary>
             <Route path="/" exact={true} component={Home} />
-            <Route path="/loginCallback" render={()=>oidc.loginCallback()}/>
+            <Route path="/callback" render={()=>oidc.loginCallback()}/>
             <Route path="/login" render={()=><Login redirectHome={this.redirectHome}/>} />
             <Route path="/checkItems" exact={true} component={checkItems} />
             <Route path="/checkItems/:id" exact={true} component={checkItem} />

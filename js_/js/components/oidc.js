@@ -1,4 +1,7 @@
 import oidc from 'oidc-client'
+import Session from './session'
+import React from 'react'
+import {Redirect} from 'react-router-dom'
 
 module.exports = {
     login,logout,getUser,loginCallback
@@ -7,7 +10,7 @@ module.exports = {
 const config = {
     authority: "http://localhost:8080/openid-connect-server-webapp/",
     client_id: "client",
-    redirect_uri: "http://localhost:8080/",
+    redirect_uri: "http://localhost:9000/callback",
     response_type: "id_token token",
     scope:"openid"
 }
@@ -33,10 +36,10 @@ function login() {
 }
 
 function loginCallback(){
-
-    return usermanager.signinRedirectCallback().then(resp=>{
-        console.log(resp)
+    usermanager.signinRedirectCallback().then(resp=>{
+        Session.setBearerToken(resp.access_token)
     })
+    return (<Redirect to="/"/>)
 }
 
 function logout() {
