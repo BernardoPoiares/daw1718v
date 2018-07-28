@@ -1,6 +1,6 @@
 import React from 'react'
 import  request  from './request';
-import  CheckItem  from '../Model/CheckItem';
+import  CheckItem  from '../model/CheckItem';
 import  Search from './searchComponent'
 
 import ServerRequests from './serverRequests'

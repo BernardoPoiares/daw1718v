@@ -1,7 +1,6 @@
 import React from 'react'
 import ServerRequests from './serverRequests'
 import TableCell from './tableCell'
-import StateCell from './tableCell'
 import DateCell from './dateCell'
 import CheckList from '../model/CheckList'
 import CheckItem from '../model/CheckItem'

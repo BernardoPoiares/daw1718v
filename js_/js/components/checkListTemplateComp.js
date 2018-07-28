@@ -3,7 +3,7 @@ import {Redirect } from 'react-router-dom'
 
 
 import CheckListTemplate from '../model/CheckListTemplate'
-import ServerRequests from './ServerRequests'
+import ServerRequests from './serverRequests'
 import TableCell from './tableCell';
 import CheckItemTempalteTable from './tables/CheckItemTemplateTable'
 import CheckItemTemplate from '../model/CheckItemTemplate'

@@ -19,7 +19,7 @@ public class MvcConfig extends WebSecurityConfigurerAdapter {
 
         registry.addInterceptor( new Interceptor());
     }
-*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
@@ -38,7 +38,7 @@ public class MvcConfig extends WebSecurityConfigurerAdapter {
                 .withUser("admin")
                 .password("password")
                 .roles("ADMIN");
-    }
+    }*/
 
 }
 

@@ -9,7 +9,9 @@ module.exports = {
 
 const config = {
     authority: "http://localhost:8080/openid-connect-server-webapp/",
-    client_id: "client",
+   client_id: "aec0ac91-e839-40dc-b197-38f8bbbbfa0c",
+   // client_id: "client",
+    
     redirect_uri: "http://localhost:9000/callback",
     response_type: "id_token token",
     scope:"openid"
@@ -28,7 +30,7 @@ function getUser()
 }
 usermanager.events.addUserLoaded(function (loadedUser) {
     user = loadedUser;
-    console.log('add user loaded'+user)
+    console.log(user)
 });
 
 function login() {
@@ -37,7 +39,9 @@ function login() {
 
 function loginCallback(){
     usermanager.signinRedirectCallback().then(resp=>{
-        Session.setBearerToken(resp.access_token)
+       // Session.saveLoginToken(resp.access_token)
+       localStorage.setItem('Bearer','Bearer '+resp.access_token)
+
     })
     return (<Redirect to="/"/>)
 }
